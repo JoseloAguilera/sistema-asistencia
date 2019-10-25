@@ -1,0 +1,87 @@
+/*hr {
+	margin-top: 0px;
+	margin-bottom: 20px;
+	height: 1px;
+	border: none;
+	background-color: #d2d6de;
+	width: 100%;
+}*/
+
+.text-success {
+	color: #00a65a;
+}
+.text-primary {
+	color: #3c8dbc;
+}
+.text-warning {
+	color: #f39c12;
+}
+.text-danger {
+	color: #d91e18;
+}
+
+.default-borders {
+	border-left: 1px solid #f4f4f4;
+	border-right: 1px solid #f4f4f4;
+	border-bottom: 1px solid #f4f4f4;
+}
+
+.success-borders {
+	border-left: 1px solid #00a65a;
+	border-right: 1px solid #00a65a;
+	border-bottom: 1px solid #00a65a;
+}
+
+.warning-borders {
+	border-left: 1px solid #f39c12;
+	border-right: 1px solid #f39c12;
+	border-bottom: 1px solid #f39c12;
+}
+
+.danger-borders {
+	border-left: 1px solid #d91e18;
+	border-right: 1px solid #d91e18;
+	border-bottom: 1px solid #d91e18;
+}
+
+.login-box-body p {
+	font-size:14pt;
+}
+
+.login-box-body a{
+	/*font-size:12pt;*/
+}
+
+.login-box-body button{
+	font-size:12pt;
+}
+
+.login-box-body input{
+	font-size:12pt;
+}
+
+.login-logo a {
+	font-size:40pt;
+}
+
+@media only screen and (max-width: 800px) {
+	.login-box-body p {
+		font-size:20pt;
+	}
+
+	.login-box-body a{
+		font-size:14pt;
+	}
+
+	.login-box-body button{
+		font-size:16pt;
+	}
+
+	.login-box-body input{
+		font-size:16pt;
+	}
+
+	.login-logo a {
+		font-size:40pt;
+	}
+}
