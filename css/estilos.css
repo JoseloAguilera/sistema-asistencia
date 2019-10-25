@@ -44,15 +44,15 @@
 	border-bottom: 1px solid #d91e18;
 }
 
-.login-box-body p {
+/*.login-box-body p {
 	font-size:14pt;
-}
+}*/
 
-.login-box-body a{
-	/*font-size:12pt;*/
-}
+/*.login-box-body a{
+	font-size:12pt;
+}*/
 
-.login-box-body button{
+/*.login-box-body button{
 	font-size:12pt;
 }
 
@@ -63,7 +63,7 @@
 .login-logo a {
 	font-size:40pt;
 }
-
+*/
 @media only screen and (max-width: 800px) {
 	.login-box-body p {
 		font-size:20pt;
