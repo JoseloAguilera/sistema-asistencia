@@ -1,8 +1,49 @@
 <?php 
+	require 'server/conn.php';
 	session_start();
 	// var_dump($_SESSION['usuario']);
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
+	}
+
+	if($_SERVER['REQUEST_METHOD'] == "POST") {
+		if (isset($_POST['nuevo'])){
+			// var_dump($_POST);
+			$nombre = $_POST['nombre'];
+			$desc_corta = $_POST['descripcion'];
+			$desc_detallada = $_POST['detallada'];
+			$duracion_meses = $_POST['duracion'];
+			$estado = $_POST['estado'];
+			$valor_cuota = $_POST['cuota'];
+			$valor_matricula = $_POST['matricula'];
+			$sql = "INSERT INTO cursos (nombre, desc_corta, desc_detallada, duracion_meses, estado, valor_cuota, valor_matrícula, fecha_add, fecha_update)
+			VALUES ('$nombre', '$desc_corta', '$desc_detallada', '$duracion_meses', '$estado', '$valor_cuota', '$valor_matricula', NOW(), NOW())";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			//$result= $query->fetchAll();
+		} else if (isset($_POST['guardar'])){
+			// var_dump($_POST);
+			$id =  $_POST['codigo'];
+			$nombre = $_POST['nombre'];
+			$desc_corta = $_POST['descripcion'];
+			$desc_detallada = $_POST['detallada'];
+			$duracion_meses = $_POST['duracion'];
+			$estado = $_POST['estado'];
+			$valor_cuota = $_POST['cuota'];
+			$valor_matricula = $_POST['matricula'];
+			$sql = "UPDATE cursos SET nombre = '$nombre', desc_corta = '$desc_corta', desc_detallada = '$desc_detallada', duracion_meses = '$duracion_meses', estado = '$estado', valor_cuota = '$valor_cuota', valor_matrícula = '$valor_matricula', fecha_update = NOW() 
+			WHERE id = $id";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			//$result= $query->fetchAll();
+		} else if (isset($_POST['excluir'])){
+			// var_dump($_POST);
+			$id =  $_POST['codigo'];
+			$sql = "DELETE FROM cursos WHERE id = $id";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			//$result= $query->fetchAll();
+		}
 	}
 ?>
 <!DOCTYPE html>
@@ -21,6 +62,22 @@
 		<?php include 'includes/aside.php'; ?>
 		<!-- ASIDE BAR END -->
 
+		<?php
+			if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
+				// var_dump($_POST['busca']);
+				$busca = $_POST['busca'];
+				$sql = "SELECT * from cursos WHERE nombre LIKE '%$busca%' OR desc_corta LIKE '%$busca%' OR duracion_meses LIKE '%$busca%' OR estado LIKE '%$busca%' OR valor_cuota LIKE '%$busca%' OR valor_matrícula LIKE '%$busca%' ORDER by nombre";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				$result= $query->fetchAll();
+			} else {
+				$busca = "";
+				$sql = "SELECT * from cursos ORDER by nombre";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				$result= $query->fetchAll();
+			}
+		?>
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
 			<!-- Cabicera de Contenido (Título) -->
@@ -48,12 +105,14 @@
 						</div>
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Buscar por..." name="busca">
-								<span class="input-group-btn">
-									<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-								</span>
-							</div>
+							<form method="POST">
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="Buscar por..." name="busca" value="<?php echo $busca;?>">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="submit" name="search"><i class="fa fa-search"></i></button>
+									</span>
+								</div>
+							</form>
 						</div>
 					</div>
 					<!-- Corpo de Caja -->
@@ -69,33 +128,25 @@
 									<th>Cuota</th>
 									<th>Estado</th>
 								</tr>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="1" data-nombre="Ballet Iniciante" data-descripcion="Ballet clásico para todas las edades." data-detallada="" data-duracion="12" data-matricula="50.000" data-cuota="250.000" data-estado="activo">
-									<td>1</td>
-									<td>Ballet Iniciante</td>
-									<td>Ballet clásico para todas las edades.</td>
-									<td>12 meses</td>
-									<td>50.000 gs</td>
-									<td>250.000 gs</td>
-									<td>Activo</td>
+								<?php foreach ($result as $row) { ?>
+								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-nombre="<?php echo $row['nombre'];?>" data-descripcion="<?php echo $row['desc_corta'];?>" data-detallada="<?php echo $row['desc_detallada'];?>" data-duracion="<?php echo $row['duracion_meses'];?>" data-matricula="<?php echo $row['valor_matrícula'];?>" data-cuota="<?php echo $row['valor_cuota'];?>" data-estado="<?php echo $row['estado'];?>">
+									<td><?php echo $row['id'];?></td>
+									<td><?php echo $row['nombre'];?></td>
+									<td><?php echo $row['desc_corta'];?></td>
+									<td><?php echo $row['duracion_meses'];?></td>
+									<td><?php echo $row['valor_matrícula'];?></td>
+									<td><?php echo $row['valor_cuota'];?></td>
+									<td><?php 
+										$estado = "";
+										if ($row['estado'] == "0") {
+											$estado = "Inactivo";
+										} else {
+											$estado = "Activo";
+										}
+										echo $estado;?>
+									</td>
 								</tr>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="2" data-nombre="Danza Paraguaya" data-descripcion="Danza clásica paraguaya para niñas." data-detallada="Danza tradicional paraguaya con foco en las niñas." data-duracion="12" data-matricula="50.000" data-cuota="250.000" data-estado="vacaciones">
-									<td>2</td>
-									<td>Danza Paraguaya</td>
-									<td>Danza clásica paraguaya para niñas.</td>
-									<td>12 meses</td>
-									<td>50.000 gs</td>
-									<td>250.000 gs</td>
-									<td>Vacaciones</td>
-								</tr>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="3" data-nombre="Danza del Vientre" data-descripcion="Danza oriental muy elemental, prácticamente sin desplazamientos." data-detallada="Danza oriental muy elemental, prácticamente sin desplazamientos y con movimientos de cuadril." data-duracion="12" data-matricula="50.000" data-cuota="300.000" data-estado="inactivo">
-									<td>3</td>
-									<td>Danza del Vientre</td>
-									<td>Danza oriental muy elemental, prácticamente sin desplazamientos.</td>
-									<td>12 meses</td>
-									<td>50.000 gs</td>
-									<td>300.000 gs</td>
-									<td>Inactivo</td>
-								</tr>
+								<?php }?>
 							</table>
 						</div>
 					</div>
@@ -134,9 +185,9 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Nuevo Curso</h4>
 				</div>
-				<div class="modal-body">
-					<div class="row">
-						<form action="" method="POST">
+				<form action="" method="POST">
+					<div class="modal-body">
+						<div class="row">
 							<div class="col-md-9">
 								<div class="form-group">
 									<label for="nombre">Nombre</label>
@@ -147,16 +198,16 @@
 								<div class="form-group">
 									<label for="activo">Estado</label>
 									<select class="form-control" id="estado" name="estado">
-										<option value="activo">Activo</option>
-										<option value="inactivo">Inactivo</option>
-										<option value="vacaciones">Vacaciones</option>
+										<option value="0">Activo</option>
+										<option value="1">Inactivo</option>
+										<option value="2">Vacaciones</option>
 									</select>
 								</div>
 							</div>
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="descripcion">Descripción Corta</label>
-									<textarea class="form-control" rows="2" id="descripcion" name="descripcion"></textarea>
+									<textarea class="form-control" rows="2" id="descripcion" name="descripcion" required></textarea>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -183,13 +234,13 @@
 									<input type="text" class="form-control" id="cuota" name="cuota" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
 								</div>
 							</div>
-						</form>
-					</div> <!-- row -->
-				</div> <!-- modal-body -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary" name="guardar">Guardar</button>
-				</div>
+						</div> <!-- row -->
+					</div> <!-- modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button type="submit" class="btn btn-primary" name="nuevo">Guardar</button>
+					</div>
+				</form>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
@@ -216,9 +267,9 @@
 							<div class="form-group">
 								<label for="activo">Estado</label>
 								<select class="form-control" id="estado" name="estado">
-									<option value="activo">Activo</option>
-									<option value="inactivo">Inactivo</option>
-									<option value="vacaciones">Vacaciones</option>
+									<option value="1">Activo</option>
+									<option value="0">Inactivo</option>
+									<option value="2">Vacaciones</option>
 								</select>
 							</div>
 						</div>
