@@ -11,9 +11,10 @@
 if (isset($_GET['guardar'])) {
 	if ($_GET['guardar']=="true") {
 		$mensaje= '<p class="alert alert-success">Registro guardado correctamente :)</p>';
-	}
+		}
 }
 if (isset($_GET['actualizar'])) {
+	var_dump($_GET['actualizar']);
 	if ($_GET['actualizar']=="true") {
 		$mensaje= '<p class="alert alert-success">Registro actualizado correctamente :)</p>';
 	}
@@ -92,6 +93,13 @@ if (isset($_GET['actualizar'])) {
 	                       }
 	                       }
 	                      break;
+			case('excluir'):
+			$id =  $_POST['codigo'];
+			$sql = 'DELETE FROM alumnos WHERE id = '.$id;
+			$query = $connection->prepare($sql);
+			$query->execute();
+
+			break;
 	}
 	}
 ?>
@@ -100,6 +108,17 @@ if (isset($_GET['actualizar'])) {
 <head>
 	<title>SSD - Alumnos</title>
 	<?php include 'includes/head.php'; ?>
+
+	<script type="text/javascript">
+	function subir_imagen(input, carpeta)
+				{
+					self.name = 'opener';
+					var name = document.getElementsByName("nombre")[0].value;
+					remote = open('subir_imagen.php?name='+name+'&input='+input+'&carpeta='+carpeta ,'remote', 'align=center,width=600,height=300,resizable=yes,status=yes');
+					remote.focus();
+				}
+
+	</script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 	<div class="wrapper">
@@ -152,13 +171,11 @@ if (isset($_GET['actualizar'])) {
 						</div>
 					</div>
 				</div>
-				<?php
-				if(isset($mensaje)){?>
-					<div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="modal-mensaje" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">Atencion</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -167,14 +184,11 @@ if (isset($_GET['actualizar'])) {
       <p>  <?php echo $mensaje; ?></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
-				<?php	}
-				 ?>
 				<!-- Corpo de Caja -->
 				<div class="box-body">
 					<div class="box-body table-responsive">
@@ -205,7 +219,7 @@ if (isset($_GET['actualizar'])) {
 													data-cedula="<?php echo $row['cedula']; ?>" data-telefono="<?php echo $row['telefono']; ?>" data-email="<?php echo $row['email']; ?>"
 													data-ciudad="<?php echo $row['ciudad']; ?>" data-direcion="<?php echo $row['direccion']; ?>" data-nascimiento="<?php echo $row['fecha_nac']; ?>"
 													data-razonsocial="<?php echo $row['razon_social']; ?>" data-ruc="<?php echo $row['ruc']; ?>" data-nombreref="<?php echo $row['nombre_ref']; ?>"
-													data-telefonoref="<?php echo $row['telefono_ref']; ?>" data-estado="<?php echo $row['estado']; ?>"><i class="fa fa-eye"></i></button>
+													data-telefonoref="<?php echo $row['telefono_ref']; ?>" data-estado="<?php echo $row['estado'];?>" data-password="<?php echo $row['password'];?>" data-foto="<?php echo $row['foto'];?>"><i class="fa fa-eye"></i></button>
 										</td>
                   </tr>
                  <?php } ?>
@@ -248,7 +262,8 @@ if (isset($_GET['actualizar'])) {
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Nuevo Alumno</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST" name="form1">
+					<input type="hidden" class="form-control" id="codigo" name="codigo">
 					<div class="modal-body">
 						<div class="col-md-12">
 							<div class="form-group">
@@ -337,7 +352,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="foto">Foto</label>
-								<input type="file" id="foto" name="foto">
+								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos')">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -369,7 +384,7 @@ if (isset($_GET['actualizar'])) {
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Actualizacion</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST" name="form">
 					<input type="hidden" class="form-control" id="codigo" name="codigo">
 					<div class="modal-body">
 						<div class="col-md-12">
@@ -459,7 +474,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="foto">Foto</label>
-								<input type="file" id="foto" name="foto">
+								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos')">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -474,8 +489,8 @@ if (isset($_GET['actualizar'])) {
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger pull-left" name="excluir" id="btn-confirmar">Excluir</button>
-						<button type="submit" class="btn" name="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
+						<button type="button" class="btn btn-danger pull-left" name="accion" value="excluir"  id="btn-confirmar">Excluir</button>
+						<button type="submit" class="btn" name="accion" value="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 						<button type="submit" class="btn btn-primary" name="accion" value="actualizar">Actualizar</button>
 					</div>
@@ -525,6 +540,9 @@ if (isset($_GET['actualizar'])) {
 			var nombreref = button.data('nombreref')
 			var telefonoref = button.data('telefonoref')
 			var nascimiento = button.data('nascimiento')
+			var password = button.data('password')
+			var foto = button.data('foto')
+
 
 			// Actualiza los datos del modal
 		var modal = $(this)
@@ -543,6 +561,9 @@ if (isset($_GET['actualizar'])) {
 			modal.find('#nombreref').val(nombreref)
 			modal.find('#telefonoref').val(telefonoref)
 			modal.find('#nascimiento').val(nascimiento)
+			modal.find('#password').val(password)
+			modal.find('#foto').val(foto)
+			modal.find('#accion').val('actualizar')
 		})
 
 
@@ -557,6 +578,7 @@ if (isset($_GET['actualizar'])) {
 			//si quiere remover el registro
 			$("#modal-btn-si").on("click", function(){
 				callback(true);
+				var codigo=
 				$("#mi-modal").modal('hide');
 			});
 
@@ -575,6 +597,14 @@ if (isset($_GET['actualizar'])) {
 				//Acciones si el usuario no confirma
 			}
 		});
+<?php if (isset($mensaje)) {?>
+		$(document).ready(function(){
+    $("#modal-mensaje").modal("show");
+  });
+<?php
+unset($mensaje);
+} ?>
+
 
 	</script>
 </body>
