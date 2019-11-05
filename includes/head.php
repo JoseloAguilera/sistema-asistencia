@@ -18,6 +18,8 @@
 <link rel="stylesheet" href="css/daterangepicker.css">
 <!-- bootstrap datepicker -->
 <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
+<!-- bootstrap selectpicker -->
+<link rel="stylesheet" href="css/bootstrap-select.min.css">
 <!-- Meus Estilos -->
 <link rel="stylesheet" href="css/estilos.css">
 

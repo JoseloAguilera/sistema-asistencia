@@ -23,6 +23,8 @@
 <!-- date-range-picker -->
 <script src="js/moment.min.js"></script>
 <script src="js/daterangepicker.js"></script>
+<!-- select-picker -->
+<script src="js/bootstrap-select.min.js"></script>
 
 <script type="text/javascript">
 	//inicia las clases tipo datepicker
