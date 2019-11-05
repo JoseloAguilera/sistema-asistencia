@@ -28,16 +28,31 @@
 			$inicio = "";
 			$asistencia = "";
 			$catastro = "";
-			$catastro2 = "";
-			$catastro3 = "";
-			if ($_SERVER['REQUEST_URI'] == '/Capacit/curso.php' || $_SERVER['REQUEST_URI'] == '/Capacit/alumno.php' || $_SERVER['REQUEST_URI'] == '/Capacit/matricula.php' || $_SERVER['REQUEST_URI'] == '/Capacit/grupo.php' || $_SERVER['REQUEST_URI'] == '/Capacit/grupo-detalle.php') {
+			$subalumno = "";
+			$submatricula = "";
+			$subcurso = "";
+			$subgrupo = "";
+
+			if (strpos($_SERVER['REQUEST_URI'], 'alumno.php') !== false){
 				$catastro = "active";
+				$subalumno = "text-aqua";
+			} 
+			else if (strpos($_SERVER['REQUEST_URI'], 'matricula.php') !== false) {
+				$catastro = "active";
+				$submatricula = "text-aqua";
+			} 
+			else if (strpos($_SERVER['REQUEST_URI'], 'curso.php') !== false) {
+				$catastro = "active";
+				$subcurso = "text-aqua";
+			}  
+			else if (strpos($_SERVER['REQUEST_URI'], 'grupo.php') !== false){
+				$catastro = "active";
+				$subgrupo = "text-aqua";
 			} else if (strpos($_SERVER['REQUEST_URI'], 'asistencia.php') !== false) {
 				$asistencia = "active";
 			} else {
 				$inicio = "active";
 			}
-
 			// var_dump($_SERVER['REQUEST_URI']);
 		?>
 		<ul class="sidebar-menu" data-widget="tree">
@@ -71,10 +86,10 @@
 					</span>
 				</a>
 				<ul class="treeview-menu">
-					<li><a href="alumno.php"><i class="fa fa-circle-o"></i> Alumnos</a></li>
-					<li><a href="matricula.php"><i class="fa fa-circle-o"></i> Matriculas</a></li>
-					<li><a href="curso.php"><i class="fa fa-circle-o"></i> Cursos</a></li>
-					<li><a href="grupo.php"><i class="fa fa-circle-o"></i> Grupos</a></li>
+					<li><a href="alumno.php"><i class="fa fa-circle-o <?php echo $subalumno;?>"></i> Alumnos</a></li>
+					<li><a href="matricula.php"><i class="fa fa-circle-o <?php echo $submatricula;?>"></i> Matriculas</a></li>
+					<li><a href="curso.php"><i class="fa fa-circle-o <?php echo $subcurso;?>"></i> Cursos</a></li>
+					<li><a href="grupo.php"><i class="fa fa-circle-o <?php echo $subgrupo;?>"></i> Grupos</a></li>
 				</ul>
 			</li>
 		</ul>
