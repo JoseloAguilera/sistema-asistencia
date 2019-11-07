@@ -77,6 +77,39 @@
 					<li><a href="asistencia.php?id=4"><i class="fa fa-circle-o"></i> Danza Paraguaya Noche 1</a></li>
 				</ul>
 			</li>	
+			<li class="<?php echo $asistencia;?> treeview">
+				<a href="#">
+					<i class="fa fa-group"></i> <span>Asistencias</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li class="treeview">
+						<a href="#"><i class="fa fa-circle-o"></i> Ballet Clasico
+							<span class="pull-right-container">
+							<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="#"><i class="fa fa-circle-o"></i> L/M/V</a></li>
+							<li><a href="#"><i class="fa fa-circle-o"></i> Martes y Jueves Tarde 4</a></li>
+							<!-- <li class="treeview">
+								<a href="#"><i class="fa fa-circle-o"></i> Level Two
+									<span class="pull-right-container">
+										<i class="fa fa-angle-left pull-right"></i>
+									</span>
+								</a>
+								<ul class="treeview-menu">
+									<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+									<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+								</ul>
+							</li> -->
+						</ul>
+					</li>
+					<li><a href="#"><i class="fa fa-circle-o"></i> Danza del Vientre</a></li>
+				</ul>
+			</li>
 			<!-- Multilevel -->
 			<li class="<?php echo $catastro;?> treeview">
 				<a href="#">

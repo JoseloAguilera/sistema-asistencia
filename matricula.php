@@ -1,8 +1,55 @@
 <?php 
+	require 'server/conn.php';
 	session_start();
 	// var_dump($_SESSION['usuario']);
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
+	}
+
+	if($_SERVER['REQUEST_METHOD'] == "POST") {
+		if (isset($_POST['nuevo'])){
+			//var_dump($_POST);
+			$fechainicio = $_POST['fechainicio'];
+			$codgrupo = $_POST['grupo'];
+			$alumno = $_POST['alumno'];
+			$matricula = str_replace(".", "", $_POST['valmatricula']);
+			$cuota = str_replace(".", "", $_POST['valcuota']);
+			// $estado = $_POST['estado'];
+			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); //convierte de dd/mm/yyyy para yyyy-mm-dd
+
+			$sql = "INSERT INTO matricula (id_alumnos, fecha_inicio, valor_cuota, valor_matricula, grupo_id, fecha_add, fecha_update) VALUES ('$alumno', '$mysqldata', '$cuota','$matricula', '$codgrupo', NOW(), NOW())";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			//var_dump($last_id);
+
+			//$result= $query->fetchAll();
+		} else if (isset($_POST['guardar'])){
+			//var_dump($_POST);
+			$id =  $_POST['codigo'];
+			$fechainicio = $_POST['fechainicio'];
+			$codgrupo = $_POST['grupo'];
+			$alumno = $_POST['alumno'];
+			$matricula = str_replace(".", "", $_POST['valmatricula']);
+			$cuota = str_replace(".", "", $_POST['valcuota']);
+			// $estado = $_POST['estado'];
+			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); //convierte de dd/mm/yyyy para yyyy-mm-dd
+
+			// Update do grupo
+			$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW()
+			WHERE id = $id";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			
+			//$result= $query->fetchAll();
+		} else if (isset($_POST['excluir'])){
+			// var_dump($_POST);
+			$id =  $_POST['codigo'];
+			// Delete Grupos
+			$sql = "DELETE FROM matricula WHERE id = $id";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			//$result= $query->fetchAll();
+		}
 	}
 ?>
 <!DOCTYPE html>
@@ -21,6 +68,22 @@
 		<?php include 'includes/aside.php'; ?>
 		<!-- ASIDE BAR END -->
 
+		<?php
+			if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
+				// var_dump($_POST['busca']);
+				// $busca = $_POST['busca'];
+				// $sql = "SELECT * from cursos WHERE nombre LIKE '%$busca%' OR desc_corta LIKE '%$busca%' OR duracion_meses LIKE '%$busca%' OR estado LIKE '%$busca%' OR valor_cuota LIKE '%$busca%' OR valor_matrícula LIKE '%$busca%' ORDER by nombre";
+				// $query = $connection->prepare($sql);
+				// $query->execute();
+				// $result= $query->fetchAll();
+			} else {
+				$busca = "";
+				$sql = "SELECT matricula.*, alumnos.nombre, alumnos.apellido, cursos.nombre AS curso, grupos.descripcion AS grupo FROM `matricula` INNER JOIN alumnos ON `id_alumnos` = alumnos.id INNER JOIN grupos ON grupo_id = grupos.id INNER JOIN cursos ON grupos.cursos_id = cursos.id ORDER BY alumnos.nombre";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				$result= $query->fetchAll();
+			}
+		?>
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
 			<!-- Cabicera de Contenido (Título) -->
@@ -63,48 +126,29 @@
 								<tr>
 									<th>#</th>
 									<th>Curso</th>
+									<th>Grupo</th>
 									<th>Alumno</th>
 									<th>Fecha de Inicio</th>
 									<th>Valor de Matricula</th>
 									<th>Valor de Cuota</th>
 									<th>Estado</th>
 								</tr>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="1" data-curso="Ballet" data-dia="Lunes de 18:00 hasta 19:00&Miercoles de 18:00 hasta 19:00" data-fechainicio="29/03/2019" data-valmatricula="25.000" data-valcuota="200.000" data-estado="activo">
-									<td>1</td>
-									<td>Ballet</td>
-									<td>Ana Carolina dos Anjos</td>
-									<td>29/03/2019</td>
-									<td>25.000</td>
-									<td>200.000</td>
+								<?php foreach ($result as $row) { 
+									$fechainicio = substr($row['fecha_inicio'], 8,2)."/".substr($row['fecha_inicio'], 5,2)."/".substr($row['fecha_inicio'], 0,4);;
+									$valmatricula = number_format($row['valor_matricula'], 0, ",", ".");
+									$valcuota = number_format($row['valor_cuota'], 0, ",", ".");
+								?>
+								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-alumno="<?php echo $row['id_alumnos'];?>"  data-grupo="<?php echo $row['grupo_id'];?>" data-fechainicio="<?php echo $fechainicio;?>" data-valmatricula="<?php echo $valmatricula;?>" data-valcuota="<?php echo $valcuota;?>" data-estado="activo">
+									<td><?php echo $row['id'];?></td>
+									<td><?php echo $row['curso'];?></td>
+									<td><?php echo $row['grupo'];?></td>
+									<td><?php echo $row['nombre']." ".$row['apellido'];?></td>
+									<td><?php echo $fechainicio;?></td>
+									<td><?php echo $valmatricula;?></td>
+									<td><?php echo $valcuota;?></td>
 									<td>Activo</td>
 								</tr>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="2" data-curso="Ballet" data-dia="lunes&miercoles" data-fechainicio="29/03/2019" data-valmatricula="25.000" data-valcuota="200.000" data-estado="activo">
-									<td>2</td>
-									<td>Ballet</td>
-									<td>Viviana Paola Peixoto</td>
-									<td>29/03/2019</td>
-									<td>25.000</td>
-									<td>200.000</td>
-									<td>Activo</td>
-								</tr>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="3" data-curso="Danza Paraguaya" data-dia="martes&jueves" data-fechainicio="04/05/2019" data-valmatricula="35.000" data-valcuota="250.000" data-estado="activo">
-									<td>3</td>
-									<td>Ballet</td>
-									<td>Gladys Palácios</td>
-									<td>04/05/2019</td>
-									<td>35.000</td>
-									<td>250.000</td>
-									<td>Activo</td>
-								</tr>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="4" data-curso="Danza Paraguaya" data-dia="sabado" data-fechainicio="29/03/2019" data-valmatricula="25.000" data-valcuota="200.000" data-estado="activo">
-									<td>4</td>
-									<td>Danza Paraguaya</td>
-									<td>Viviana Paola Peixoto</td>
-									<td>29/03/2019</td>
-									<td>25.000</td>
-									<td>200.000</td>
-									<td>Inactivo</td>
-								</tr>
+								<?php }?>
 							</table>
 						</div>
 					</div>
@@ -149,53 +193,67 @@
 							</div>
 							<div class="col-md-8">
 								<div class="form-group">
-									<label for="dia">Curso</label>
-									<select class="form-control" id="curso" name="curso">
-										<option value="ballet">Ballet</option>
-										<option value="paraguaya">Danza Paraguaya</option>
-										<option value="vientre">Danza del Vientre</option>
-									</select>
-								</div>
-							</div>
-							<div class="col-md-12">
-								<div class="form-group">
 									<label for="dia">Alumno</label>
-									<select class="form-control" id="curso" name="curso">
-										<option value="ballet">Ana Carolina dos Anjos</option>
-										<option value="paraguaya">Gladys Palácios</option>
-										<option value="vientre">Viviana Paola Peixoto</option>
+									<select class="form-control" id="alumno" name="alumno">
+									<?php
+										$sql = "SELECT * from alumnos ORDER by nombre";
+										$query = $connection->prepare($sql);
+										$query->execute();
+										$result= $query->fetchAll();
+
+										foreach ($result as $row) { 
+									?>
+										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre']." ".$row['apellido'];?></option>
+									<?php }?>
 									</select>
 								</div>
 							</div>
-							<div class="col-md-8">
+							<div class="col-md-6">
 								<div class="form-group">
-									<label for="salida">Horario</label>
-									<select multiple class="form-control" id="horario" name="horario">
-										<option>Lunes de 18:00 hasta 19:00</option>
-										<option>Martes de 08:00 hasta 09:00</option>
-										<option>Miercoles de 18:00 hasta 19:00</option>
-										<option>Jueves de 08:00 hasta 09:00</option>
-										<option>Sabado de 08:00 hasta 11:00</option>
+									<label for="grupo">Grupo</label>
+									<select class="form-control" id="grupo" name="grupo">
+									<?php
+										$sql = "SELECT * from cursos ORDER by nombre";
+										$query = $connection->prepare($sql);
+										$query->execute();
+										$result= $query->fetchAll();
+
+										foreach ($result as $row) { 
+									?>
+										<optgroup label="<?php echo 'Curso de '.$row['nombre'];?>">
+											<?php 
+												$codcurso = $row['id'];
+												$sql = "SELECT * from grupos WHERE cursos_id = $codcurso ORDER by descripcion";
+												$query = $connection->prepare($sql);
+												$query->execute();
+												$result2= $query->fetchAll();
+
+												foreach ($result2 as $grupo) { 
+											?>
+											<option value="<?php echo $grupo['id'];?>"><?php echo $grupo['descripcion'];?></option>
+											<?php }?>
+										</optgroup>
+									<?php }?>
 									</select>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="valmatricula">Valor Matrícula</label>
-									<input type="text" class="form-control" id="valmatricula" name="valmatricula">
+									<input type="text" class="form-control" id="valmatricula" name="valmatricula" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="valcuota">Valor Cuota</label>
-									<input type="text" class="form-control" id="valcuota" name="valcuota">
+									<input type="text" class="form-control" id="valcuota" name="valcuota" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
 								</div>
 							</div>
 						</div> <!-- row -->
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-						<button type="submit" class="btn btn-primary" name="guardar">Guardar</button>
+						<button type="submit" class="btn btn-primary" name="nuevo">Guardar</button>
 					</div>
 				</form>
 			</div><!-- /.modal-content -->
@@ -213,6 +271,7 @@
 				</div>
 				<form action="" method="POST">
 					<div class="modal-body">
+						<input type="hidden" class="form-control" id="codigo" name="codigo">
 						<div class="row">
 							<div class="col-md-4">
 								<div class="form-group">
@@ -222,43 +281,57 @@
 							</div>
 							<div class="col-md-8">
 								<div class="form-group">
-									<label for="dia">Curso</label>
-									<select class="form-control" id="curso" name="curso">
-										<option value="ballet">Ballet</option>
-										<option value="paraguaya">Danza Paraguaya</option>
-										<option value="vientre">Danza del Vientre</option>
-									</select>
-								</div>
-							</div>
-							<div class="col-md-12">
-								<div class="form-group">
 									<label for="dia">Alumno</label>
-									<select class="form-control" id="curso" name="curso">
-										<option value="ana">Ana Carolina dos Anjos</option>
-										<option value="gladys">Gladys Palácios</option>
-										<option value="viviana">Viviana Paola Peixoto</option>
+									<select class="form-control" id="alumno" name="alumno">
+									<?php
+										$sql = "SELECT * from alumnos ORDER by nombre";
+										$query = $connection->prepare($sql);
+										$query->execute();
+										$result= $query->fetchAll();
+
+										foreach ($result as $row) { 
+									?>
+										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre']." ".$row['apellido'];?></option>
+									<?php }?>
 									</select>
 								</div>
 							</div>
-							<div class="col-md-8">
+							<div class="col-md-6">
 								<div class="form-group">
-									<label for="salida">Horario</label>
-									<select multiple class="form-control" id="horario" name="horario">
-										<option value="lunes">Lunes de 18:00 hasta 19:00</option>
-										<option value="martes">Martes de 08:00 hasta 09:00</option>
-										<option value="miercoles">Miercoles de 18:00 hasta 19:00</option>
-										<option value="jueves">Jueves de 08:00 hasta 09:00</option>
-										<option value="sabado">Sabado de 08:00 hasta 11:00</option>
+									<label for="grupo">Grupo</label>
+									<select class="form-control" id="grupo" name="grupo">
+									<?php
+										$sql = "SELECT * from cursos ORDER by nombre";
+										$query = $connection->prepare($sql);
+										$query->execute();
+										$result= $query->fetchAll();
+
+										foreach ($result as $row) { 
+									?>
+										<optgroup label="<?php echo 'Curso de '.$row['nombre'];?>">
+											<?php 
+												$codcurso = $row['id'];
+												$sql = "SELECT * from grupos WHERE cursos_id = $codcurso ORDER by descripcion";
+												$query = $connection->prepare($sql);
+												$query->execute();
+												$result2= $query->fetchAll();
+
+												foreach ($result2 as $grupo) { 
+											?>
+											<option value="<?php echo $grupo['id'];?>"><?php echo $grupo['descripcion'];?></option>
+											<?php }?>
+										</optgroup>
+									<?php }?>
 									</select>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="valmatricula">Valor Matrícula</label>
 									<input type="text" class="form-control" id="valmatricula" name="valmatricula" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="valcuota">Valor Cuota</label>
 									<input type="text" class="form-control" id="valcuota" name="valcuota" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
@@ -303,40 +376,28 @@
 		$('#AltModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // objeto que disparó el modal
 			var codigo = button.data('codigo') 
-			var dia = button.data('dia')
-			var dias = dia.split("&")
 			var fechainicio = button.data('fechainicio')
+			var alumno = button.data('alumno')
+			var grupo = button.data('grupo')
 			var valmatricula = button.data('valmatricula')
 			var valcuota = button.data('valcuota')
 			var estado = button.data('estado')
 			
+			// console.log(grupo + " -- ");
 			// Actualiza los datos del modal 
 			var modal = $(this)
-			var selectObj = document.getElementById("horario")
-			
-			modal.find('.modal-title').text('Horario ' + codigo)
+			modal.find('.modal-title').text('Matricula ' + codigo)
 			modal.find('#codigo').val(codigo)
+			modal.find('#alumno').val(alumno)
+			//modal.find('#grupo').val(grupo)
+			$('select[name=grupo]').val(grupo)
+			$('.selectpicker').selectpicker('render')
 
-			for (var x = 0; x < dias.length; x++) {
-				for(var i = 0; i < selectObj.options.length; i++) {
-					// opt = selectObj.options[i];
-					// console.log(opt.value)
-					if(selectObj.options[i].value === dias[x]) {
-						console.log(selectObj.options[i].value + " - " + dias[x])
-						selectObj.options[i].selected = true;
-					} else {
-						selectObj.options[i].selected = false;
-					}
-				}
-			}
-			
-			// modal.find('#horario').val(dia)
 			modal.find('#fechainicio').val(fechainicio)
 			modal.find('#valmatricula').val(valmatricula)
 			modal.find('#valcuota').val(valcuota)
 			modal.find('#estado').val(estado)
 		})
-
 
 		// formato para moneda
 		String.prototype.reverse = function(){

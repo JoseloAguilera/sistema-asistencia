@@ -157,7 +157,8 @@
 								<th>Ctd Inscriptos</th>
 								<th>Estado</th>
 							</tr>
-							<?php foreach ($result as $row) { 
+							<?php 
+							foreach ($result as $row) { 
 								$curso_id = $row['cursos_id'];
 								$grupo_id = $row['id'];
 								$sql = "SELECT * FROM horarios WHERE grupos_id = $grupo_id AND grupos_cursos_id = $curso_id";
@@ -171,6 +172,7 @@
 										$dias = $dias.",";
 									}
 									$dias = $dias.$horario['dia'];
+									$id = $row['id'];
 								}
 								//var_dump($dias);
 							?>
@@ -186,7 +188,7 @@
 								<td>De <?php echo substr($horario['hora_inicio'],0,5)."<br>";?>Hasta <?php echo substr($horario['hora_fin'],0,5)."<br>";?></td>
 								<?php
 								//Quantidade de Alunos Matriculados no Grupo
-								$sql = "SELECT COUNT(*) FROM `matricula` INNER JOIN grupos ON matricula.`id_curso` = grupos.id WHERE matricula.`id_curso` = 3";
+								$sql = "SELECT COUNT(*) FROM `matricula` INNER JOIN grupos ON matricula.`grupo_id` = grupos.id WHERE matricula.`grupo_id` = $id";
 								$query = $connection->prepare($sql);
 								$query->execute();
 								$result3= $query->fetch();
@@ -468,10 +470,8 @@
 			modal.find('#salida').val(salida)
 			//modal.find('#dia').val(dias)
 
-			$('.selectpicker').val(dias);
-			$('.selectpicker').selectpicker('render');
-
-			//modal.find('#dia').change();
+			$('.selectpicker').val(dias)
+			$('.selectpicker').selectpicker('render')
 			modal.find('#estado').val(estado)
 		})
 
