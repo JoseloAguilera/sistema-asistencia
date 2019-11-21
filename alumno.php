@@ -14,11 +14,11 @@ if (isset($_GET['guardar'])) {
 		}
 }
 if (isset($_GET['actualizar'])) {
-	var_dump($_GET['actualizar']);
-	if ($_GET['actualizar']=="true") {
+		if ($_GET['actualizar']=="true") {
 		$mensaje= '<p class="alert alert-success">Registro actualizado correctamente :)</p>';
 	}
 }
+
 //VALIDAR EXISTENCIA DE UN POST
 	if(isset($_POST['accion'])){
 	switch ($_POST['accion']){
@@ -30,14 +30,14 @@ if (isset($_GET['actualizar'])) {
 	        && $_POST['cedula'] != ''
 	        && $_POST['telefono'] != ''*/
 	      //INICIAMOS LA TRANSACCION
-	          $sql = 'INSERT INTO alumnos(nombre, apellido, cedula, telefono, fecha_nac, email, ruc, razon_social, ciudad, direccion,
-	            nombre_ref, telefono_ref, estado, password, foto,  fecha_add ) VALUES (:nombre, :apellido, :cedula, :telefono, :fecha_nac, :email, :ruc,
-	            :razonsocial, :ciudad, :direccion, :nombreref, :telefonoref, :estado, :password, :foto,  NOW() )';
+	          $sql = 'INSERT INTO alumnos(nombre, apellido, cedula, telefono_alumno, fecha_nac, email, ruc, razon_social, ciudad, direccion,
+	            nombre_ref, telefono_ref, mama, telefono_mama, papa, telefono_papa, estado, password, foto,  fecha_add ) VALUES (:nombre, :apellido, :cedula, :telefono_alumno, :fecha_nac, :email, :ruc,
+	            :razonsocial, :ciudad, :direccion, :nombreref, :telefonoref, :mama, :telefono_mama, :papa, :telefono_papa, :estado, :password, :foto,  NOW() )';
 	          $data = array(
 	              'nombre' => $_POST['nombre'],
 	              'apellido' => $_POST['apellido'],
 	              'cedula' => $_POST['cedula'],
-	              'telefono' => $_POST['telefono'],
+	              'telefono_alumno' => $_POST['telefono'],
 	              'fecha_nac' => $_POST['nascimiento'],
 	              'email' => $_POST['email'],
 	              'direccion' => $_POST['direcion'],
@@ -46,6 +46,10 @@ if (isset($_GET['actualizar'])) {
 	              'razonsocial' => $_POST['razonsocial'],
 	              'nombreref' => $_POST['nombreref'],
 	              'telefonoref' => $_POST['telefonoref'],
+								'mama' => $_POST['nombremama'],
+								'telefono_mama' => $_POST['telefono_mama'],
+								'papa' => $_POST['nombrepapa'],
+								'telefono_papa' => $_POST['telefono_papa'],
 	              'password' => $_POST['contrasena'],
 	              'estado' => $_POST['estado'],
 	              'foto' => $_POST['foto']
@@ -65,7 +69,7 @@ if (isset($_GET['actualizar'])) {
 	                    if($_POST['codigo'] > 0){
 	                         $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono=:telefono, fecha_nac=:fecha_nac, email=:email,
 	                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
-	                         estado=:estado, password=:password, foto=:foto, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
+													 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, password=:password, foto=:foto, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
 	                         $data = array(
 	                             'nombre' => $_POST['nombre'],
 	                             'apellido' => $_POST['apellido'],
@@ -79,6 +83,10 @@ if (isset($_GET['actualizar'])) {
 	                             'razonsocial' => $_POST['razonsocial'],
 	                             'nombreref' => $_POST['nombreref'],
 	                             'telefonoref' => $_POST['telefonoref'],
+								 						 	 'mama' => $_POST['nombremama'],
+								 							 'telefono_mama' => $_POST['telefono_mama'],
+								 						 	 'papa' => $_POST['nombrepapa'],
+								 						 	 'telefono_papa' => $_POST['telefono_papa'],
 	                             'password' => $_POST['contrasena'],
 	                             'estado' => $_POST['estado'],
 	                             'foto' => $_POST['foto']
@@ -127,11 +135,20 @@ if (isset($_GET['actualizar'])) {
 		require 'server/conn.php'?>
 		<!-- MAIN HEADER END -->
 		<?php
-	  $sql = "SELECT * from alumnos ORDER by id DESC";
-	  $query = $connection->prepare($sql);
-	  $query->execute();
-	  $result= $query->fetchAll();
-	  ?>
+				if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
+				$busca = $_POST['busca'];
+				$sql = "SELECT * from alumnos WHERE nombre LIKE '%$busca%' OR apellido LIKE '%$busca%' OR cedula LIKE '%$busca%' ORDER by id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				$result= $query->fetchAll();
+			} else {
+				$busca = "";
+				$sql = "SELECT * from alumnos ORDER by id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				$result= $query->fetchAll();
+			}
+		?>
 		<!-- ASIDE BAR -->
 		<?php include 'includes/aside.php'; ?>
 		<!-- ASIDE BAR END -->
@@ -163,12 +180,14 @@ if (isset($_GET['actualizar'])) {
 					</div>
 					<!-- Caja de Busqueda -->
 					<div class="col-md-3 pull-right">
-						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Buscar por..." name="busca">
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-							</span>
-						</div>
+						<form method="POST">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Buscar " name="busca" value="<?php echo $busca;?>">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="submit" name="search"><i class="fa fa-search"></i></button>
+								</span>
+							</div>
+						</form>
 					</div>
 				</div>
 <div class="modal fade" id="modal-mensaje" tabindex="-1" role="dialog">
@@ -200,36 +219,47 @@ if (isset($_GET['actualizar'])) {
 								<th>Razón Social</th>
 								<th>RUC</th>
 								<th>Teléfono</th>
-								<th>Fecha Nascimiento</th>
 								<th>Estado</th>
-								<th>Acciones</th>
 							</tr>
+							<?php
+								$activo=0;
+								$inactivo=0;
+								$interesado=0; ?>
 							<?php foreach ($result as $row) { ?>
-                  <tr>
+                  <tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-apellido="<?php echo $row['apellido']; ?>"
+										data-cedula="<?php echo $row['cedula']; ?>" data-telefono_alumno="<?php echo $row['telefono_alumno']; ?>" data-email="<?php echo $row['email']; ?>"
+										data-ciudad="<?php echo $row['ciudad']; ?>" data-direcion="<?php echo $row['direccion']; ?>" data-nascimiento="<?php echo $row['fecha_nac']; ?>"
+										data-razonsocial="<?php echo $row['razon_social']; ?>" data-ruc="<?php echo $row['ruc']; ?>" data-nombreref="<?php echo $row['nombre_ref']; ?>"
+										data-telefonoref="<?php echo $row['telefono_ref']; ?>" data-nombremama="<?php echo $row['mama']; ?>" data-telefono_mama="<?php echo $row['telefono_mama']; ?>"
+										data-nombrepapa="<?php echo $row['papa']; ?>" data-telefono_papa="<?php echo $row['telefono_papa']; ?>" data-estado="<?php echo $row['estado'];?>" data-password="<?php echo $row['password'];?>" data-foto="<?php echo $row['foto'];?>">
                     <td><?php echo $row['id']; ?></td>
                     <td><?php echo $row['nombre']; ?></td>
                     <td><?php echo $row['apellido']; ?></td>
 										<td><?php echo $row['razon_social']; ?></td>
                     <td><?php echo $row['cedula']; ?></td>
-										<td><?php echo $row['telefono']; ?></td>
-                    <td><?php echo $row['fecha_nac']; ?></td>
+										<td><?php echo $row['telefono_alumno']; ?></td>
                     <td><?php echo $row['estado']; ?></td>
-										<td>
-												<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-apellido="<?php echo $row['apellido']; ?>"
-													data-cedula="<?php echo $row['cedula']; ?>" data-telefono="<?php echo $row['telefono']; ?>" data-email="<?php echo $row['email']; ?>"
-													data-ciudad="<?php echo $row['ciudad']; ?>" data-direcion="<?php echo $row['direccion']; ?>" data-nascimiento="<?php echo $row['fecha_nac']; ?>"
-													data-razonsocial="<?php echo $row['razon_social']; ?>" data-ruc="<?php echo $row['ruc']; ?>" data-nombreref="<?php echo $row['nombre_ref']; ?>"
-													data-telefonoref="<?php echo $row['telefono_ref']; ?>" data-estado="<?php echo $row['estado'];?>" data-password="<?php echo $row['password'];?>" data-foto="<?php echo $row['foto'];?>"><i class="fa fa-eye"></i></button>
-										</td>
-                  </tr>
-                 <?php } ?>
+
+									</tr>
+									<?php
+									if($row['estado']=="activo"){
+										$activo++;
+									}
+									elseif($row['estado']=="activo"){
+										$inactivo++;
+									}
+									elseif($row['estado']=="interesado"){
+										$interesado++;
+									}
+                  } ?>
 						</table>
 					</div>
 				</div>
 				<!-- /.box-body -->
 				<div class="box-footer text-center">
-					<div class="col-md-6"><small>2 Alumnos Activos</small></div>
-					<div class="col-md-6"><small>1 Alumnos Inactivos</small></div>
+					<div class="col-md-4"><small><?php echo $activo ?> Alumnos Activo/s</small></div>
+					<div class="col-md-4"><small><?php echo $inactivo ?> Alumnos Inactivo/s</small></div>
+					<div class="col-md-4"><small><?php echo $interesado ?> Interesado/s</small></div>
 				</div>
 				<!-- /.box-footer-->
 			</div>
@@ -265,13 +295,13 @@ if (isset($_GET['actualizar'])) {
 				<form action="" method="POST" name="form1">
 					<input type="hidden" class="form-control" id="codigo" name="codigo">
 					<div class="modal-body">
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label for="nombre">Nombre</label>
-								<input type="text" class="form-control" id="nombre" name="nombre" maxlength="50" value="<?php echo $row['nombre']; ?>" required>
+								<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Alumno" maxlength="50" required>
 							</div>
 						</div>
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label for="apellido">Apellido</label>
 								<input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del Alumno" maxlength="50" required>
@@ -292,7 +322,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefono">Teléfono</label>
-								<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Numero de Teléfono" maxlength="10" required>
+								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="10" required>
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -340,13 +370,37 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="nombreref">Nombre Referencia</label>
-								<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="10">
+								<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="100">
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefonoref">Teléfono Referencia</label>
 								<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="10">
+							</div>
+						</div>
+						<div class="col-md-8">
+							<div class="form-group">
+								<label for="nombreref">Nombre Madre</label>
+								<input type="text" class="form-control" id="nombremama" name="nombremama" placeholder="Nombre de la madre" maxlength="100">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="telefonoref">Teléfono Madre</label>
+								<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="10">
+							</div>
+						</div>
+						<div class="col-md-8">
+							<div class="form-group">
+								<label for="nombreref">Nombre Padre</label>
+								<input type="text" class="form-control" id="nombrepapa" name="nombrepapa" placeholder="Nombre del padre" maxlength="100">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="telefonoref">Teléfono Padre</label>
+								<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="10">
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -387,13 +441,13 @@ if (isset($_GET['actualizar'])) {
 				<form action="" method="POST" name="form">
 					<input type="hidden" class="form-control" id="codigo" name="codigo">
 					<div class="modal-body">
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label for="nombre">Nombre</label>
 								<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Alumno" maxlength="50" required>
 							</div>
 						</div>
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label for="apellido">Apellido</label>
 								<input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del Alumno" maxlength="50" required>
@@ -401,7 +455,7 @@ if (isset($_GET['actualizar'])) {
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
-								<label for="cedula">Fecha Nascimiento</label>
+								<label for="cedula">Fecha Nacimiento</label>
 								<input type="text" class="form-control pull-right datepicker" id="nascimiento" name="nascimiento">
 							</div>
 						</div>
@@ -473,6 +527,30 @@ if (isset($_GET['actualizar'])) {
 						</div>
 						<div class="col-md-8">
 							<div class="form-group">
+								<label for="nombreref">Nombre Madre</label>
+								<input type="text" class="form-control" id="nombremama" name="nombremama" placeholder="Nombre de la madre" maxlength="100">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="telefonoref">Teléfono Madre</label>
+								<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="10">
+							</div>
+						</div>
+						<div class="col-md-8">
+							<div class="form-group">
+								<label for="nombreref">Nombre Padre</label>
+								<input type="text" class="form-control" id="nombrepapa" name="nombrepapa" placeholder="Nombre del padre" maxlength="100">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="telefonoref">Teléfono Padre</label>
+								<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="10">
+							</div>
+						</div>
+						<div class="col-md-8">
+							<div class="form-group">
 								<label for="foto">Foto</label>
 								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos')">
 							</div>
@@ -490,6 +568,7 @@ if (isset($_GET['actualizar'])) {
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger pull-left" name="accion" value="excluir"  id="btn-confirmar">Excluir</button>
+						<button type="submit" class="btn btn-warning pull-left" name="pdf" value="pdf" >Generar pdf</button>
 						<button type="submit" class="btn" name="accion" value="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 						<button type="submit" class="btn btn-primary" name="accion" value="actualizar">Actualizar</button>
@@ -563,9 +642,8 @@ if (isset($_GET['actualizar'])) {
 			modal.find('#nascimiento').val(nascimiento)
 			modal.find('#password').val(password)
 			modal.find('#foto').val(foto)
-			modal.find('#accion').val('actualizar')
+			//modal.find('#accion').val('actualizar')
 		})
-
 
 
 		// modal para confirmar si quiere remover el registro
