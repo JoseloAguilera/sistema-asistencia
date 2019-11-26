@@ -32,6 +32,7 @@
 			$submatricula = "";
 			$subcurso = "";
 			$subgrupo = "";
+			$config = "";
 
 			if (strpos($_SERVER['REQUEST_URI'], 'alumno.php') !== false){
 				$catastro = "active";
@@ -50,6 +51,9 @@
 				$subgrupo = "text-aqua";
 			} else if (strpos($_SERVER['REQUEST_URI'], 'asistencia.php') !== false) {
 				$asistencia = "active";
+			} 
+			else if (strpos($_SERVER['REQUEST_URI'], 'configuraciones.php') !== false) {
+				$config = "active";
 			} else {
 				$inicio = "active";
 			}
@@ -124,6 +128,11 @@
 					<li><a href="curso.php"><i class="fa fa-circle-o <?php echo $subcurso;?>"></i> Cursos</a></li>
 					<li><a href="grupo.php"><i class="fa fa-circle-o <?php echo $subgrupo;?>"></i> Grupos</a></li>
 				</ul>
+			</li>
+			<li class="<?php echo $config;?>">
+				<a href="configuraciones.php">
+					<i class="fa fa-gear"></i> <span>Configuraciones</span>
+				</a>
 			</li>
 		</ul>
 	</section>

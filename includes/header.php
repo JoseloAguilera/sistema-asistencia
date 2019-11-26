@@ -27,14 +27,14 @@
 
 				<p>
 				<?php echo $_SESSION['nome_usuario'];?>
-				<small>Member since Nov. 2012</small>
+				<small><?php echo $_SESSION['nome_compl'];?></small>
 				</p>
 				</li>
 				</li>
 				<!-- Menu Footer-->
 				<li class="user-footer">
 				<div class="pull-left">
-				<a href="#" class="btn btn-default btn-flat">Perfil</a>
+				<a href="configuraciones.php" class="btn btn-default btn-flat">Configuraciones</a>
 				</div>
 				<div class="pull-right">
 				<a href="salir.php" class="btn btn-default btn-flat">Salir</a>

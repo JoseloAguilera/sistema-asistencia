@@ -7,11 +7,16 @@
 			$usuario = $_POST['usuario'];
 			$contrasena = md5($_POST['contrasena']); //md5 para encriptar
 
-			//Select usuario y contraseña
+			//Select usuario y contraseña ADM
+			$sql = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			$user= $query->fetch();
 
-			if ($_POST['usuario'] == 'jose') { //Si encontró
+			if ($_POST['usuario'] == $user['usuario'] && $contrasena == $user['password']) { //Si encontró
 				$_SESSION['logueado'] = 'logueado';
-				$_SESSION['nome_usuario'] = "jose";
+				$_SESSION['nome_usuario'] = $user['usuario'];
+				$_SESSION['nome_compl'] = $user['nombre'];
 				header('Location: index.php');
 			} else if ($_POST['usuario'] == 'alumno') { //Si encontró
 				$_SESSION['logueado'] = 'logueado';
