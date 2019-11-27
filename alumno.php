@@ -37,7 +37,7 @@ if (isset($_GET['actualizar'])) {
 	              'nombre' => $_POST['nombre'],
 	              'apellido' => $_POST['apellido'],
 	              'cedula' => $_POST['cedula'],
-	              'telefono_alumno' => $_POST['telefono'],
+	              'telefono_alumno' => $_POST['telefono_alumno'],
 	              'fecha_nac' => $_POST['nascimiento'],
 	              'email' => $_POST['email'],
 	              'direccion' => $_POST['direcion'],
@@ -67,14 +67,14 @@ if (isset($_GET['actualizar'])) {
 	          break;
 	      case('actualizar'):
 	                    if($_POST['codigo'] > 0){
-	                         $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono=:telefono, fecha_nac=:fecha_nac, email=:email,
+	                         $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
 	                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
 													 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, password=:password, foto=:foto, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
 	                         $data = array(
 	                             'nombre' => $_POST['nombre'],
 	                             'apellido' => $_POST['apellido'],
 	                             'cedula' => $_POST['cedula'],
-	                             'telefono' => $_POST['telefono'],
+	                             'telefono_alumno' => $_POST['telefono_alumno'],
 	                             'fecha_nac' => $_POST['nascimiento'],
 	                             'email' => $_POST['email'],
 	                             'direccion' => $_POST['direcion'],
@@ -468,7 +468,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefono">Teléfono</label>
-								<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Numero de Teléfono" maxlength="10" required>
+								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="10" required>
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -610,7 +610,7 @@ if (isset($_GET['actualizar'])) {
 			var apellido = button.data('apellido')
 			var estado = button.data('estado')
 			var cedula = button.data('cedula')
-			var telefono = button.data('telefono')
+			var telefono_alumno = button.data('telefono_alumno')
 			var email = button.data('email')
 			var ciudad = button.data('ciudad')
 			var direcion = button.data('direcion')
@@ -621,6 +621,10 @@ if (isset($_GET['actualizar'])) {
 			var nascimiento = button.data('nascimiento')
 			var password = button.data('password')
 			var foto = button.data('foto')
+			var nombremama = button.data('nombremama')
+			var telefono_mama = button.data('telefono_mama')
+			var nombrepapa = button.data('nombrepapa')
+			var telefono_papa = button.data('telefono_papa')
 
 
 			// Actualiza los datos del modal
@@ -631,7 +635,7 @@ if (isset($_GET['actualizar'])) {
 			modal.find('#apellido').val(apellido)
 			modal.find('#estado').val(estado)
 			modal.find('#cedula').val(cedula)
-			modal.find('#telefono').val(telefono)
+			modal.find('#telefono_alumno').val(telefono_alumno)
 			modal.find('#email').val(email)
 			modal.find('#ciudad').val(ciudad)
 			modal.find('#direcion').val(direcion)
@@ -642,6 +646,10 @@ if (isset($_GET['actualizar'])) {
 			modal.find('#nascimiento').val(nascimiento)
 			modal.find('#password').val(password)
 			modal.find('#foto').val(foto)
+			modal.find('#nombremama').val(nombremama)
+			modal.find('#telefono_mama').val(telefono_mama)
+			modal.find('#nombrepapa').val(nombrepapa)
+			modal.find('#telefono_papa').val(telefono_papa)
 			//modal.find('#accion').val('actualizar')
 		})
 
