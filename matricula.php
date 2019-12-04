@@ -354,7 +354,7 @@ if (isset($_POST['codigo'])) {
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger pull-left" name="excluir" id="btn-confirmar">Excluir</button>
 						<button type="submit" class="btn" name="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
-						<button type= "submit" class="btn btn-default pull-left">Generar Pdf <i class="fa fa-file-pdf-o"></i></button>
+						<button type= "submit" class="btn btn-warning pull-left">Generar Pdf <i class="fa fa-file-pdf-o"></i></button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 						<button type="submit" class="btn btn-primary" name="guardar">Guardar</button>
 					</div>

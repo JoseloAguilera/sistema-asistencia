@@ -568,7 +568,6 @@ if (isset($_GET['actualizar'])) {
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger pull-left" name="accion" value="excluir"  id="btn-confirmar">Excluir</button>
-						<button type="submit" class="btn btn-warning pull-left" name="pdf" value="pdf" >Generar pdf</button>
 						<button type="submit" class="btn" name="accion" value="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 						<button type="submit" class="btn btn-primary" name="accion" value="actualizar">Actualizar</button>
