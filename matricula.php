@@ -1,10 +1,17 @@
-<?php 
+<?php
 	require 'server/conn.php';
 	session_start();
 	// var_dump($_SESSION['usuario']);
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
 	}
+
+if (isset($_POST['codigo'])) {
+	if ($_POST['codigo']>0) {
+	//	echo "<script>window.location('pdf.php?id='".$_POST['codigo'].")</script>";
+		header('Location: pdf.php?id='.$_POST['codigo']);
+	}
+}
 
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (isset($_POST['nuevo'])){
@@ -39,7 +46,7 @@
 			WHERE id = $id";
 			$query = $connection->prepare($sql);
 			$query->execute();
-			
+
 			//$result= $query->fetchAll();
 		} else if (isset($_POST['excluir'])){
 			// var_dump($_POST);
@@ -51,6 +58,7 @@
 			//$result= $query->fetchAll();
 		}
 	}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -132,13 +140,16 @@
 									<th>Valor de Matricula</th>
 									<th>Valor de Cuota</th>
 									<th>Estado</th>
+									<th>Acción</th>
+
 								</tr>
-								<?php foreach ($result as $row) { 
+								<?php foreach ($result as $row) {
 									$fechainicio = substr($row['fecha_inicio'], 8,2)."/".substr($row['fecha_inicio'], 5,2)."/".substr($row['fecha_inicio'], 0,4);;
 									$valmatricula = number_format($row['valor_matricula'], 0, ",", ".");
 									$valcuota = number_format($row['valor_cuota'], 0, ",", ".");
 								?>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-alumno="<?php echo $row['id_alumnos'];?>"  data-grupo="<?php echo $row['grupo_id'];?>" data-fechainicio="<?php echo $fechainicio;?>" data-valmatricula="<?php echo $valmatricula;?>" data-valcuota="<?php echo $valcuota;?>" data-estado="activo">
+								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-alumno="<?php echo $row['id_alumnos'];?>"  data-grupo="<?php echo $row['grupo_id'];?>" data-fechainicio="<?php echo $fechainicio;?>"
+									data-valmatricula="<?php echo $valmatricula;?>" data-valcuota="<?php echo $valcuota;?>" data-estado="activo">
 									<td><?php echo $row['id'];?></td>
 									<td><?php echo $row['curso'];?></td>
 									<td><?php echo $row['grupo'];?></td>
@@ -201,7 +212,7 @@
 										$query->execute();
 										$result= $query->fetchAll();
 
-										foreach ($result as $row) { 
+										foreach ($result as $row) {
 									?>
 										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre']." ".$row['apellido'];?></option>
 									<?php }?>
@@ -218,17 +229,17 @@
 										$query->execute();
 										$result= $query->fetchAll();
 
-										foreach ($result as $row) { 
+										foreach ($result as $row) {
 									?>
 										<optgroup label="<?php echo 'Curso de '.$row['nombre'];?>">
-											<?php 
+											<?php
 												$codcurso = $row['id'];
 												$sql = "SELECT * from grupos WHERE cursos_id = $codcurso ORDER by descripcion";
 												$query = $connection->prepare($sql);
 												$query->execute();
 												$result2= $query->fetchAll();
 
-												foreach ($result2 as $grupo) { 
+												foreach ($result2 as $grupo) {
 											?>
 											<option value="<?php echo $grupo['id'];?>"><?php echo $grupo['descripcion'];?></option>
 											<?php }?>
@@ -289,7 +300,7 @@
 										$query->execute();
 										$result= $query->fetchAll();
 
-										foreach ($result as $row) { 
+										foreach ($result as $row) {
 									?>
 										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre']." ".$row['apellido'];?></option>
 									<?php }?>
@@ -306,17 +317,17 @@
 										$query->execute();
 										$result= $query->fetchAll();
 
-										foreach ($result as $row) { 
+										foreach ($result as $row) {
 									?>
 										<optgroup label="<?php echo 'Curso de '.$row['nombre'];?>">
-											<?php 
+											<?php
 												$codcurso = $row['id'];
 												$sql = "SELECT * from grupos WHERE cursos_id = $codcurso ORDER by descripcion";
 												$query = $connection->prepare($sql);
 												$query->execute();
 												$result2= $query->fetchAll();
 
-												foreach ($result2 as $grupo) { 
+												foreach ($result2 as $grupo) {
 											?>
 											<option value="<?php echo $grupo['id'];?>"><?php echo $grupo['descripcion'];?></option>
 											<?php }?>
@@ -335,6 +346,7 @@
 								<div class="form-group">
 									<label for="valcuota">Valor Cuota</label>
 									<input type="text" class="form-control" id="valcuota" name="valcuota" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
+									<input type="hidden" name="pdf" id="pdf">
 								</div>
 							</div>
 						</div> <!-- row -->
@@ -342,6 +354,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger pull-left" name="excluir" id="btn-confirmar">Excluir</button>
 						<button type="submit" class="btn" name="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
+						<button type= "submit" class="btn btn-default pull-left">Generar Pdf <i class="fa fa-file-pdf-o"></i></button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 						<button type="submit" class="btn btn-primary" name="guardar">Guardar</button>
 					</div>
@@ -367,7 +380,7 @@
 		</div>
 	</div>
 	<!-- Confirmación Modal (para excluisiones) -->
-	
+
 	<!-- SCRIPTS (js) -->
 	<?php include "includes/scripts.php"; ?>
 	<!-- ./SCRIPTS (js) -->
@@ -375,16 +388,16 @@
 	<script type="text/javascript">
 		$('#AltModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // objeto que disparó el modal
-			var codigo = button.data('codigo') 
+			var codigo = button.data('codigo')
 			var fechainicio = button.data('fechainicio')
 			var alumno = button.data('alumno')
 			var grupo = button.data('grupo')
 			var valmatricula = button.data('valmatricula')
 			var valcuota = button.data('valcuota')
 			var estado = button.data('estado')
-			
+
 			// console.log(grupo + " -- ");
-			// Actualiza los datos del modal 
+			// Actualiza los datos del modal
 			var modal = $(this)
 			modal.find('.modal-title').text('Matricula ' + codigo)
 			modal.find('#codigo').val(codigo)
@@ -401,7 +414,7 @@
 
 		// formato para moneda
 		String.prototype.reverse = function(){
-			return this.split('').reverse().join(''); 
+			return this.split('').reverse().join('');
 		};
 		function formatoMoneda(campo, evento){
 			var tecla = (!evento) ? window.event.keyCode : evento.which;

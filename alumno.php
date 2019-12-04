@@ -245,7 +245,7 @@ if (isset($_GET['actualizar'])) {
 									if($row['estado']=="activo"){
 										$activo++;
 									}
-									elseif($row['estado']=="activo"){
+									elseif($row['estado']=="inactivo"){
 										$inactivo++;
 									}
 									elseif($row['estado']=="interesado"){
