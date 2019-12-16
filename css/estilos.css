@@ -84,4 +84,14 @@
 	.login-logo a {
 		font-size:40pt;
 	}
+
+
+	tr.fila-ausencia {
+		background: #ffbaa5d6;
+	}
+
+	.btn-primary {
+		background-color: #FFC107 !important;
+		border-color: #FF9800;
+	}
 }

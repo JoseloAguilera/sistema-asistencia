@@ -6,12 +6,7 @@
 		header('Location: login.php');
 	}
 
-if (isset($_POST['codigo'])) {
-	if ($_POST['codigo']>0) {
-	//	echo "<script>window.location('pdf.php?id='".$_POST['codigo'].")</script>";
-		header('Location: pdf.php?id='.$_POST['codigo']);
-	}
-}
+
 
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (isset($_POST['nuevo'])){
@@ -49,13 +44,27 @@ if (isset($_POST['codigo'])) {
 
 			//$result= $query->fetchAll();
 		} else if (isset($_POST['excluir'])){
-			// var_dump($_POST);
 			$id =  $_POST['codigo'];
-			// Delete Grupos
-			$sql = "DELETE FROM matricula WHERE id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			//$result= $query->fetchAll();
+			try {
+				// Delete Grupos
+				$sql = "DELETE FROM matricula WHERE id = $id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				//$result= $query->fetchAll();
+				$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+			} catch (\Exception $e) {
+				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+
+			}
+
+
+
+		}
+		else if (isset($_POST['pdf'])) {
+			if ($_POST['codigo']>0) {
+			//	echo "<script>window.location('pdf.php?id='".$_POST['codigo'].")</script>";
+				header('Location: pdf.php?id='.$_POST['codigo']);
+			}
 		}
 	}
 
@@ -119,18 +128,28 @@ if (isset($_POST['codigo'])) {
 						</div>
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
-							<div class="input-group">
+							<!--<div class="input-group">
 								<input type="text" class="form-control" placeholder="Buscar por..." name="busca">
 								<span class="input-group-btn">
 									<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
 								</span>
-							</div>
+							</div>-->
 						</div>
 					</div>
 					<!-- Corpo de Caja -->
 					<div class="box-body">
+						<div class="col-md-12">
+							<?php
+							if (isset( $mensaje)) {
+								echo $mensaje; //alert mensaje
+							}
+
+							?>
+
+						</div>
 						<div class="box-body table-responsive">
-							<table class="table table-hover">
+							<table class="table table-striped table-bordered display nowra" id="tabladatos">
+							<thead>
 								<tr>
 									<th>#</th>
 									<th>Curso</th>
@@ -140,9 +159,10 @@ if (isset($_POST['codigo'])) {
 									<th>Valor de Matricula</th>
 									<th>Valor de Cuota</th>
 									<th>Estado</th>
-									<th>Acción</th>
 
 								</tr>
+								</thead>
+								<tbody>
 								<?php foreach ($result as $row) {
 									$fechainicio = substr($row['fecha_inicio'], 8,2)."/".substr($row['fecha_inicio'], 5,2)."/".substr($row['fecha_inicio'], 0,4);;
 									$valmatricula = number_format($row['valor_matricula'], 0, ",", ".");
@@ -160,6 +180,7 @@ if (isset($_POST['codigo'])) {
 									<td>Activo</td>
 								</tr>
 								<?php }?>
+								</tbody>
 							</table>
 						</div>
 					</div>
@@ -354,7 +375,7 @@ if (isset($_POST['codigo'])) {
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger pull-left" name="excluir" id="btn-confirmar">Excluir</button>
 						<button type="submit" class="btn" name="excluir" id="btn-excluir" style="display: none;">Submit Excluir</button>
-						<button type= "submit" class="btn btn-warning pull-left">Generar Pdf <i class="fa fa-file-pdf-o"></i></button>
+						<button type= "submit" class="btn btn-warning pull-left" name="pdf">Generar Pdf <i class="fa fa-file-pdf-o"></i></button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 						<button type="submit" class="btn btn-primary" name="guardar">Guardar</button>
 					</div>

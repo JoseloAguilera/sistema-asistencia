@@ -23,6 +23,21 @@ if (isset($_GET['actualizar'])) {
 	if(isset($_POST['accion'])){
 	switch ($_POST['accion']){
 	       case ('guardar' ):
+				 if($_POST['estado']!="activo")
+				 {
+					 $activo=0;
+				 }
+				 else
+				 {
+					 $activo=1;
+				 }
+				 if ($_POST['contrasena']!='') {
+				 	$pass= $_POST['contrasena'];
+				 }
+				 else {
+				 	$pass= $_POST['cedula'];
+				 }
+
 				 //VALIDAR CAMPOS
 	      /*== 'guardar'
 	        && $_POST['nombre'] != ''
@@ -31,8 +46,8 @@ if (isset($_GET['actualizar'])) {
 	        && $_POST['telefono'] != ''*/
 	      //INICIAMOS LA TRANSACCION
 	          $sql = 'INSERT INTO alumnos(nombre, apellido, cedula, telefono_alumno, fecha_nac, email, ruc, razon_social, ciudad, direccion,
-	            nombre_ref, telefono_ref, mama, telefono_mama, papa, telefono_papa, estado, password, foto,  fecha_add ) VALUES (:nombre, :apellido, :cedula, :telefono_alumno, :fecha_nac, :email, :ruc,
-	            :razonsocial, :ciudad, :direccion, :nombreref, :telefonoref, :mama, :telefono_mama, :papa, :telefono_papa, :estado, :password, :foto,  NOW() )';
+	            nombre_ref, telefono_ref, mama, telefono_mama, papa, telefono_papa, estado, password, foto, activo, fecha_add ) VALUES (:nombre, :apellido, :cedula, :telefono_alumno, :fecha_nac, :email, :ruc,
+	            :razonsocial, :ciudad, :direccion, :nombreref, :telefonoref, :mama, :telefono_mama, :papa, :telefono_papa, :estado, :password, :foto, :activo,  NOW() )';
 	          $data = array(
 	              'nombre' => $_POST['nombre'],
 	              'apellido' => $_POST['apellido'],
@@ -50,9 +65,10 @@ if (isset($_GET['actualizar'])) {
 								'telefono_mama' => $_POST['telefono_mama'],
 								'papa' => $_POST['nombrepapa'],
 								'telefono_papa' => $_POST['telefono_papa'],
-	              'password' => $_POST['contrasena'],
+	              'password' => md5($pass),
 	              'estado' => $_POST['estado'],
-	              'foto' => $_POST['foto']
+	              'foto' => $_POST['foto'],
+								'activo' => $activo
 	          );
 	         $query = $connection->prepare($sql);
 	          try {
@@ -67,33 +83,73 @@ if (isset($_GET['actualizar'])) {
 	          break;
 	      case('actualizar'):
 	                    if($_POST['codigo'] > 0){
-	                         $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
-	                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
-													 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, password=:password, foto=:foto, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
-	                         $data = array(
-	                             'nombre' => $_POST['nombre'],
-	                             'apellido' => $_POST['apellido'],
-	                             'cedula' => $_POST['cedula'],
-	                             'telefono_alumno' => $_POST['telefono_alumno'],
-	                             'fecha_nac' => $_POST['nascimiento'],
-	                             'email' => $_POST['email'],
-	                             'direccion' => $_POST['direcion'],
-	                             'ciudad' => $_POST['ciudad'],
-	                             'ruc' => $_POST['ruc'],
-	                             'razonsocial' => $_POST['razonsocial'],
-	                             'nombreref' => $_POST['nombreref'],
-	                             'telefonoref' => $_POST['telefonoref'],
-								 						 	 'mama' => $_POST['nombremama'],
-								 							 'telefono_mama' => $_POST['telefono_mama'],
-								 						 	 'papa' => $_POST['nombrepapa'],
-								 						 	 'telefono_papa' => $_POST['telefono_papa'],
-	                             'password' => $_POST['contrasena'],
-	                             'estado' => $_POST['estado'],
-	                             'foto' => $_POST['foto']
-	                         );
-	                         $query2 = $connection->prepare($sql);
+												if($_POST['estado']!="activo")
+												{
+													$activo=0;
+												}
+												else
+												{
+													$activo=1;
+												}
+												if($_POST['contrasena']!="")
+							 				 {
+												     $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
+		                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
+														 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, password=:password, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
+		                         $data = array(
+		                             'nombre' => $_POST['nombre'],
+		                             'apellido' => $_POST['apellido'],
+		                             'cedula' => $_POST['cedula'],
+		                             'telefono_alumno' => $_POST['telefono_alumno'],
+		                             'fecha_nac' => $_POST['nascimiento'],
+		                             'email' => $_POST['email'],
+		                             'direccion' => $_POST['direcion'],
+		                             'ciudad' => $_POST['ciudad'],
+		                             'ruc' => $_POST['ruc'],
+		                             'razonsocial' => $_POST['razonsocial'],
+		                             'nombreref' => $_POST['nombreref'],
+		                             'telefonoref' => $_POST['telefonoref'],
+									 						 	 'mama' => $_POST['nombremama'],
+									 							 'telefono_mama' => $_POST['telefono_mama'],
+									 						 	 'papa' => $_POST['nombrepapa'],
+									 						 	 'telefono_papa' => $_POST['telefono_papa'],
+		                             'password' => md5($_POST['contrasena']),
+		                             'estado' => $_POST['estado'],
+		                             'foto' => $_POST['foto'],
+																 'activo'=> $activo
+		                         );
+							 				 }
+							 				 else
+											 {
+
+		                         $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
+		                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
+														 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
+		                         $data = array(
+		                             'nombre' => $_POST['nombre'],
+		                             'apellido' => $_POST['apellido'],
+		                             'cedula' => $_POST['cedula'],
+		                             'telefono_alumno' => $_POST['telefono_alumno'],
+		                             'fecha_nac' => $_POST['nascimiento'],
+		                             'email' => $_POST['email'],
+		                             'direccion' => $_POST['direcion'],
+		                             'ciudad' => $_POST['ciudad'],
+		                             'ruc' => $_POST['ruc'],
+		                             'razonsocial' => $_POST['razonsocial'],
+		                             'nombreref' => $_POST['nombreref'],
+		                             'telefonoref' => $_POST['telefonoref'],
+									 						 	 'mama' => $_POST['nombremama'],
+									 							 'telefono_mama' => $_POST['telefono_mama'],
+									 						 	 'papa' => $_POST['nombrepapa'],
+									 						 	 'telefono_papa' => $_POST['telefono_papa'],
+		                             'estado' => $_POST['estado'],
+		                             'foto' => $_POST['foto'],
+																 'activo'=> $activo
+		                         );
+							 				 }
+	                         $query = $connection->prepare($sql);
 	                        try{
-	                          $query2->execute($data);
+	                          $query->execute($data);
 	                         //$mensaje = '<p class="alert alert-success">Registro actualizado correctamente :)</p>';
 	                         echo '<script> window.location="alumno.php?actualizar=true"; </script>';
 	                          }catch(Exception $e){
@@ -102,11 +158,15 @@ if (isset($_GET['actualizar'])) {
 	                       }
 	                      break;
 			case('excluir'):
-			$id =  $_POST['codigo'];
-			$sql = 'DELETE FROM alumnos WHERE id = '.$id;
-			$query = $connection->prepare($sql);
-			$query->execute();
-
+					$id =  $_POST['codigo'];
+					try {
+							$sql = 'DELETE FROM alumnos WHERE id = '.$id;
+							$query = $connection->prepare($sql);
+							$query->execute();
+							$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+			} catch (\Exception $e) {
+							$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+			}
 			break;
 	}
 	}
@@ -118,11 +178,11 @@ if (isset($_GET['actualizar'])) {
 	<?php include 'includes/head.php'; ?>
 
 	<script type="text/javascript">
-	function subir_imagen(input, carpeta)
+	function subir_imagen(input, carpeta, evento)
 				{
 					self.name = 'opener';
 					var name = document.getElementsByName("nombre")[0].value;
-					remote = open('subir_imagen.php?name='+name+'&input='+input+'&carpeta='+carpeta ,'remote', 'align=center,width=600,height=300,resizable=yes,status=yes');
+					remote = open('subir_imagen.php?name='+name+'&input='+input+'&carpeta='+carpeta+'&evento='+evento ,'remote', 'align=center,width=600,height=300,resizable=yes,status=yes');
 					remote.focus();
 				}
 
@@ -135,19 +195,19 @@ if (isset($_GET['actualizar'])) {
 		require 'server/conn.php'?>
 		<!-- MAIN HEADER END -->
 		<?php
-				if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
+				/*if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
 				$busca = $_POST['busca'];
 				$sql = "SELECT * from alumnos WHERE nombre LIKE '%$busca%' OR apellido LIKE '%$busca%' OR cedula LIKE '%$busca%' ORDER by id";
 				$query = $connection->prepare($sql);
 				$query->execute();
 				$result= $query->fetchAll();
 			} else {
-				$busca = "";
+				$busca = "";*/
 				$sql = "SELECT * from alumnos ORDER by id";
 				$query = $connection->prepare($sql);
 				$query->execute();
 				$result= $query->fetchAll();
-			}
+			//}
 		?>
 		<!-- ASIDE BAR -->
 		<?php include 'includes/aside.php'; ?>
@@ -180,14 +240,14 @@ if (isset($_GET['actualizar'])) {
 					</div>
 					<!-- Caja de Busqueda -->
 					<div class="col-md-3 pull-right">
-						<form method="POST">
+						<!--<form method="POST">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="Buscar " name="busca" value="<?php echo $busca;?>">
 								<span class="input-group-btn">
 									<button class="btn btn-default" type="submit" name="search"><i class="fa fa-search"></i></button>
 								</span>
 							</div>
-						</form>
+						</form>-->
 					</div>
 				</div>
 <div class="modal fade" id="modal-mensaje" tabindex="-1" role="dialog">
@@ -211,7 +271,8 @@ if (isset($_GET['actualizar'])) {
 				<!-- Corpo de Caja -->
 				<div class="box-body">
 					<div class="box-body table-responsive">
-						<table class="table table-hover">
+						<table class="table table-striped table-bordered display nowra" id="tabladatos">
+						<thead>
 							<tr>
 								<th>#</th>
 								<th>Nombre</th>
@@ -221,10 +282,12 @@ if (isset($_GET['actualizar'])) {
 								<th>Teléfono</th>
 								<th>Estado</th>
 							</tr>
+						</thead>
 							<?php
 								$activo=0;
 								$inactivo=0;
 								$interesado=0; ?>
+						<tbody>
 							<?php foreach ($result as $row) { ?>
                   <tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-apellido="<?php echo $row['apellido']; ?>"
 										data-cedula="<?php echo $row['cedula']; ?>" data-telefono_alumno="<?php echo $row['telefono_alumno']; ?>" data-email="<?php echo $row['email']; ?>"
@@ -241,6 +304,7 @@ if (isset($_GET['actualizar'])) {
                     <td><?php echo $row['estado']; ?></td>
 
 									</tr>
+									</tbody>
 									<?php
 									if($row['estado']=="activo"){
 										$activo++;
@@ -322,7 +386,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefono">Teléfono</label>
-								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="10" required>
+								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="15">
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -334,7 +398,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="contrasena">Contraseña</label>
-								<input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
+								<input type="text" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -364,7 +428,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="ruc">RUC</label>
-								<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="10">
+								<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="15">
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -376,7 +440,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefonoref">Teléfono Referencia</label>
-								<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="10">
+								<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="15">
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -388,7 +452,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefonoref">Teléfono Madre</label>
-								<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="10">
+								<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="15">
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -400,13 +464,13 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefonoref">Teléfono Padre</label>
-								<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="10">
+								<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="15">
 							</div>
 						</div>
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="foto">Foto</label>
-								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos')">
+								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos', 'add')">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -468,13 +532,13 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefono">Teléfono</label>
-								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="10" required>
+								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="10">
 							</div>
 						</div>
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="email">E-mail</label>
-								<input type="email" class="form-control" id="email" name="email" placeholder="E-mail de contacto" maxlength="50" required>
+								<input type="email" class="form-control" id="email" name="email" placeholder="E-mail de contacto" maxlength="50">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -497,32 +561,32 @@ if (isset($_GET['actualizar'])) {
 						</div>
 						<div class="col-md-8">
 							<div class="form-group">
-								<label for="direcion">Direción</label>
-								<input type="text" class="form-control" id="direcion" name="direcion" placeholder="Direción de Cobranza" maxlength="50" required>
+								<label for="direcion">Dirección</label>
+								<input type="text" class="form-control" id="direcion" name="direcion" placeholder="Direción de Cobranza" maxlength="50">
 							</div>
 						</div>
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="razonsocial">Razon Social</label>
-								<input type="text" class="form-control" id="razonsocial" name="razonsocial" placeholder="Nombre para emisión de factura" maxlength="50" required>
+								<input type="text" class="form-control" id="razonsocial" name="razonsocial" placeholder="Nombre para emisión de factura" maxlength="50">
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="ruc">RUC</label>
-								<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="10" required>
+								<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="10">
 							</div>
 						</div>
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="nombreref">Nombre Referencia</label>
-								<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="10" required>
+								<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="10">
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="telefonoref">Teléfono Referencia</label>
-								<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="10" required>
+								<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="10">
 							</div>
 						</div>
 						<div class="col-md-8">
@@ -552,7 +616,7 @@ if (isset($_GET['actualizar'])) {
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="foto">Foto</label>
-								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos')">
+								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos','alt')">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -643,13 +707,12 @@ if (isset($_GET['actualizar'])) {
 			modal.find('#nombreref').val(nombreref)
 			modal.find('#telefonoref').val(telefonoref)
 			modal.find('#nascimiento').val(nascimiento)
-			modal.find('#password').val(password)
+			//modal.find('#contrasena').val(password)
 			modal.find('#foto').val(foto)
 			modal.find('#nombremama').val(nombremama)
 			modal.find('#telefono_mama').val(telefono_mama)
 			modal.find('#nombrepapa').val(nombrepapa)
 			modal.find('#telefono_papa').val(telefono_papa)
-			//modal.find('#accion').val('actualizar')
 		})
 
 

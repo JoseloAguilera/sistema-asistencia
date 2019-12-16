@@ -8,6 +8,7 @@
     $name = $_GET['name'];
     $input = $_GET['input'];
     $carpeta = $_GET['carpeta'];
+    $evento = $_GET['evento'];
     // obtener extencion de la imagen
     $extension = substr(strrchr($_FILES['userfile']['name'], "."), 1);
     // random 5 digitos
@@ -17,13 +18,25 @@
     // directorio
     $directorio = "img/". $carpeta ."/";
     // guarda el archivo en el directorio
-    move_uploaded_file($_FILES["userfile"]["tmp_name"], $directorio . $nuevo_nombre)
-    ?>
+    move_uploaded_file($_FILES["userfile"]["tmp_name"], $directorio . $nuevo_nombre);
+    //var_dump($input);
+    if ($evento=='add') {
+      ?>
+    <script>
+        opener.document.form1.<?php echo $input ?>.value="<?php echo $nuevo_nombre; ?>";
+        self.close();
+    </script>
+<?php
+  }
+  elseif ($evento=='alt') {
+?>
     <script>
         opener.document.form.<?php echo $input ?>.value="<?php echo $nuevo_nombre; ?>";
         self.close();
     </script>
+
 <?php
+  }
 
 } else { ?>
     <form  method="post" enctype="multipart/form-data" id="frmImagen">

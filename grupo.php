@@ -1,4 +1,4 @@
-<?php 
+<?php
 	require 'server/conn.php';
 	session_start();
 	// var_dump($_SESSION['usuario']);
@@ -19,7 +19,7 @@
 			$sql = "INSERT INTO grupos (descripcion, cursos_id) VALUES ('$descripcion', '$codcurso')";
 			$query = $connection->prepare($sql);
 			$query->execute();
-			$last_id = $connection->lastInsertId(); //id del grupo 
+			$last_id = $connection->lastInsertId(); //id del grupo
 			//var_dump($last_id);
 
 			foreach ($dia as $diasemana) {
@@ -54,26 +54,42 @@
 			}
 
 			// Update do grupo
-			$sql = "UPDATE grupos SET descripcion = '$descripcion', cursos_id = '$codcurso' 
+			$sql = "UPDATE grupos SET descripcion = '$descripcion', cursos_id = '$codcurso'
 			WHERE id = $id";
 			$query = $connection->prepare($sql);
 			$query->execute();
-			
+
 			//$result= $query->fetchAll();
 		} else if (isset($_POST['excluir'])){
 			// var_dump($_POST);
 			$id =  $_POST['codigo'];
+			try {
+				//Delete horarios
+				$sql = "DELETE FROM horarios WHERE grupos_id = $id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
 
-			//Delete horarios
-			$sql = "DELETE FROM horarios WHERE grupos_id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
+			} catch (\Exception $e) {
+				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 
-			//Delete Grupos
-			$sql = "DELETE FROM grupos WHERE id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			//$result= $query->fetchAll();
+			}
+
+
+			try {
+				//Delete Grupos
+				$sql = "DELETE FROM grupos WHERE id = $id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				//$result= $query->fetchAll();
+				$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+
+			} catch (\Exception $e) {
+				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+
+			}
+
+
 		}
 	}
 ?>
@@ -94,7 +110,7 @@
 		<!-- ASIDE BAR END -->
 
 		<?php
-			if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
+			/*if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
 				// var_dump($_POST['busca']);
 				$busca = $_POST['busca'];
 				$sql = "SELECT grupos.*, nombre FROM grupos INNER JOIN cursos ON grupos.cursos_id=cursos.id WHERE descripcion LIKE '%$busca%' OR nombre LIKE '%$busca%' ORDER by descripcion";
@@ -102,12 +118,12 @@
 				$query->execute();
 				$result= $query->fetchAll();
 			} else {
-				$busca = "";
+				$busca = "";*/
 				$sql = "SELECT grupos.*, nombre FROM grupos INNER JOIN cursos ON grupos.cursos_id=cursos.id ORDER by descripcion";
 				$query = $connection->prepare($sql);
 				$query->execute();
 				$result= $query->fetchAll();
-			}
+			//}
 		?>
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -134,20 +150,23 @@
 					</div>
 					<!-- Caja de Busqueda -->
 					<div class="col-md-3 pull-right">
-						<form method="POST">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Buscar por..." name="busca" value="<?php echo $busca;?>">
-								<span class="input-group-btn">
-									<button class="btn btn-default" type="submit" name="search"><i class="fa fa-search"></i></button>
-								</span>
-							</div>
-						</form>
+
 					</div>
 				</div>
 				<!-- Corpo de Caja -->
 				<div class="box-body">
+					<div class="col-md-12">
+						<?php
+						if (isset( $mensaje)) {
+							echo $mensaje; //alert mensaje
+						}
+
+						?>
+
+					</div>
 					<div class="box-body table-responsive">
-						<table class="table table-hover">
+						<table class="table table-striped table-bordered display nowra" id="tabladatos">
+						<thead>
 							<tr>
 								<th>#</th>
 								<th>Curso</th>
@@ -157,8 +176,10 @@
 								<th>Ctd Inscriptos</th>
 								<th>Estado</th>
 							</tr>
-							<?php 
-							foreach ($result as $row) { 
+						</thead>
+						<tbody>
+							<?php
+							foreach ($result as $row) {
 								$curso_id = $row['cursos_id'];
 								$grupo_id = $row['id'];
 								$sql = "SELECT * FROM horarios WHERE grupos_id = $grupo_id AND grupos_cursos_id = $curso_id";
@@ -181,7 +202,7 @@
 								<td><?php echo $row['nombre'];?></td>
 								<td><?php echo $row['descripcion'];?></td>
 								<td>
-									<?php foreach ($result2 as $horario) { ?>	
+									<?php foreach ($result2 as $horario) { ?>
 										<?php echo $horario['dia']."<br>";?>
 									<?php } ?>
 								</td>
@@ -197,6 +218,7 @@
 								<td>Activo<?php //echo $row['estado'];?></td>
 							</tr>
 						<?php } ?>
+						</tbody>
 						</table>
 					</div>
 				</div>
@@ -249,7 +271,7 @@
 										$query->execute();
 										$result= $query->fetchAll();
 
-										foreach ($result as $row) { 
+										foreach ($result as $row) {
 									?>
 										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre'];?></option>
 									<?php }?>
@@ -280,10 +302,10 @@
 									<select class="selectpicker" id="dia" name="dia[]" multiple>
 										<option value="Lunes">Lunes</option>
 										<option value="Martes">Martes</option>
-										<option value="Miércoles">Miércoles</option>
+										<option value="Miercoles">Miércoles</option>
 										<option value="Jueves">Jueves</option>
 										<option value="Viernes">Viernes</option>
-										<option value="Sábado">Sábado</option>
+										<option value="Sabado">Sábado</option>
 									</select>
 								</div>
 							</div>
@@ -346,7 +368,7 @@
 										$query->execute();
 										$result= $query->fetchAll();
 
-										foreach ($result as $row) { 
+										foreach ($result as $row) {
 									?>
 										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre'];?></option>
 									<?php }?>
@@ -377,10 +399,10 @@
 									<select class="selectpicker" id="dia" name="dia[]" multiple>
 										<option value="Lunes">Lunes</option>
 										<option value="Martes">Martes</option>
-										<option value="Miércoles">Miércoles</option>
+										<option value="Miercoles">Miércoles</option>
 										<option value="Jueves">Jueves</option>
 										<option value="Viernes">Viernes</option>
-										<option value="Sábado">Sábado</option>
+										<option value="Sabado">Sábado</option>
 									</select>
 								</div>
 							</div>
@@ -418,7 +440,7 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
-	<!-- ./AltModal -->	
+	<!-- ./AltModal -->
 
 	<!-- Confirmación Modal (para excluisiones) -->
 	<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="mi-modal">
@@ -449,7 +471,7 @@
 	})
 	$('#AltModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // objeto que disparó el modal
-			var codigo = button.data('codigo') 
+			var codigo = button.data('codigo')
 			var curso = button.data('curso')
 			var descripcion = button.data('descripcion')
 			var entrada = button.data('entrada')
@@ -459,8 +481,8 @@
 			var estado = button.data('estado')
 
 			console.log(dias);
-			
-			// Actualiza los datos del modal 
+
+			// Actualiza los datos del modal
 			var modal = $(this)
 			modal.find('.modal-title').text('Grupo ' + descripcion)
 			modal.find('#codigo').val(codigo)

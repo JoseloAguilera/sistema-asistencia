@@ -63,7 +63,7 @@
 		<!-- ASIDE BAR END -->
 
 		<?php
-			if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
+			/*if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
 				// var_dump($_POST['busca']);
 				$busca = $_POST['busca'];
 				$sql = "SELECT * from cursos WHERE nombre LIKE '%$busca%' OR desc_corta LIKE '%$busca%' OR duracion_meses LIKE '%$busca%' OR estado LIKE '%$busca%' OR valor_cuota LIKE '%$busca%' OR valor_matrícula LIKE '%$busca%' ORDER by nombre";
@@ -71,12 +71,12 @@
 				$query->execute();
 				$result= $query->fetchAll();
 			} else {
-				$busca = "";
+				$busca = "";*/
 				$sql = "SELECT * from cursos ORDER by nombre";
 				$query = $connection->prepare($sql);
 				$query->execute();
 				$result= $query->fetchAll();
-			}
+			//}
 		?>
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -105,20 +105,21 @@
 						</div>
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
-							<form method="POST">
+							<!--<form method="POST">
 								<div class="input-group">
 									<input type="text" class="form-control" placeholder="Buscar por..." name="busca" value="<?php echo $busca;?>">
 									<span class="input-group-btn">
 										<button class="btn btn-default" type="submit" name="search"><i class="fa fa-search"></i></button>
 									</span>
 								</div>
-							</form>
+							</form>-->
 						</div>
 					</div>
 					<!-- Corpo de Caja -->
 					<div class="box-body">
 						<div class="box-body table-responsive">
-							<table class="table table-hover">
+							<table class="table table-striped table-bordered display nowra" id="tabladatos">
+							<thead>
 								<tr>
 									<th>#</th>
 									<th>Nombre</th>
@@ -128,6 +129,8 @@
 									<th>Cuota</th>
 									<th>Estado</th>
 								</tr>
+							</thead>
+							<tbody>		
 								<?php foreach ($result as $row) { ?>
 								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-nombre="<?php echo $row['nombre'];?>" data-descripcion="<?php echo $row['desc_corta'];?>" data-detallada="<?php echo $row['desc_detallada'];?>" data-duracion="<?php echo $row['duracion_meses'];?>" data-matricula="<?php echo $row['valor_matrícula'];?>" data-cuota="<?php echo $row['valor_cuota'];?>" data-estado="<?php echo $row['estado'];?>">
 									<td><?php echo $row['id'];?></td>
@@ -147,6 +150,7 @@
 									</td>
 								</tr>
 								<?php }?>
+							</tbody>
 							</table>
 						</div>
 					</div>

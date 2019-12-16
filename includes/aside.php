@@ -24,7 +24,7 @@
 		</form> -->
 		<!-- /.search form -->
 		<!-- sidebar menu: : style can be found in sidebar.less -->
-		<?php 
+		<?php
 			$inicio = "";
 			$asistencia = "";
 			$catastro = "";
@@ -37,22 +37,21 @@
 			if (strpos($_SERVER['REQUEST_URI'], 'alumno.php') !== false){
 				$catastro = "active";
 				$subalumno = "text-aqua";
-			} 
+			}
 			else if (strpos($_SERVER['REQUEST_URI'], 'matricula.php') !== false) {
 				$catastro = "active";
 				$submatricula = "text-aqua";
-			} 
+			}
 			else if (strpos($_SERVER['REQUEST_URI'], 'curso.php') !== false) {
 				$catastro = "active";
 				$subcurso = "text-aqua";
-			}  
+			}
 			else if (strpos($_SERVER['REQUEST_URI'], 'grupo.php') !== false){
 				$catastro = "active";
 				$subgrupo = "text-aqua";
 			} else if (strpos($_SERVER['REQUEST_URI'], 'asistencia.php') !== false) {
 				$asistencia = "active";
-			} 
-			else if (strpos($_SERVER['REQUEST_URI'], 'configuraciones.php') !== false) {
+			} else if (strpos($_SERVER['REQUEST_URI'], 'configuraciones.php') !== false) {
 				$config = "active";
 			} else {
 				$inicio = "active";
@@ -66,7 +65,9 @@
 					<i class="fa fa-home"></i> <span>Inicio</span>
 				</a>
 			</li>
-			<!-- Multilevel -->
+
+
+			<!-- Multilevel >
 			<li class="<?php echo $asistencia;?> treeview">
 				<a href="#">
 					<i class="fa fa-group"></i> <span>Asistencias</span>
@@ -80,7 +81,7 @@
 					<li><a href="asistencia.php?id=3"><i class="fa fa-circle-o"></i> Danza del Vientre Sábado</a></li>
 					<li><a href="asistencia.php?id=4"><i class="fa fa-circle-o"></i> Danza Paraguaya Noche 1</a></li>
 				</ul>
-			</li>	
+			</li -->
 			<li class="<?php echo $asistencia;?> treeview">
 				<a href="#">
 					<i class="fa fa-group"></i> <span>Asistencias</span>
@@ -88,30 +89,71 @@
 						<i class="fa fa-angle-left pull-right"></i>
 					</span>
 				</a>
+				<?php
+					function getCursos(){
+						require 'server/conn.php';
+						$sql = "SELECT * from cursos Where activo = 1";
+						$query = $connection->prepare($sql);
+						$query->execute();
+						return $query->fetchAll();
+					}
+
+					function getGrupos($idcurso){
+						require 'server/conn.php';
+						$sql = "SELECT * from grupos Where activo = 1 AND cursos_id =$idcurso";
+						$query = $connection->prepare($sql);
+						$query->execute();
+						return $query->fetchAll();
+
+
+					}
+
+
+				?>
 				<ul class="treeview-menu">
+
+				<?php
+				$cursos = getCursos();
+				foreach ($cursos as $curso) { ?>
 					<li class="treeview">
-						<a href="#"><i class="fa fa-circle-o"></i> Ballet Clasico
+						<a href="#"><i class="fa fa-circle-o"></i> <?php echo $curso['nombre']?>
 							<span class="pull-right-container">
 							<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu">
-							<li><a href="#"><i class="fa fa-circle-o"></i> L/M/V</a></li>
-							<li><a href="#"><i class="fa fa-circle-o"></i> Martes y Jueves Tarde 4</a></li>
-							<!-- <li class="treeview">
-								<a href="#"><i class="fa fa-circle-o"></i> Level Two
-									<span class="pull-right-container">
-										<i class="fa fa-angle-left pull-right"></i>
-									</span>
-								</a>
-								<ul class="treeview-menu">
-									<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-									<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-								</ul>
-							</li> -->
-						</ul>
+                        <ul class="treeview-menu">
+						<?php
+						$iddelcurso =$curso['id'];
+						//echo $iddelcurso;
+						$grupos = getGrupos($iddelcurso);
+						foreach ($grupos as $grupo) { ?>
+
+
+									<li><a href="asistencia.php?id=<?php echo $grupo['id'];?>"><i class="fa fa-circle-o"></i><?php echo $grupo['descripcion'] ?></a></li>
+									<!-- <li class="treeview">
+										<a href="#"><i class="fa fa-circle-o"></i> Level Two
+											<span class="pull-right-container">
+												<i class="fa fa-angle-left pull-right"></i>
+											</span>
+										</a>
+										<ul class="treeview-menu">
+											<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+											<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+										</ul>
+									</li> -->
+
+						<?php
+							}
+						?>
+                     </ul>
+
+
+
+
 					</li>
-					<li><a href="#"><i class="fa fa-circle-o"></i> Danza del Vientre</a></li>
+
+
+			  <?php } ?>
 				</ul>
 			</li>
 			<!-- Multilevel -->
@@ -129,6 +171,7 @@
 					<li><a href="grupo.php"><i class="fa fa-circle-o <?php echo $subgrupo;?>"></i> Grupos</a></li>
 				</ul>
 			</li>
+
 			<li class="<?php echo $config;?>">
 				<a href="configuraciones.php">
 					<i class="fa fa-gear"></i> <span>Configuraciones</span>

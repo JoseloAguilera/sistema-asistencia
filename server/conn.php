@@ -10,6 +10,7 @@
 		$user = 'root'; //usuario
 		$password = ''; //senha
 		$host = 'localhost'; //hosts
+		//$dbname = 'capacit_2020'; //nombre da base de dados
 		$dbname = 'ssdpy_asist'; //nombre da base de dados
 
 		$parametros = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'"); //caso os dados estejam com acentos ou ç

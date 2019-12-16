@@ -26,15 +26,15 @@
 				<img src="img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
 				<p>
-				<?php echo $_SESSION['nome_usuario'];?>
-				<small><?php echo $_SESSION['nome_compl'];?></small>
+				<?php echo $_SESSION['nombre_usaurio'];?>
+				<small>Member since Nov. 2012</small>
 				</p>
 				</li>
 				</li>
 				<!-- Menu Footer-->
 				<li class="user-footer">
 				<div class="pull-left">
-				<a href="configuraciones.php" class="btn btn-default btn-flat">Configuraciones</a>
+				<a href="#" class="btn btn-default btn-flat">Perfil</a>
 				</div>
 				<div class="pull-right">
 				<a href="salir.php" class="btn btn-default btn-flat">Salir</a>
