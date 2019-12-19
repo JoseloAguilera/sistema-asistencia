@@ -4,20 +4,13 @@
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
 	}
+	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
+		header('Location: presencia.php');
+	}
 
 	require 'server/conn.php';
 	  //Validar si existe un post
 
-if (isset($_GET['guardar'])) {
-	if ($_GET['guardar']=="true") {
-		$mensaje= '<p class="alert alert-success">Registro guardado correctamente :)</p>';
-		}
-}
-if (isset($_GET['actualizar'])) {
-		if ($_GET['actualizar']=="true") {
-		$mensaje= '<p class="alert alert-success">Registro actualizado correctamente :)</p>';
-	}
-}
 
 //VALIDAR EXISTENCIA DE UN POST
 	if(isset($_POST['accion'])){
@@ -73,8 +66,8 @@ if (isset($_GET['actualizar'])) {
 	         $query = $connection->prepare($sql);
 	          try {
 	              $query->execute($data);
-
-	            echo '<script> window.location = "alumno.php?guardar=true"; </script>';
+					$mensaje = '<p class="alert alert-success"> Registro Actualizado correctamente</p>';
+	            	//echo '<script> window.location = "alumno.php?guardar=true"; </script>';
 	          } catch (PDOException $e) {
 	              //print_r($e);
 	               //$connection->rollback();
@@ -94,37 +87,37 @@ if (isset($_GET['actualizar'])) {
 												if($_POST['contrasena']!="")
 							 				 {
 												     $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
-		                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
+		                         						ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
 														 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, password=:password, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
-		                         $data = array(
-		                             'nombre' => $_POST['nombre'],
-		                             'apellido' => $_POST['apellido'],
-		                             'cedula' => $_POST['cedula'],
-		                             'telefono_alumno' => $_POST['telefono_alumno'],
-		                             'fecha_nac' => $_POST['nascimiento'],
-		                             'email' => $_POST['email'],
-		                             'direccion' => $_POST['direcion'],
-		                             'ciudad' => $_POST['ciudad'],
-		                             'ruc' => $_POST['ruc'],
-		                             'razonsocial' => $_POST['razonsocial'],
-		                             'nombreref' => $_POST['nombreref'],
-		                             'telefonoref' => $_POST['telefonoref'],
-									 						 	 'mama' => $_POST['nombremama'],
-									 							 'telefono_mama' => $_POST['telefono_mama'],
-									 						 	 'papa' => $_POST['nombrepapa'],
-									 						 	 'telefono_papa' => $_POST['telefono_papa'],
-		                             'password' => md5($_POST['contrasena']),
-		                             'estado' => $_POST['estado'],
-		                             'foto' => $_POST['foto'],
-																 'activo'=> $activo
-		                         );
+		                         					$data = array(
+		                             								'nombre' => $_POST['nombre'],
+		                             								'apellido' => $_POST['apellido'],
+		                             								'cedula' => $_POST['cedula'],
+		                             								'telefono_alumno' => $_POST['telefono_alumno'],
+		                             								'fecha_nac' => $_POST['nascimiento'],
+		                             								'email' => $_POST['email'],
+		                             								'direccion' => $_POST['direcion'],
+		                             								'ciudad' => $_POST['ciudad'],
+		                             								'ruc' => $_POST['ruc'],
+		                             								'razonsocial' => $_POST['razonsocial'],
+		                             								'nombreref' => $_POST['nombreref'],
+		                             								'telefonoref' => $_POST['telefonoref'],
+									 						 	 	'mama' => $_POST['nombremama'],
+									 							 	'telefono_mama' => $_POST['telefono_mama'],
+									 						 	 	'papa' => $_POST['nombrepapa'],
+									 						 	 	'telefono_papa' => $_POST['telefono_papa'],
+																	'password' => md5($_POST['contrasena']),
+																	'estado' => $_POST['estado'],
+																	'foto' => $_POST['foto'],
+																 	'activo'=> $activo
+		                         									);
 							 				 }
 							 				 else
 											 {
 
 		                         $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
 		                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
-														 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
+								mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
 		                         $data = array(
 		                             'nombre' => $_POST['nombre'],
 		                             'apellido' => $_POST['apellido'],
@@ -138,20 +131,20 @@ if (isset($_GET['actualizar'])) {
 		                             'razonsocial' => $_POST['razonsocial'],
 		                             'nombreref' => $_POST['nombreref'],
 		                             'telefonoref' => $_POST['telefonoref'],
-									 						 	 'mama' => $_POST['nombremama'],
-									 							 'telefono_mama' => $_POST['telefono_mama'],
-									 						 	 'papa' => $_POST['nombrepapa'],
-									 						 	 'telefono_papa' => $_POST['telefono_papa'],
+									 'mama' => $_POST['nombremama'],
+									 'telefono_mama' => $_POST['telefono_mama'],
+									 'papa' => $_POST['nombrepapa'],
+									 'telefono_papa' => $_POST['telefono_papa'],
 		                             'estado' => $_POST['estado'],
 		                             'foto' => $_POST['foto'],
-																 'activo'=> $activo
+									 'activo'=> $activo
 		                         );
 							 				 }
 	                         $query = $connection->prepare($sql);
 	                        try{
 	                          $query->execute($data);
-	                         //$mensaje = '<p class="alert alert-success">Registro actualizado correctamente :)</p>';
-	                         echo '<script> window.location="alumno.php?actualizar=true"; </script>';
+	                          $mensaje = '<p class="alert alert-success">Registro actualizado correctamente :)</p>';
+	                         //echo '<script> window.location="alumno.php?actualizar=true"; </script>';
 	                          }catch(Exception $e){
 	                             echo '<p class="alert alert-danger">'. $e .'</p>';
 	                       }
@@ -240,6 +233,7 @@ if (isset($_GET['actualizar'])) {
 					</div>
 					<!-- Caja de Busqueda -->
 					<div class="col-md-3 pull-right">
+						<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
 						<!--<form method="POST">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="Buscar " name="busca" value="<?php echo $busca;?>">

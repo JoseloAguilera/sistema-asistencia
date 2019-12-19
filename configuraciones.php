@@ -5,6 +5,9 @@
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
 	}
+	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
+		header('Location: presencia.php');
+	}
 
 	$usuario = $_SESSION['nome_usuario'];
 

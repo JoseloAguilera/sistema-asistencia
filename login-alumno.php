@@ -46,7 +46,7 @@
 		</div> <!-- /.login-logo -->
 
 	 	<div class="login-box-body">
-			<p class="login-box-msg">Ingrese su Usuario y Contraseña</p>
+			<p class="login-box-msg">AREA DE ALUMNOS<br>Ingrese su Usuario y Contraseña</p>
 			<?php
 				if (isset($mensaje)) {
 					echo $mensaje; //mensaje de error
@@ -68,7 +68,7 @@
 				</div>
 			</form>
 			<br>
-			<a href="#">Olvidé mi contraseña</a><br>
+			<a href="login.php">No soy alumno</a><br>
 		</div> <!-- /.login-box-body -->
 	</div><!-- /.login-box -->
 

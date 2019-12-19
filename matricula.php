@@ -5,8 +5,9 @@
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
 	}
-
-
+	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
+		header('Location: presencia.php');
+	}
 
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (isset($_POST['nuevo'])){
@@ -14,35 +15,51 @@
 			$fechainicio = $_POST['fechainicio'];
 			$codgrupo = $_POST['grupo'];
 			$alumno = $_POST['alumno'];
+			$estado = $_POST['estado'];
 			$matricula = str_replace(".", "", $_POST['valmatricula']);
 			$cuota = str_replace(".", "", $_POST['valcuota']);
 			// $estado = $_POST['estado'];
 			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); //convierte de dd/mm/yyyy para yyyy-mm-dd
+			try {
+				$sql = "INSERT INTO matricula (id_alumnos, fecha_inicio, valor_cuota, valor_matricula, grupo_id, fecha_add, activo) VALUES ('$alumno', '$mysqldata', '$cuota','$matricula', '$codgrupo', NOW(), '$estado')";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				//var_dump($last_id);
 
-			$sql = "INSERT INTO matricula (id_alumnos, fecha_inicio, valor_cuota, valor_matricula, grupo_id, fecha_add, fecha_update) VALUES ('$alumno', '$mysqldata', '$cuota','$matricula', '$codgrupo', NOW(), NOW())";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			//var_dump($last_id);
+				//$result= $query->fetchAll()
+				$mensaje= '<div class="alert alert-success">REGISTRO AGREGADO CORRECTAMENTE</div>';
 
-			//$result= $query->fetchAll();
+			} catch (\Exception $e) {
+					$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+			}
+
+
 		} else if (isset($_POST['guardar'])){
 			//var_dump($_POST);
 			$id =  $_POST['codigo'];
 			$fechainicio = $_POST['fechainicio'];
 			$codgrupo = $_POST['grupo'];
 			$alumno = $_POST['alumno'];
+			$estado = $_POST['estado'];
 			$matricula = str_replace(".", "", $_POST['valmatricula']);
 			$cuota = str_replace(".", "", $_POST['valcuota']);
 			// $estado = $_POST['estado'];
 			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); //convierte de dd/mm/yyyy para yyyy-mm-dd
 
 			// Update do grupo
-			$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW()
-			WHERE id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
+			try {
+				$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW(), activo = '$estado'
+				WHERE id = $id";
+				$query = $connection->prepare($sql);
+				$query->execute();
 
-			//$result= $query->fetchAll();
+				//$result= $query->fetchAll();
+					$mensaje= '<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
+			} catch (\Exception $e) {
+				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+			}
+
+
 		} else if (isset($_POST['excluir'])){
 			$id =  $_POST['codigo'];
 			try {
@@ -62,8 +79,14 @@
 		}
 		else if (isset($_POST['pdf'])) {
 			if ($_POST['codigo']>0) {
-			//	echo "<script>window.location('pdf.php?id='".$_POST['codigo'].")</script>";
-				header('Location: pdf.php?id='.$_POST['codigo']);
+				?>
+				<script type="text/javascript" >
+				var pdf = "<?php echo $_POST['codigo'];?>";
+				//console.log(pdf);
+				window.open('pdf.php?id='+pdf,'_blank');
+				</script>
+				<?php
+				//header('Location: pdf.php?id='.$_POST['codigo']);
 			}
 		}
 	}
@@ -74,6 +97,8 @@
 <head>
 	<title>SSD - Matriculas</title>
 	<?php include 'includes/head.php'; ?>
+
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 	<div class="wrapper">
@@ -84,6 +109,10 @@
 		<!-- ASIDE BAR -->
 		<?php include 'includes/aside.php'; ?>
 		<!-- ASIDE BAR END -->
+		<?php if(isset($pdf)){
+			//var_dump($pdf);
+			//echo $pdf;
+		} ?>
 
 		<?php
 			if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
@@ -169,7 +198,7 @@
 									$valcuota = number_format($row['valor_cuota'], 0, ",", ".");
 								?>
 								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-alumno="<?php echo $row['id_alumnos'];?>"  data-grupo="<?php echo $row['grupo_id'];?>" data-fechainicio="<?php echo $fechainicio;?>"
-									data-valmatricula="<?php echo $valmatricula;?>" data-valcuota="<?php echo $valcuota;?>" data-estado="activo">
+									data-valmatricula="<?php echo $valmatricula;?>" data-valcuota="<?php echo $valcuota;?>" data-estado="<?php echo $row['activo'];?>">
 									<td><?php echo $row['id'];?></td>
 									<td><?php echo $row['curso'];?></td>
 									<td><?php echo $row['grupo'];?></td>
@@ -177,7 +206,16 @@
 									<td><?php echo $fechainicio;?></td>
 									<td><?php echo $valmatricula;?></td>
 									<td><?php echo $valcuota;?></td>
-									<td>Activo</td>
+									<td>
+										<?php
+											$estado = "";
+											if ($row['activo'] == 1) {
+												$estado = "Activo";
+											} else {
+												$estado = "Inactivo";
+											}
+											echo $estado;?>
+									</td>
 								</tr>
 								<?php }?>
 								</tbody>
@@ -261,9 +299,12 @@
 												$result2= $query->fetchAll();
 
 												foreach ($result2 as $grupo) {
+													if ($grupo[activo]==1) {
+
 											?>
 											<option value="<?php echo $grupo['id'];?>"><?php echo $grupo['descripcion'];?></option>
-											<?php }?>
+											<?php }
+										}?>
 										</optgroup>
 									<?php }?>
 									</select>
@@ -279,6 +320,16 @@
 								<div class="form-group">
 									<label for="valcuota">Valor Cuota</label>
 									<input type="text" class="form-control" id="valcuota" name="valcuota" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="activo">Estado</label>
+									<select class="form-control" id="estado" name="estado">
+										<option value="1">Activo</option>
+										<option value="0">Inactivo</option>
+										<!--option value="2">Vacaciones</option-->
+									</select>
 								</div>
 							</div>
 						</div> <!-- row -->
@@ -368,6 +419,16 @@
 									<label for="valcuota">Valor Cuota</label>
 									<input type="text" class="form-control" id="valcuota" name="valcuota" placeholder="000.000" onKeyUp="formatoMoneda(this, event)" required>
 									<input type="hidden" name="pdf" id="pdf">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="activo">Estado</label>
+									<select class="form-control" id="estado" name="estado">
+										<option value="1">Activo</option>
+										<option value="0">Inactivo</option>
+										<!--option value="2">Vacaciones</option-->
+									</select>
 								</div>
 							</div>
 						</div> <!-- row -->

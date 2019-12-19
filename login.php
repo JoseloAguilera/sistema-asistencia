@@ -17,10 +17,12 @@
 				$_SESSION['logueado'] = 'logueado';
 				$_SESSION['nome_usuario'] = $user['usuario'];
 				$_SESSION['nome_compl'] = $user['nombre'];
+				$_SESSION['tipo_login'] = 'adm';
 				header('Location: index.php');
 			} else if ($_POST['usuario'] == 'alumno') { //Si encontró
 				$_SESSION['logueado'] = 'logueado';
 				$_SESSION['nome_usuario'] = "Alumno";
+				$_SESSION['tipo_login'] = 'alumno';
 				header('Location: presencia.php');
 			} else { //Si no encontró apresenta error
 				$mensaje = '<p class="alert alert-danger">Los Datos Ingresados están Incorrectos!</p>';
@@ -67,7 +69,7 @@
 				</div>
 			</form>
 			<br>
-			<a href="#">Olvidé mi contraseña</a><br>
+			<a href="login-alumno.php">Area de Alumnos</a><br>
 		</div> <!-- /.login-box-body -->
 	</div><!-- /.login-box -->
 

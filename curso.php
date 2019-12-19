@@ -1,9 +1,12 @@
-<?php 
+<?php
 	require 'server/conn.php';
 	session_start();
 	// var_dump($_SESSION['usuario']);
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
+	}
+	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
+		header('Location: presencia.php');
 	}
 
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -13,10 +16,10 @@
 			$desc_corta = $_POST['descripcion'];
 			$desc_detallada = $_POST['detallada'];
 			$duracion_meses = $_POST['duracion'];
-			$estado = $_POST['estado'];
+			$activo = $_POST['estado'];
 			$valor_cuota = $_POST['cuota'];
 			$valor_matricula = $_POST['matricula'];
-			$sql = "INSERT INTO cursos (nombre, desc_corta, desc_detallada, duracion_meses, estado, valor_cuota, valor_matrícula, fecha_add, fecha_update)
+			$sql = "INSERT INTO cursos (nombre, desc_corta, desc_detallada, duracion_meses, activo, valor_cuota, valor_matrícula, fecha_add, fecha_update)
 			VALUES ('$nombre', '$desc_corta', '$desc_detallada', '$duracion_meses', '$estado', '$valor_cuota', '$valor_matricula', NOW(), NOW())";
 			$query = $connection->prepare($sql);
 			$query->execute();
@@ -31,7 +34,7 @@
 			$estado = $_POST['estado'];
 			$valor_cuota = $_POST['cuota'];
 			$valor_matricula = $_POST['matricula'];
-			$sql = "UPDATE cursos SET nombre = '$nombre', desc_corta = '$desc_corta', desc_detallada = '$desc_detallada', duracion_meses = '$duracion_meses', estado = '$estado', valor_cuota = '$valor_cuota', valor_matrícula = '$valor_matricula', fecha_update = NOW() 
+			$sql = "UPDATE cursos SET nombre = '$nombre', desc_corta = '$desc_corta', desc_detallada = '$desc_detallada', duracion_meses = '$duracion_meses', activo = '$estado', valor_cuota = '$valor_cuota', valor_matrícula = '$valor_matricula', fecha_update = NOW()
 			WHERE id = $id";
 			$query = $connection->prepare($sql);
 			$query->execute();
@@ -105,6 +108,7 @@
 						</div>
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
+							<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
 							<!--<form method="POST">
 								<div class="input-group">
 									<input type="text" class="form-control" placeholder="Buscar por..." name="busca" value="<?php echo $busca;?>">
@@ -130,21 +134,22 @@
 									<th>Estado</th>
 								</tr>
 							</thead>
-							<tbody>		
+							<tbody>
 								<?php foreach ($result as $row) { ?>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-nombre="<?php echo $row['nombre'];?>" data-descripcion="<?php echo $row['desc_corta'];?>" data-detallada="<?php echo $row['desc_detallada'];?>" data-duracion="<?php echo $row['duracion_meses'];?>" data-matricula="<?php echo $row['valor_matrícula'];?>" data-cuota="<?php echo $row['valor_cuota'];?>" data-estado="<?php echo $row['estado'];?>">
+								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-nombre="<?php echo $row['nombre'];?>" data-descripcion="<?php echo $row['desc_corta'];?>" data-detallada="<?php echo $row['desc_detallada'];?>"
+									data-duracion="<?php echo $row['duracion_meses'];?>" data-matricula="<?php echo $row['valor_matrícula'];?>" data-cuota="<?php echo $row['valor_cuota'];?>" data-estado="<?php echo $row['activo'];?>">
 									<td><?php echo $row['id'];?></td>
 									<td><?php echo $row['nombre'];?></td>
 									<td><?php echo $row['desc_corta'];?></td>
 									<td><?php echo $row['duracion_meses'];?></td>
 									<td><?php echo $row['valor_matrícula'];?></td>
 									<td><?php echo $row['valor_cuota'];?></td>
-									<td><?php 
+									<td><?php
 										$estado = "";
-										if ($row['estado'] == "0") {
-											$estado = "Inactivo";
-										} else {
+										if ($row['activo'] == 1) {
 											$estado = "Activo";
+										} else {
+											$estado = "Inactivo";
 										}
 										echo $estado;?>
 									</td>
@@ -202,9 +207,9 @@
 								<div class="form-group">
 									<label for="activo">Estado</label>
 									<select class="form-control" id="estado" name="estado">
-										<option value="0">Activo</option>
-										<option value="1">Inactivo</option>
-										<option value="2">Vacaciones</option>
+										<option value="1">Activo</option>
+										<option value="0">Inactivo</option>
+										<!--option value="2">Vacaciones</option-->
 									</select>
 								</div>
 							</div>
@@ -273,7 +278,7 @@
 								<select class="form-control" id="estado" name="estado">
 									<option value="1">Activo</option>
 									<option value="0">Inactivo</option>
-									<option value="2">Vacaciones</option>
+									<!--option value="2">Vacaciones</option-->
 								</select>
 							</div>
 						</div>
@@ -344,7 +349,7 @@
 	<script type="text/javascript">
 		$('#AltModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // objeto que disparó el modal
-			var codigo = button.data('codigo') 
+			var codigo = button.data('codigo')
 			var nombre = button.data('nombre')
 			var descripcion = button.data('descripcion')
 			var detallada = button.data('detallada')
@@ -353,8 +358,8 @@
 			var cuota = button.data('cuota')
 			var matricula = button.data('matricula')
 			var estado = button.data('estado')
-			
-			// Actualiza los datos del modal 
+
+			// Actualiza los datos del modal
 			var modal = $(this)
 			modal.find('.modal-title').text('Curso ' + nombre)
 			modal.find('#codigo').val(codigo)
@@ -367,10 +372,10 @@
 			modal.find('#matricula').val(matricula)
 			modal.find('#estado').val(estado)
 		})
-		
+
 		// formato para campos moneda
 		String.prototype.reverse = function(){
-			return this.split('').reverse().join(''); 
+			return this.split('').reverse().join('');
 		};
 		function formatoMoneda(campo, evento){
 			var tecla = (!evento) ? window.event.keyCode : evento.which;

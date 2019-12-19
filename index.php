@@ -2,7 +2,7 @@
 	session_start();
 	// var_dump($_SESSION['usuario']);
 	if (!isset($_SESSION['logueado'])) {
-		header('Location: login.php');
+		header('Location: login-alumno.php');
 	}
 
 	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {

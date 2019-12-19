@@ -6,6 +6,9 @@
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
 	}
+	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
+		header('Location: presencia.php');
+	}
 	require 'server/conn.php';
 	$idgrupo=-1;
 	if (isset($_GET['id'])) {
@@ -239,14 +242,14 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 				//echo $fechai."----------------------------------------------<br>";
 				foreach ($alumnos as $alumno) {
 					$idalumno = $alumno['idalumno'];
-					
+					$fechaInicio = $alumno['idalumno'];
 		
 					$sql="SELECT *	FROM informe_presencia where idalumno= '$idalumno' AND fecha_marcacion='$fechai'";
 					$query = $connection->prepare($sql);
 					$query->execute();
 					$asistencia= $query->fetch();
-		
-					if ($asistencia) { ?>
+					//si encuentra una asistencia marcada y si la fecha de inicio es mayor a la fecha buscada
+					if ($asistencia && $fechaInicio >= $fechai) { ?>
 					<!--tr class="bg-success" data-toggle="modal" data-target="#AltModal" data-codigo="1" data-curso="ballet" data-dia="Lunes" data-fecha="30/09/2019 18:42" data-alumno="ana"-->
 				    <tr>
 					 	<td><?php echo $fechai?></td>

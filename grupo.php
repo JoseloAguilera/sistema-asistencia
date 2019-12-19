@@ -5,6 +5,9 @@
 	if (!isset($_SESSION['logueado'])) {
 		header('Location: login.php');
 	}
+	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
+		header('Location: presencia.php');
+	}
 
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (isset($_POST['nuevo'])){
@@ -16,7 +19,7 @@
 			$entrada = $_POST['entrada'];
 			$salida = $_POST['salida'];
 
-			$sql = "INSERT INTO grupos (descripcion, cursos_id) VALUES ('$descripcion', '$codcurso')";
+			$sql = "INSERT INTO grupos (descripcion, cursos_id, activo) VALUES ('$descripcion', '$codcurso', '$estado')";
 			$query = $connection->prepare($sql);
 			$query->execute();
 			$last_id = $connection->lastInsertId(); //id del grupo
@@ -54,7 +57,7 @@
 			}
 
 			// Update do grupo
-			$sql = "UPDATE grupos SET descripcion = '$descripcion', cursos_id = '$codcurso'
+			$sql = "UPDATE grupos SET descripcion = '$descripcion', cursos_id = '$codcurso', activo = '$estado'
 			WHERE id = $id";
 			$query = $connection->prepare($sql);
 			$query->execute();
@@ -150,7 +153,7 @@
 					</div>
 					<!-- Caja de Busqueda -->
 					<div class="col-md-3 pull-right">
-
+						<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
 					</div>
 				</div>
 				<!-- Corpo de Caja -->
@@ -197,7 +200,8 @@
 								}
 								//var_dump($dias);
 							?>
-							<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-curso="<?php echo $row['cursos_id'];?>" data-descripcion="<?php echo $row['descripcion'];?>" data-dias="<?php echo $dias;?>" data-entrada="<?php echo substr($horario['hora_inicio'],0,5)?>" data-salida="<?php echo substr($horario['hora_fin'],0,5)?>" data-estado="1">
+							<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-curso="<?php echo $row['cursos_id'];?>" data-descripcion="<?php echo $row['descripcion'];?>" data-dias="<?php echo $dias;?>"
+								data-entrada="<?php echo substr($horario['hora_inicio'],0,5)?>" data-salida="<?php echo substr($horario['hora_fin'],0,5)?>" data-estado="<?php echo $row['activo']?>">
 								<td><?php echo $row['id'];?></td>
 								<td><?php echo $row['nombre'];?></td>
 								<td><?php echo $row['descripcion'];?></td>
@@ -215,7 +219,16 @@
 								$result3= $query->fetch();
 								?>
 								<td><?php echo $result3['COUNT(*)']?> alumnos</td>
-								<td>Activo<?php //echo $row['estado'];?></td>
+								<td>
+									<?php
+										$estado = "";
+										if ($row['activo'] == 1) {
+											$estado = "Activo";
+										} else {
+											$estado = "Inactivo";
+										}
+										echo $estado;?>
+							</td>
 							</tr>
 						<?php } ?>
 						</tbody>
@@ -272,9 +285,12 @@
 										$result= $query->fetchAll();
 
 										foreach ($result as $row) {
+											if ($row['activo']== 1)
+											{
 									?>
 										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre'];?></option>
-									<?php }?>
+									<?php }
+												}?>
 									</select>
 								</div>
 							</div>
@@ -282,9 +298,9 @@
 								<div class="form-group">
 									<label for="activo">Estado</label>
 									<select class="form-control" id="estado" name="estado">
-										<option value="0">Activo</option>
-										<option value="1">Inactivo</option>
-										<option value="2">Vacaciones</option>
+										<option value="1">Activo</option>
+										<option value="0">Inactivo</option>
+										<!--option value="2">Vacaciones</option-->
 									</select>
 								</div>
 							</div>
@@ -379,9 +395,9 @@
 								<div class="form-group">
 									<label for="activo">Estado</label>
 									<select class="form-control" id="estado" name="estado">
-										<option value="0">Activo</option>
-										<option value="1">Inactivo</option>
-										<option value="2">Vacaciones</option>
+										<option value="1">Activo</option>
+										<option value="0">Inactivo</option>
+										<!--option value="2">Vacaciones</option-->
 									</select>
 								</div>
 							</div>

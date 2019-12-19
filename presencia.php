@@ -2,8 +2,10 @@
 	session_start();
 	// var_dump($_SESSION['usuario']);
 	if (!isset($_SESSION['logueado'])) {
-		header('Location: login.php');
+		header('Location: login-alumno.php');
 	}
+
+	
 
 	require 'server/conn.php';
 
@@ -89,7 +91,7 @@
 		$idgrupo=$_POST['txtidgrupo'];
 			
 		try {
-			$sql = "INSERT INTO asistenciaS (matricula_id, matricula_id_alumnos, matricula_grupo_id, horarios_id, dia,  horario, fecha_add)
+			$sql = "INSERT INTO asistencias (matricula_id, matricula_id_alumnos, matricula_grupo_id, horarios_id, dia,  horario, fecha_add)
 			VALUES ('$idmatricula', '$idalumno', '$idgrupo',  '$idhorariopresencia', '$dia',  NOW(), NOW())";
 			$query = $connection->prepare($sql);
 			$query->execute();
@@ -192,7 +194,7 @@
 	 		</div>
 	 		<br>
 	 		<div class="row text-center">
-	 			<a href="salir.php" class="btn btn-lg btn-danger">Salir</a>
+	 			<a href="salir.php?asistencia=true" class="btn btn-lg btn-danger">Salir</a>
 	 		</div>
 	 		
 			<!-- <p class="login-box-msg">29/09/2019</p> -->
@@ -210,10 +212,10 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title" id="myspan">¿Deseas registrar presencia?</h4>					
-					<input type="text" id="txthorario" name="txthorario">	
-					<input type="text" id="txtdia" name="txtdia">	
-					<input type="text" id="txtidmatricula" name="txtidmatricula">	
-					<input type="text" id="txtidgrupo" name="txtidgrupo">					
+					<input type="text" id="txthorario" name="txthorario" class="hidden">	
+					<input type="text" id="txtdia" name="txtdia" class="hidden">	
+					<input type="text" id="txtidmatricula" name="txtidmatricula" class="hidden"> 	
+					<input type="text" id="txtidgrupo" name="txtidgrupo" class="hidden">					
 					
 				</div>
 				<!-- <div class="modal-body">
