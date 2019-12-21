@@ -48,7 +48,7 @@
 
 			// Update do grupo
 			try {
-				$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW(), activo = '$estado'
+				$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW(), activo = '$estado4'
 				WHERE id = $id";
 				$query = $connection->prepare($sql);
 				$query->execute();
@@ -157,6 +157,7 @@
 						</div>
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
+								<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
 							<!--<div class="input-group">
 								<input type="text" class="form-control" placeholder="Buscar por..." name="busca">
 								<span class="input-group-btn">

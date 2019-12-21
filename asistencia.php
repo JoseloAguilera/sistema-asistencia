@@ -242,22 +242,25 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 				//echo $fechai."----------------------------------------------<br>";
 				foreach ($alumnos as $alumno) {
 					$idalumno = $alumno['idalumno'];
-					$fechaInicio = $alumno['idalumno'];
+					$fechaInicio = $alumno['fecha_inicio'];
 		
-					$sql="SELECT *	FROM informe_presencia where idalumno= '$idalumno' AND fecha_marcacion='$fechai'";
+					$sql="SELECT *	FROM informe_presencia where idalumno= '$idalumno' AND fecha_marcacion='$fechai' AND idgrupo='$idgrupo'";
 					$query = $connection->prepare($sql);
 					$query->execute();
 					$asistencia= $query->fetch();
+					if ($fechai >= $fechaInicio) {
+								
 					//si encuentra una asistencia marcada y si la fecha de inicio es mayor a la fecha buscada
-					if ($asistencia && $fechaInicio >= $fechai) { ?>
+					if ($asistencia) { ?>
 					<!--tr class="bg-success" data-toggle="modal" data-target="#AltModal" data-codigo="1" data-curso="ballet" data-dia="Lunes" data-fecha="30/09/2019 18:42" data-alumno="ana"-->
 				    <tr>
-					 	<td><?php echo $fechai?></td>
+
+					 	<td><?php echo $fechai?>-<?php echo $fechaInicio?></td>
 					    <td><?php echo $asistencia['idalumno']?></td>
 						<td><?php echo $asistencia['nombrealumno']." ".$asistencia['apellidoalumno']?></td>
 						<td><?php echo $asistencia['diamarcado']?></td>
 						<td><?php echo $asistencia['fecha_marcacion']?></td>
-						<td><?php echo $asistencia['hora_de_marcacion']?></td>
+						<td><?php echo date_format($asistencia['hora_de_marcacion'], 'H:i:s');?></td>
 						<td><?php echo $asistencia['asistencia']?></td>
 				   </tr>
 					<?php } else { ?>
@@ -275,6 +278,8 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 					</tr>
 					
 					<?php } 
+
+					}
 					
 					
 				}
@@ -416,8 +421,9 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 			modal.find('#alumno').val(alumno)
 		})
 
-		$('#fecha').daterangepicker({ timePicker: true, timePickerIncrement: 30, singleDatePicker: true, locale: { format: 'DD/MM/YYYY hh:mm A' }})
-
+		//$('#fecha').daterangepicker({ timePicker: true, timePickerIncrement: 30, singleDatePicker: true, locale: { format: 'DD/MM/YYYY hh:mm A' }})
+		//$('#fecha_fin').datepicker('setEndDate', new Date());
+		
 		// modal para confirmar si quiere remover el registro
 		var modalConfirm = function(callback){
 			//botón que llama el modal
