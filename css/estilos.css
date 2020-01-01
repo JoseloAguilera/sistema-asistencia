@@ -75,95 +75,25 @@
   background-color: #e3a70e;
   border-color: #dba10d;
 }
-/*.btn-primary:active,
-.btn-primary.active,
-.open > .dropdown-toggle.btn-primary {
-  color: #fff;
-  background-color: #286090;
-  background-image: none;
-  border-color: #204d74;
-}
-.btn-primary:active:hover,
-.btn-primary.active:hover,
-.open > .dropdown-toggle.btn-primary:hover,
-.btn-primary:active:focus,
-.btn-primary.active:focus,
-.open > .dropdown-toggle.btn-primary:focus,
-.btn-primary:active.focus,
-.btn-primary.active.focus,
-.open > .dropdown-toggle.btn-primary.focus {
-  color: #fff;
-  background-color: #204d74;
-  border-color: #122b40;
-}
-.btn-primary.disabled:hover,
-.btn-primary[disabled]:hover,
-fieldset[disabled] .btn-primary:hover,
-.btn-primary.disabled:focus,
-.btn-primary[disabled]:focus,
-fieldset[disabled] .btn-primary:focus,
-.btn-primary.disabled.focus,
-.btn-primary[disabled].focus,
-fieldset[disabled] .btn-primary.focus {
-  background-color: #337ab7;
-  border-color: #2e6da4;
-}
-.btn-primary .badge {
-  color: #337ab7;
-  background-color: #fff;
-}*/
-/*.login-box-body p {
-	font-size:14pt;
-}*/
 
-/*.login-box-body a{
-	font-size:12pt;
-}*/
-
-/*.login-box-body button{
-	font-size:12pt;
+.modal-mensaje .modal-content{
+	border-radius: 5px;
 }
 
-.login-box-body input{
-	font-size:12pt;
+.modal-mensaje .modal-header{
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
 }
 
-.login-logo a {
-	font-size:40pt;
+.modal-mensaje .modal-mensaje-success {
+	background-color: #2ecc71;
 }
-*/
-/*@media only screen and (max-width: 800px) {
-	.login-box-body p {
-		font-size:20pt;
-	}
 
-	.login-box-body a{
-		font-size:14pt;
-	}
-
-	.login-box-body button{
-		font-size:16pt;
-	}
-
-	.login-box-body input{
-		font-size:16pt;
-	}
-
-	.login-logo a {
-		font-size:40pt;
-	}
-<<<<<<< Updated upstream
-
-
-	tr.fila-ausencia {
-		background: #ffbaa5d6;
-	}
-
-	.btn-primary {
-		background-color: #FFC107 !important;
-		border-color: #FF9800;
-	}
+.modal-mensaje .modal-mensaje-error {
+	background-color: #f03434;
 }
-=======
-}*/
->>>>>>> Stashed changes
+
+.modal-mensaje img {
+	width: 15%;
+	margin: 15px;
+}

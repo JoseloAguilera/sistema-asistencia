@@ -179,7 +179,7 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 							</div>
 							<div class="col-md-2">
 							<br>
-								<input type="submit" class="btn btn-success">
+								<input type="submit" class="btn btn-primary">
 							</div>
 						</form>
 						
@@ -193,13 +193,13 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 
 				
 			<tr>
-			   <th>FECHA</th>
-				<th>COD-ALUMNO</th>
-				<th>ALUMNO</th>
-				<th>DIA MARCADO</th>
-				<th>FECHA MARCADA</th>
-				<th>HORA</th>
-				<th>PRESENCIA</th>
+			   <th>Fecha</th>
+				<th>Cod-Alumno</th>
+				<th>Alumno</th>
+				<th>Dia Marcado</th>
+				<th>Fecha Maracada</th>
+				<th>Hora</th>
+				<th>Presencia</th>
 			</tr>
 			</thead>
 			<tbody>			
@@ -255,7 +255,7 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 					<!--tr class="bg-success" data-toggle="modal" data-target="#AltModal" data-codigo="1" data-curso="ballet" data-dia="Lunes" data-fecha="30/09/2019 18:42" data-alumno="ana"-->
 				    <tr>
 
-					 	<td><?php echo $fechai?>-<?php echo $fechaInicio?></td>
+					 	<td><?php echo $fechai?><!-- -<?php //echo $fechaInicio?> --></td>
 					    <td><?php echo $asistencia['idalumno']?></td>
 						<td><?php echo $asistencia['nombrealumno']." ".$asistencia['apellidoalumno']?></td>
 						<td><?php echo $asistencia['diamarcado']?></td>

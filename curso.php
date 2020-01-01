@@ -16,7 +16,7 @@
 			$desc_corta = $_POST['descripcion'];
 			$desc_detallada = $_POST['detallada'];
 			$duracion_meses = $_POST['duracion'];
-			$activo = $_POST['estado'];
+			$estado = $_POST['estado'];
 			$valor_cuota = $_POST['cuota'];
 			$valor_matricula = $_POST['matricula'];
 			try {

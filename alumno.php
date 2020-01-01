@@ -9,159 +9,150 @@
 	}
 
 	require 'server/conn.php';
-	  //Validar si existe un post
+	//Validar si existe un post
 
+	//VALIDAR EXISTENCIA DE UN POST
+	if(isset($_POST['accion'])) {
+		switch ($_POST['accion']){
+			case ('guardar' ):
+				if($_POST['estado']!="activo"){
+					$activo=0;
+				}
+				else {
+					$activo=1;
+				}
+				if ($_POST['contrasena']!='') {
+					$pass= $_POST['contrasena'];
+				}
+				else {
+					$pass= $_POST['cedula'];
+				}
 
-//VALIDAR EXISTENCIA DE UN POST
-	if(isset($_POST['accion'])){
-	switch ($_POST['accion']){
-	       case ('guardar' ):
-				 if($_POST['estado']!="activo")
-				 {
-					 $activo=0;
-				 }
-				 else
-				 {
-					 $activo=1;
-				 }
-				 if ($_POST['contrasena']!='') {
-				 	$pass= $_POST['contrasena'];
-				 }
-				 else {
-				 	$pass= $_POST['cedula'];
-				 }
-
-				 //VALIDAR CAMPOS
-	      /*== 'guardar'
-	        && $_POST['nombre'] != ''
-	        && $_POST['apellido'] != ''
-	        && $_POST['cedula'] != ''
-	        && $_POST['telefono'] != ''*/
-	      //INICIAMOS LA TRANSACCION
-	          $sql = 'INSERT INTO alumnos(nombre, apellido, cedula, telefono_alumno, fecha_nac, email, ruc, razon_social, ciudad, direccion,
-	            nombre_ref, telefono_ref, mama, telefono_mama, papa, telefono_papa, estado, password, foto, activo, fecha_add ) VALUES (:nombre, :apellido, :cedula, :telefono_alumno, :fecha_nac, :email, :ruc,
-	            :razonsocial, :ciudad, :direccion, :nombreref, :telefonoref, :mama, :telefono_mama, :papa, :telefono_papa, :estado, :password, :foto, :activo,  NOW() )';
-	          $data = array(
-	              'nombre' => $_POST['nombre'],
-	              'apellido' => $_POST['apellido'],
-	              'cedula' => $_POST['cedula'],
-	              'telefono_alumno' => $_POST['telefono_alumno'],
-	              'fecha_nac' => $_POST['nascimiento'],
-	              'email' => $_POST['email'],
-	              'direccion' => $_POST['direcion'],
-	              'ciudad' => $_POST['ciudad'],
-	              'ruc' => $_POST['ruc'],
-	              'razonsocial' => $_POST['razonsocial'],
-	              'nombreref' => $_POST['nombreref'],
-	              'telefonoref' => $_POST['telefonoref'],
-								'mama' => $_POST['nombremama'],
-								'telefono_mama' => $_POST['telefono_mama'],
-								'papa' => $_POST['nombrepapa'],
-								'telefono_papa' => $_POST['telefono_papa'],
-	              'password' => md5($pass),
-	              'estado' => $_POST['estado'],
-	              'foto' => $_POST['foto'],
-								'activo' => $activo
-	          );
-	         $query = $connection->prepare($sql);
-	          try {
-	              $query->execute($data);
-					$mensaje = '<p class="alert alert-success"> Registro Actualizado correctamente</p>';
-	            	//echo '<script> window.location = "alumno.php?guardar=true"; </script>';
-	          } catch (PDOException $e) {
-	              //print_r($e);
-	               //$connection->rollback();
-	              $mensaje= '<p class="alert alert-danger">'. $e .'</p>';
-	          }
-	          break;
-	      case('actualizar'):
-	                    if($_POST['codigo'] > 0){
-												if($_POST['estado']!="activo")
-												{
-													$activo=0;
-												}
-												else
-												{
-													$activo=1;
-												}
-												if($_POST['contrasena']!="")
-							 				 {
-												     $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
-		                         						ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
-														 mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, password=:password, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
-		                         					$data = array(
-		                             								'nombre' => $_POST['nombre'],
-		                             								'apellido' => $_POST['apellido'],
-		                             								'cedula' => $_POST['cedula'],
-		                             								'telefono_alumno' => $_POST['telefono_alumno'],
-		                             								'fecha_nac' => $_POST['nascimiento'],
-		                             								'email' => $_POST['email'],
-		                             								'direccion' => $_POST['direcion'],
-		                             								'ciudad' => $_POST['ciudad'],
-		                             								'ruc' => $_POST['ruc'],
-		                             								'razonsocial' => $_POST['razonsocial'],
-		                             								'nombreref' => $_POST['nombreref'],
-		                             								'telefonoref' => $_POST['telefonoref'],
-									 						 	 	'mama' => $_POST['nombremama'],
-									 							 	'telefono_mama' => $_POST['telefono_mama'],
-									 						 	 	'papa' => $_POST['nombrepapa'],
-									 						 	 	'telefono_papa' => $_POST['telefono_papa'],
-																	'password' => md5($_POST['contrasena']),
-																	'estado' => $_POST['estado'],
-																	'foto' => $_POST['foto'],
-																 	'activo'=> $activo
-		                         									);
-							 				 }
-							 				 else
-											 {
-
-		                         $sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email,
-		                         ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref,
-								mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
-		                         $data = array(
-		                             'nombre' => $_POST['nombre'],
-		                             'apellido' => $_POST['apellido'],
-		                             'cedula' => $_POST['cedula'],
-		                             'telefono_alumno' => $_POST['telefono_alumno'],
-		                             'fecha_nac' => $_POST['nascimiento'],
-		                             'email' => $_POST['email'],
-		                             'direccion' => $_POST['direcion'],
-		                             'ciudad' => $_POST['ciudad'],
-		                             'ruc' => $_POST['ruc'],
-		                             'razonsocial' => $_POST['razonsocial'],
-		                             'nombreref' => $_POST['nombreref'],
-		                             'telefonoref' => $_POST['telefonoref'],
-									 'mama' => $_POST['nombremama'],
-									 'telefono_mama' => $_POST['telefono_mama'],
-									 'papa' => $_POST['nombrepapa'],
-									 'telefono_papa' => $_POST['telefono_papa'],
-		                             'estado' => $_POST['estado'],
-		                             'foto' => $_POST['foto'],
-									 'activo'=> $activo
-		                         );
-							 				 }
-	                         $query = $connection->prepare($sql);
-	                        try{
-	                          $query->execute($data);
-	                          $mensaje = '<p class="alert alert-success">Registro actualizado correctamente :)</p>';
-	                         //echo '<script> window.location="alumno.php?actualizar=true"; </script>';
-	                          }catch(Exception $e){
-	                             echo '<p class="alert alert-danger">'. $e .'</p>';
-	                       }
-	                       }
-	                      break;
+				//VALIDAR CAMPOS
+				/*== 'guardar'
+				&& $_POST['nombre'] != ''
+				&& $_POST['apellido'] != ''
+				&& $_POST['cedula'] != ''
+				&& $_POST['telefono'] != ''*/
+				//INICIAMOS LA TRANSACCION
+				$sql = 'INSERT INTO alumnos(nombre, apellido, cedula, telefono_alumno, fecha_nac, email, ruc, razon_social, ciudad, direccion, nombre_ref, telefono_ref, mama, telefono_mama, papa, telefono_papa, estado, password, foto, activo, fecha_add ) VALUES (:nombre, :apellido, :cedula, :telefono_alumno, :fecha_nac, :email, :ruc, :razonsocial, :ciudad, :direccion, :nombreref, :telefonoref, :mama, :telefono_mama, :papa, :telefono_papa, :estado, :password, :foto, :activo,  NOW() )';
+				$data = array(
+					'nombre' => $_POST['nombre'],
+					'apellido' => $_POST['apellido'],
+					'cedula' => $_POST['cedula'],
+					'telefono_alumno' => $_POST['telefono_alumno'],
+					'fecha_nac' => $_POST['nascimiento'],
+					'email' => $_POST['email'],
+					'direccion' => $_POST['direcion'],
+					'ciudad' => $_POST['ciudad'],
+					'ruc' => $_POST['ruc'],
+					'razonsocial' => $_POST['razonsocial'],
+					'nombreref' => $_POST['nombreref'],
+					'telefonoref' => $_POST['telefonoref'],
+					'mama' => $_POST['nombremama'],
+					'telefono_mama' => $_POST['telefono_mama'],
+					'papa' => $_POST['nombrepapa'],
+					'telefono_papa' => $_POST['telefono_papa'],
+					'password' => md5($pass),
+					'estado' => $_POST['estado'],
+					'foto' => $_POST['foto'],
+					'activo' => $activo
+				);
+				$query = $connection->prepare($sql);
+				try {
+					$query->execute($data);
+					$tipomensaje = 'success';
+					$mensaje = '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';//'<p class="alert alert-success"> Registro Actualizado correctamente</p>';
+					//echo '<script> window.location = "alumno.php?guardar=true"; </script>';
+				} catch (PDOException $e) {
+					//print_r($e);
+					//$connection->rollback();
+					$tipomensaje = 'error';
+					$mensaje= '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<p class="alert alert-danger">'. $e .'</p>';
+				}
+				break;
+			case ('actualizar'):
+				if($_POST['codigo'] > 0){
+					if($_POST['estado']!="activo"){
+						$activo=0;
+					}
+					else {
+						$activo=1;
+					}
+					if($_POST['contrasena']!="") {
+						$sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email, ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref, mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, password=:password, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
+						$data = array(
+							'nombre' => $_POST['nombre'],
+							'apellido' => $_POST['apellido'],
+							'cedula' => $_POST['cedula'],
+							'telefono_alumno' => $_POST['telefono_alumno'],
+							'fecha_nac' => $_POST['nascimiento'],
+							'email' => $_POST['email'],
+							'direccion' => $_POST['direcion'],
+							'ciudad' => $_POST['ciudad'],
+							'ruc' => $_POST['ruc'],
+							'razonsocial' => $_POST['razonsocial'],
+							'nombreref' => $_POST['nombreref'],
+							'telefonoref' => $_POST['telefonoref'],
+							'mama' => $_POST['nombremama'],
+							'telefono_mama' => $_POST['telefono_mama'],
+							'papa' => $_POST['nombrepapa'],
+							'telefono_papa' => $_POST['telefono_papa'],
+							'password' => md5($_POST['contrasena']),
+							'estado' => $_POST['estado'],
+							'foto' => $_POST['foto'],
+							'activo'=> $activo
+							);
+						}
+					else {
+						$sql = 'UPDATE alumnos set nombre=:nombre, apellido=:apellido, cedula=:cedula, telefono_alumno=:telefono_alumno, fecha_nac=:fecha_nac, email=:email, ruc=:ruc, razon_social=:razonsocial, ciudad=:ciudad, direccion=:direccion, nombre_ref=:nombreref, telefono_ref=:telefonoref, mama=:mama, telefono_mama=:telefono_mama, papa=:papa, telefono_papa=:telefono_papa, estado=:estado, foto=:foto, activo=:activo, fecha_update=NOW() WHERE id = ' . $_POST['codigo'];
+						$data = array(
+							'nombre' => $_POST['nombre'],
+							'apellido' => $_POST['apellido'],
+							'cedula' => $_POST['cedula'],
+							'telefono_alumno' => $_POST['telefono_alumno'],
+							'fecha_nac' => $_POST['nascimiento'],
+							'email' => $_POST['email'],
+							'direccion' => $_POST['direcion'],
+							'ciudad' => $_POST['ciudad'],
+							'ruc' => $_POST['ruc'],
+							'razonsocial' => $_POST['razonsocial'],
+							'nombreref' => $_POST['nombreref'],
+							'telefonoref' => $_POST['telefonoref'],
+							'mama' => $_POST['nombremama'],
+							'telefono_mama' => $_POST['telefono_mama'],
+							'papa' => $_POST['nombrepapa'],
+							'telefono_papa' => $_POST['telefono_papa'],
+							'estado' => $_POST['estado'],
+							'foto' => $_POST['foto'],
+							'activo'=> $activo
+						);
+					}
+					$query = $connection->prepare($sql);
+					try{
+						$query->execute($data);
+						$tipomensaje = 'success';
+						$mensaje = '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';//'<p class="alert alert-success"> Registro Actualizado correctamente</p>';
+						//echo '<script> window.location="alumno.php?actualizar=true"; </script>';
+					}catch(Exception $e){
+						$tipomensaje = 'error';
+						$mensaje= '<h3>HA OCURRIDO UN ERROR!</h3><p>Consulte al administrador de sistemas.<br><br>Error->"'.$e.'</p>';
+						// echo '<p class="alert alert-danger">'. $e .'</p>';
+					}
+				}
+				break;
 			case('excluir'):
-					$id =  $_POST['codigo'];
-					try {
-							$sql = 'DELETE FROM alumnos WHERE id = '.$id;
-							$query = $connection->prepare($sql);
-							$query->execute();
-							$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
-			} catch (\Exception $e) {
-							$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
-			}
-			break;
-	}
+				$id =  $_POST['codigo'];
+				try {
+						$sql = 'DELETE FROM alumnos WHERE id = '.$id;
+						$query = $connection->prepare($sql);
+						$query->execute();
+						$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+				} catch (\Exception $e) {
+						$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				}
+				break;
+		}
 	}
 ?>
 <!DOCTYPE html>
@@ -171,13 +162,12 @@
 	<?php include 'includes/head.php'; ?>
 
 	<script type="text/javascript">
-	function subir_imagen(input, carpeta, evento)
-				{
-					self.name = 'opener';
-					var name = document.getElementsByName("nombre")[0].value;
-					remote = open('subir_imagen.php?name='+name+'&input='+input+'&carpeta='+carpeta+'&evento='+evento ,'remote', 'align=center,width=600,height=300,resizable=yes,status=yes');
-					remote.focus();
-				}
+	function subir_imagen(input, carpeta, evento){
+		self.name = 'opener';
+		var name = document.getElementsByName("nombre")[0].value;
+		remote = open('subir_imagen.php?name='+name+'&input='+input+'&carpeta='+carpeta+'&evento='+evento ,'remote', 'align=center,width=600,height=300,resizable=yes,status=yes');
+		remote.focus();
+	}
 
 	</script>
 </head>
@@ -233,7 +223,7 @@
 					</div>
 					<!-- Caja de Busqueda -->
 					<div class="col-md-3 pull-right">
-						<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
+						<a type="button" class="btn btn-primary pull-right" href="index.php"> ← Atrás </a>
 						<!--<form method="POST">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="Buscar " name="busca" value="<?php echo $busca;?>">
@@ -244,24 +234,30 @@
 						</form>-->
 					</div>
 				</div>
-<div class="modal fade" id="modal-mensaje" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Atencion</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <p>  <?php echo $mensaje; ?></p>
-      </div>
-      <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+				<div class="modal fade modal-mensaje" id="modal-mensaje" tabindex="-1" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header modal-mensaje-<?php echo $tipomensaje;?>" > <!-- modal-mensaje-success or modal-mensaje-error -->
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h1 class="modal-title text-center">
+									<?php if ($tipomensaje == 'success') {?>
+										<img src="img/success-icon.png"> 
+									<?php } else { ?>
+										<img src="img/error-icon.png">
+									<?php }?>
+								</h1>
+							</div>
+							<div class="modal-body text-center">
+								<p>  <?php echo $mensaje; ?></p>
+							</div>
+							<!-- <div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							</div> -->
+						</div>
+					</div>
+				</div>
 				<!-- Corpo de Caja -->
 				<div class="box-body">
 					<div class="box-body table-responsive">
@@ -283,19 +279,19 @@
 								$interesado=0; ?>
 						<tbody>
 							<?php foreach ($result as $row) { ?>
-                  <tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-apellido="<?php echo $row['apellido']; ?>"
+									<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-apellido="<?php echo $row['apellido']; ?>"
 										data-cedula="<?php echo $row['cedula']; ?>" data-telefono_alumno="<?php echo $row['telefono_alumno']; ?>" data-email="<?php echo $row['email']; ?>"
 										data-ciudad="<?php echo $row['ciudad']; ?>" data-direcion="<?php echo $row['direccion']; ?>" data-nascimiento="<?php echo $row['fecha_nac']; ?>"
 										data-razonsocial="<?php echo $row['razon_social']; ?>" data-ruc="<?php echo $row['ruc']; ?>" data-nombreref="<?php echo $row['nombre_ref']; ?>"
 										data-telefonoref="<?php echo $row['telefono_ref']; ?>" data-nombremama="<?php echo $row['mama']; ?>" data-telefono_mama="<?php echo $row['telefono_mama']; ?>"
 										data-nombrepapa="<?php echo $row['papa']; ?>" data-telefono_papa="<?php echo $row['telefono_papa']; ?>" data-estado="<?php echo $row['estado'];?>" data-password="<?php echo $row['password'];?>" data-foto="<?php echo $row['foto'];?>">
-                    <td><?php echo $row['id']; ?></td>
-                    <td><?php echo $row['nombre']; ?></td>
-                    <td><?php echo $row['apellido']; ?></td>
-										<td><?php echo $row['razon_social']; ?></td>
-                    <td><?php echo $row['cedula']; ?></td>
-										<td><?php echo $row['telefono_alumno']; ?></td>
-                    <td><?php echo $row['estado']; ?></td>
+									<td><?php echo $row['id']; ?></td>
+									<td><?php echo $row['nombre']; ?></td>
+									<td><?php echo $row['apellido']; ?></td>
+									<td><?php echo $row['razon_social']; ?></td>
+									<td><?php echo $row['ruc']; ?></td>
+									<td><?php echo $row['telefono_alumno']; ?></td>
+									<td><?php echo $row['estado']; ?></td>
 
 									</tr>
 									
@@ -303,23 +299,23 @@
 									if($row['estado']=="activo"){
 										$activo++;
 									}
-									elseif($row['estado']=="inactivo"){
+									else if($row['estado']=="inactivo"){
 										$inactivo++;
 									}
-									elseif($row['estado']=="interesado"){
+									else if($row['estado']=="interesado"){
 										$interesado++;
 									}
-                  } ?>
-				  </tbody>
+								} ?>
+				  			</tbody>
 						</table>
 					</div>
 				</div>
 				<!-- /.box-body -->
-				<div class="box-footer text-center">
+				<!-- <div class="box-footer text-center">
 					<div class="col-md-4"><small><?php echo $activo ?> Alumnos Activo/s</small></div>
 					<div class="col-md-4"><small><?php echo $inactivo ?> Alumnos Inactivo/s</small></div>
 					<div class="col-md-4"><small><?php echo $interesado ?> Interesado/s</small></div>
-				</div>
+				</div> -->
 				<!-- /.box-footer-->
 			</div>
 			<!-- /.Caja de Texto de color gris (Default) -->
@@ -393,7 +389,7 @@
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="contrasena">Contraseña</label>
-								<input type="text" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
+								<input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -465,7 +461,7 @@
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="foto">Foto</label>
-								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos', 'add')">
+								<input type="text" class="form-control" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos', 'add')">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -539,7 +535,7 @@
 						<div class="col-md-4">
 							<div class="form-group">
 								<label for="contrasena">Contraseña</label>
-								<input type="text" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
+								<input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -611,7 +607,7 @@
 						<div class="col-md-8">
 							<div class="form-group">
 								<label for="foto">Foto</label>
-								<input type="text" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos','alt')">
+								<input type="text" class="form-control" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos','alt')">
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -684,9 +680,8 @@
 			var nombrepapa = button.data('nombrepapa')
 			var telefono_papa = button.data('telefono_papa')
 
-
 			// Actualiza los datos del modal
-		var modal = $(this)
+			var modal = $(this)
 			modal.find('.modal-title').text('Curso ' + nombre)
 			modal.find('#codigo').val(codigo)
 			modal.find('#nombre').val(nombre)
@@ -709,7 +704,6 @@
 			modal.find('#nombrepapa').val(nombrepapa)
 			modal.find('#telefono_papa').val(telefono_papa)
 		})
-
 
 		// modal para confirmar si quiere remover el registro
 		var modalConfirm = function(callback){
@@ -740,14 +734,14 @@
 				//Acciones si el usuario no confirma
 			}
 		});
-<?php if (isset($mensaje)) {?>
-		$(document).ready(function(){
-    $("#modal-mensaje").modal("show");
-  });
-<?php
-unset($mensaje);
-} ?>
 
+		<?php if (isset($mensaje)) {?>
+			$(document).ready(function(){
+			$("#modal-mensaje").modal("show");
+			});
+		<?php
+			unset($mensaje);
+		} ?>
 
 	</script>
 </body>
