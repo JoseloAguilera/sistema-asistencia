@@ -19,10 +19,18 @@
 			$activo = $_POST['estado'];
 			$valor_cuota = $_POST['cuota'];
 			$valor_matricula = $_POST['matricula'];
-			$sql = "INSERT INTO cursos (nombre, desc_corta, desc_detallada, duracion_meses, activo, valor_cuota, valor_matrícula, fecha_add, fecha_update)
-			VALUES ('$nombre', '$desc_corta', '$desc_detallada', '$duracion_meses', '$estado', '$valor_cuota', '$valor_matricula', NOW(), NOW())";
-			$query = $connection->prepare($sql);
-			$query->execute();
+			try {
+				$sql = "INSERT INTO cursos (nombre, desc_corta, desc_detallada, duracion_meses, activo, valor_cuota, valor_matrícula, fecha_add, fecha_update)
+				VALUES ('$nombre', '$desc_corta', '$desc_detallada', '$duracion_meses', '$estado', '$valor_cuota', '$valor_matricula', NOW(), NOW())";
+				$query = $connection->prepare($sql);
+				$query->execute();
+
+				$mensaje= '<div class="alert alert-success">REGISTRO INSERTADO CORRECTAMENTE</div>';
+
+			} catch (\Exception $e) {
+				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+			}
+			
 			//$result= $query->fetchAll();
 		} else if (isset($_POST['guardar'])){
 			// var_dump($_POST);
@@ -34,18 +42,31 @@
 			$estado = $_POST['estado'];
 			$valor_cuota = $_POST['cuota'];
 			$valor_matricula = $_POST['matricula'];
+
+			try {
 			$sql = "UPDATE cursos SET nombre = '$nombre', desc_corta = '$desc_corta', desc_detallada = '$desc_detallada', duracion_meses = '$duracion_meses', activo = '$estado', valor_cuota = '$valor_cuota', valor_matrícula = '$valor_matricula', fecha_update = NOW()
 			WHERE id = $id";
 			$query = $connection->prepare($sql);
 			$query->execute();
-			//$result= $query->fetchAll();
+			//$result= $query->fetchAll();							
+			$mensaje= '<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
+
+			} catch (\Exception $e) {
+				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+			}
+				
 		} else if (isset($_POST['excluir'])){
 			// var_dump($_POST);
 			$id =  $_POST['codigo'];
+			try {
 			$sql = "DELETE FROM cursos WHERE id = $id";
 			$query = $connection->prepare($sql);
 			$query->execute();
 			//$result= $query->fetchAll();
+			
+			} catch (\Exception $e) {
+				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+			}
 		}
 	}
 ?>
@@ -55,7 +76,7 @@
 	<title>SSD - Cursos</title>
 	<?php include 'includes/head.php'; ?>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
 		<!-- MAIN HEADER -->
 		<?php include 'includes/header.php'; ?>
@@ -121,6 +142,15 @@
 					</div>
 					<!-- Corpo de Caja -->
 					<div class="box-body">
+					<div class="col-md-12">
+							<?php
+							if (isset( $mensaje)) {
+								echo $mensaje; //alert mensaje
+							}
+
+							?>
+
+						</div>
 						<div class="box-body table-responsive">
 							<table class="table table-striped table-bordered display nowra" id="tabladatos">
 							<thead>

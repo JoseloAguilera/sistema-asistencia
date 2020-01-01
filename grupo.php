@@ -102,7 +102,7 @@
 	<title>SSD - Grupos</title>
 	<?php include 'includes/head.php'; ?>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
 		<!-- MAIN HEADER -->
 		<?php include 'includes/header.php'; ?>

@@ -44,6 +44,74 @@
 	border-bottom: 1px solid #d91e18;
 }
 
+/*.skin-yellow .main-header .navbar {
+	background-color: #f6b719;
+}
+.skin-yellow .main-header .navbar .sidebar-toggle:hover {
+	background-color: #e08e0b;
+}
+.skin-yellow .main-header .logo {
+  background-color: #dba10d;
+  color: #ffffff;
+  border-bottom: 0 solid transparent;
+}
+.skin-yellow .main-header .logo:hover {
+  background-color: #c4951f;
+}*/
+
+.btn-primary {
+	color: #fff;
+	background-color: #f6b719;
+	border-color: #edb018;
+}
+.btn-primary:focus,
+.btn-primary.focus {
+	color: #fff;
+	background-color: #c4951f;
+	border-color: #a37d1c;
+}
+.btn-primary:hover {
+  color: #fff;
+  background-color: #e3a70e;
+  border-color: #dba10d;
+}
+/*.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #fff;
+  background-color: #286090;
+  background-image: none;
+  border-color: #204d74;
+}
+.btn-primary:active:hover,
+.btn-primary.active:hover,
+.open > .dropdown-toggle.btn-primary:hover,
+.btn-primary:active:focus,
+.btn-primary.active:focus,
+.open > .dropdown-toggle.btn-primary:focus,
+.btn-primary:active.focus,
+.btn-primary.active.focus,
+.open > .dropdown-toggle.btn-primary.focus {
+  color: #fff;
+  background-color: #204d74;
+  border-color: #122b40;
+}
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled.focus,
+.btn-primary[disabled].focus,
+fieldset[disabled] .btn-primary.focus {
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.btn-primary .badge {
+  color: #337ab7;
+  background-color: #fff;
+}*/
 /*.login-box-body p {
 	font-size:14pt;
 }*/
@@ -64,7 +132,7 @@
 	font-size:40pt;
 }
 */
-@media only screen and (max-width: 800px) {
+/*@media only screen and (max-width: 800px) {
 	.login-box-body p {
 		font-size:20pt;
 	}
@@ -84,6 +152,7 @@
 	.login-logo a {
 		font-size:40pt;
 	}
+<<<<<<< Updated upstream
 
 
 	tr.fila-ausencia {
@@ -95,3 +164,6 @@
 		border-color: #FF9800;
 	}
 }
+=======
+}*/
+>>>>>>> Stashed changes

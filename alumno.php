@@ -181,7 +181,7 @@
 
 	</script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
 		<!-- MAIN HEADER -->
 		<?php include 'includes/header.php';
@@ -298,7 +298,7 @@
                     <td><?php echo $row['estado']; ?></td>
 
 									</tr>
-									</tbody>
+									
 									<?php
 									if($row['estado']=="activo"){
 										$activo++;
@@ -310,6 +310,7 @@
 										$interesado++;
 									}
                   } ?>
+				  </tbody>
 						</table>
 					</div>
 				</div>

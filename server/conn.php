@@ -8,7 +8,7 @@
 
 		// Local Host
 		$user = 'root'; //usuario
-		$password = ''; //senha
+		$password = '12345678'; //senha
 		$host = 'localhost'; //hosts
 		//$dbname = 'capacit_2020'; //nombre da base de dados
 		$dbname = 'ssdpy_asist'; //nombre da base de dados

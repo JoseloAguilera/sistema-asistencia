@@ -9,7 +9,7 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="css/AdminLTE.min.css">
 <!-- Bootstrap Toggle -->
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<link href="plugins/bootstrap-toggle.min.css" rel="stylesheet">
 <!-- iCheck -->
 <link rel="stylesheet" href="css/iCheck/blue.css">
 <!-- Bootstrap time Picker -->
@@ -22,15 +22,15 @@
 <link rel="stylesheet" href="css/bootstrap-select.min.css">
 <!-- Meus Estilos -->
 <link rel="stylesheet" href="css/estilos.css">
-<!-- Datatables -->
-<link rel="stylesheet" type="text/css" href="../plugins/DataTables/datatables.min.css"/>
+<!-- Datatables >
+<link rel="stylesheet" type="text/css" href="plugins/DataTables/datatables.min.css"/-->
 <link rel="stylesheet" type="text/css" href="plugins/DataTables/DataTables-1.10.20/css/dataTables.bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css
+<link rel="stylesheet" type="text/css" href="plugins/DataTables/DataTables-1.10.20/buttons.dataTables.min.css
 "/>
 
 <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
 page. However, you can choose any other skin. Make sure you
 apply the skin class to the body tag so the changes take effect. -->
-<link rel="stylesheet" href="css/skin-blue.min.css">
+<link rel="stylesheet" href="css/skin-yellow.min.css">
 
 <!-- FONTS -->

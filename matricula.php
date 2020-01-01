@@ -48,7 +48,7 @@
 
 			// Update do grupo
 			try {
-				$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW(), activo = '$estado4'
+				$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW(), activo = '$estado'
 				WHERE id = $id";
 				$query = $connection->prepare($sql);
 				$query->execute();
@@ -100,7 +100,7 @@
 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
 		<!-- MAIN HEADER -->
 		<?php include 'includes/header.php'; ?>
@@ -157,7 +157,6 @@
 						</div>
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
-								<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
 							<!--<div class="input-group">
 								<input type="text" class="form-control" placeholder="Buscar por..." name="busca">
 								<span class="input-group-btn">
@@ -267,7 +266,7 @@
 									<label for="dia">Alumno</label>
 									<select class="form-control" id="alumno" name="alumno">
 									<?php
-										$sql = "SELECT * from alumnos ORDER by nombre";
+										$sql = "SELECT * from alumnos ORDER by id DESC";
 										$query = $connection->prepare($sql);
 										$query->execute();
 										$result= $query->fetchAll();
@@ -402,7 +401,7 @@
 
 												foreach ($result2 as $grupo) {
 											?>
-											<option value="<?php echo $grupo['id'];?>"><?php echo $grupo['descripcion'];?></option>
+											<option value="<?php echo $grupo['id'];?>" ><?php echo $grupo['descripcion'];?></option>
 											<?php }?>
 										</optgroup>
 									<?php }?>

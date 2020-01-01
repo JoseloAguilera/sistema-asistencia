@@ -36,19 +36,19 @@
 
 			if (strpos($_SERVER['REQUEST_URI'], 'alumno.php') !== false){
 				$catastro = "active";
-				$subalumno = "text-aqua";
+				$subalumno = "text-yellow";
 			}
 			else if (strpos($_SERVER['REQUEST_URI'], 'matricula.php') !== false) {
 				$catastro = "active";
-				$submatricula = "text-aqua";
+				$submatricula = "text-yellow";
 			}
 			else if (strpos($_SERVER['REQUEST_URI'], 'curso.php') !== false) {
 				$catastro = "active";
-				$subcurso = "text-aqua";
+				$subcurso = "text-yellow";
 			}
 			else if (strpos($_SERVER['REQUEST_URI'], 'grupo.php') !== false){
 				$catastro = "active";
-				$subgrupo = "text-aqua";
+				$subgrupo = "text-yellow";
 			} else if (strpos($_SERVER['REQUEST_URI'], 'asistencia.php') !== false) {
 				$asistencia = "active";
 			} else if (strpos($_SERVER['REQUEST_URI'], 'configuraciones.php') !== false) {

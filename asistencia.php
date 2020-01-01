@@ -95,7 +95,7 @@ error_reporting(0);
 	<title>SSD - Asistencia</title>
 	<?php include 'includes/head.php'; ?>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
 		<!-- MAIN HEADER -->
 		<?php include 'includes/header.php'; ?>
@@ -260,7 +260,7 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 						<td><?php echo $asistencia['nombrealumno']." ".$asistencia['apellidoalumno']?></td>
 						<td><?php echo $asistencia['diamarcado']?></td>
 						<td><?php echo $asistencia['fecha_marcacion']?></td>
-						<td><?php echo date_format($asistencia['hora_de_marcacion'], 'H:i:s');?></td>
+						<td><?php echo $asistencia['hora_de_marcacion']?></td>
 						<td><?php echo $asistencia['asistencia']?></td>
 				   </tr>
 					<?php } else { ?>
