@@ -7,7 +7,6 @@
 			$usuario = $_POST['usuario'];
 			$contrasena = md5($_POST['contrasena']); //md5 para encriptar
 
-
 			$sql= "SELECT * from alumnos WHERE cedula = '$usuario' AND password = '$contrasena'";
 			$query= $connection->prepare($sql);
 			$query->execute();
@@ -16,20 +15,18 @@
 				foreach ($query->fetchAll() as $row) {
 					$_SESSION['logueado'] = 'logueado';
 					$_SESSION['tipo_login'] = 'alumno';
-					$_SESSION['nome_usuario'] = $row[nombre];
-					$_SESSION['nome_compl'] = $row[nombre];
-					$_SESSION['id'] = $row[id];
-					$_SESSION['cedula'] = $row[cedula];
-				    header('Location: presencia.php');
+					$_SESSION['nome_usuario'] = $row['nombre'];
+					$_SESSION['nome_compl'] = $row['nombre'];
+					$_SESSION['id'] = $row['id'];
+					$_SESSION['cedula'] = $row['cedula'];
+					header('Location: presencia.php');
 				}
 			}
-
-		else { //Si no encontró apresenta error
-			$mensaje = '<p class="alert alert-danger">Por favor, Ingrese Todos los Datos!</p>';
+			else { //Si no encontró apresenta error
+				$mensaje = '<p class="alert alert-danger">Por favor, Ingrese Todos los Datos!</p>';
+			}
 		}
 	}
-
-}
 ?>
 
 <!DOCTYPE html>

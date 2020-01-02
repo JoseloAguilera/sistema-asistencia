@@ -17,29 +17,27 @@
 				<!-- User Account: style can be found in dropdown.less -->
 				<li class="dropdown user user-menu">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				<img src="img/user2-160x160.jpg" class="user-image" alt="User Image">
-				<span class="hidden-xs"><?php echo $_SESSION['nome_usuario'];?></span>
+					<img src="img/user2-160x160.jpg" class="user-image" alt="User Image">
+					<span class="hidden-xs"><?php echo $_SESSION['nome_usuario'];?></span>
 				</a>
 				<ul class="dropdown-menu">
 				<!-- User image -->
-				<li class="user-header">
-				<img src="img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-				<p>
-				<?php echo $_SESSION['nombre_usaurio'];?>
-				<small>Member since Nov. 2012</small>
-				</p>
-				</li>
-				</li>
-				<!-- Menu Footer-->
-				<li class="user-footer">
-				<div class="pull-left">
-				<a href="#" class="btn btn-default btn-flat">Perfil</a>
-				</div>
-				<div class="pull-right">
-				<a href="salir.php" class="btn btn-default btn-flat">Salir</a>
-				</div>
-				</li>
+					<li class="user-header">
+						<img src="img/user2-160x160.jpg" class="img-circle" alt="User Image">
+						<p>
+							<?php echo $_SESSION['nome_usuario'];?>
+							<small>Member since Nov. 2012</small>
+						</p>
+					</li>
+					<!-- Menu Footer-->
+					<li class="user-footer">
+						<div class="pull-left">
+							<a href="configuraciones.php" class="btn btn-default btn-flat">Config</a>
+						</div>
+						<div class="pull-right">
+							<a href="salir.php" class="btn btn-default btn-flat">Salir</a>
+						</div>
+					</li>
 				</ul>
 				</li>
 				<!-- Control Sidebar Toggle Button -->

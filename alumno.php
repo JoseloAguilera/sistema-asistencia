@@ -147,9 +147,11 @@
 						$sql = 'DELETE FROM alumnos WHERE id = '.$id;
 						$query = $connection->prepare($sql);
 						$query->execute();
-						$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+						$tipomensaje = 'success';
+						$mensaje = '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
 				} catch (\Exception $e) {
-						$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+						$tipomensaje = 'error';
+						$mensaje= '<h3>HA OCURRIDO UN ERROR!</h3><p>Consulte al administrador de sistemas.<br><br>Error->"'.$e.'</p>';
 				}
 				break;
 		}
@@ -178,19 +180,10 @@
 		require 'server/conn.php'?>
 		<!-- MAIN HEADER END -->
 		<?php
-				/*if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
-				$busca = $_POST['busca'];
-				$sql = "SELECT * from alumnos WHERE nombre LIKE '%$busca%' OR apellido LIKE '%$busca%' OR cedula LIKE '%$busca%' ORDER by id";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				$result= $query->fetchAll();
-			} else {
-				$busca = "";*/
-				$sql = "SELECT * from alumnos ORDER by id";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				$result= $query->fetchAll();
-			//}
+			$sql = "SELECT * from alumnos ORDER by id";
+			$query = $connection->prepare($sql);
+			$query->execute();
+			$result= $query->fetchAll();
 		?>
 		<!-- ASIDE BAR -->
 		<?php include 'includes/aside.php'; ?>
@@ -279,12 +272,7 @@
 								$interesado=0; ?>
 						<tbody>
 							<?php foreach ($result as $row) { ?>
-									<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-apellido="<?php echo $row['apellido']; ?>"
-										data-cedula="<?php echo $row['cedula']; ?>" data-telefono_alumno="<?php echo $row['telefono_alumno']; ?>" data-email="<?php echo $row['email']; ?>"
-										data-ciudad="<?php echo $row['ciudad']; ?>" data-direcion="<?php echo $row['direccion']; ?>" data-nascimiento="<?php echo $row['fecha_nac']; ?>"
-										data-razonsocial="<?php echo $row['razon_social']; ?>" data-ruc="<?php echo $row['ruc']; ?>" data-nombreref="<?php echo $row['nombre_ref']; ?>"
-										data-telefonoref="<?php echo $row['telefono_ref']; ?>" data-nombremama="<?php echo $row['mama']; ?>" data-telefono_mama="<?php echo $row['telefono_mama']; ?>"
-										data-nombrepapa="<?php echo $row['papa']; ?>" data-telefono_papa="<?php echo $row['telefono_papa']; ?>" data-estado="<?php echo $row['estado'];?>" data-password="<?php echo $row['password'];?>" data-foto="<?php echo $row['foto'];?>">
+								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-apellido="<?php echo $row['apellido']; ?>" data-cedula="<?php echo $row['cedula']; ?>" data-telefono_alumno="<?php echo $row['telefono_alumno']; ?>" data-email="<?php echo $row['email']; ?>" data-ciudad="<?php echo $row['ciudad']; ?>" data-direcion="<?php echo $row['direccion']; ?>" data-nascimiento="<?php echo $row['fecha_nac']; ?>" data-razonsocial="<?php echo $row['razon_social']; ?>" data-ruc="<?php echo $row['ruc']; ?>" data-nombreref="<?php echo $row['nombre_ref']; ?>" data-telefonoref="<?php echo $row['telefono_ref']; ?>" data-nombremama="<?php echo $row['mama']; ?>" data-telefono_mama="<?php echo $row['telefono_mama']; ?>" data-nombrepapa="<?php echo $row['papa']; ?>" data-telefono_papa="<?php echo $row['telefono_papa']; ?>" data-estado="<?php echo $row['estado'];?>" data-password="<?php echo $row['password'];?>" data-foto="<?php echo $row['foto'];?>">
 									<td><?php echo $row['id']; ?></td>
 									<td><?php echo $row['nombre']; ?></td>
 									<td><?php echo $row['apellido']; ?></td>
@@ -293,9 +281,9 @@
 									<td><?php echo $row['telefono_alumno']; ?></td>
 									<td><?php echo $row['estado']; ?></td>
 
-									</tr>
+								</tr>
 									
-									<?php
+								<?php
 									if($row['estado']=="activo"){
 										$activo++;
 									}
@@ -312,9 +300,9 @@
 				</div>
 				<!-- /.box-body -->
 				<!-- <div class="box-footer text-center">
-					<div class="col-md-4"><small><?php echo $activo ?> Alumnos Activo/s</small></div>
-					<div class="col-md-4"><small><?php echo $inactivo ?> Alumnos Inactivo/s</small></div>
-					<div class="col-md-4"><small><?php echo $interesado ?> Interesado/s</small></div>
+					<div class="col-md-4"><small><?php //echo $activo ?> Alumnos Activo/s</small></div>
+					<div class="col-md-4"><small><?php //echo $inactivo ?> Alumnos Inactivo/s</small></div>
+					<div class="col-md-4"><small><?php //echo $interesado ?> Interesado/s</small></div>
 				</div> -->
 				<!-- /.box-footer-->
 			</div>

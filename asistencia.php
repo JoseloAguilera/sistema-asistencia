@@ -102,22 +102,19 @@ error_reporting(0);
 		<!-- MAIN HEADER END -->
 		<?php
 
-$sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
- $query = $connection->prepare($sql);
- $query->execute();
- $alumnos= $query->fetchAll();
- 
- if (isset($_POST['fecha_inicio']) && isset($_POST['fecha_fin'])) {
-	 $f1= str_replace('/', '-', $_POST['fecha_inicio']);
-	 $f2=str_replace('/', '-', $_POST['fecha_fin']);
-	 $fechaInicio=date('Y-m-d',strtotime($f1));
-	 $fechaFin=date('Y-m-d',strtotime($f2));
-	 $fechaInicio = strtotime($fechaInicio);
-	 $fechaFin = strtotime($fechaFin);
+			$sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
+			$query = $connection->prepare($sql);
+			$query->execute();
+			$alumnos= $query->fetchAll();
 
-
-	
- }
+			if (isset($_POST['fecha_inicio']) && isset($_POST['fecha_fin'])) {
+				$f1= str_replace('/', '-', $_POST['fecha_inicio']);
+				$f2=str_replace('/', '-', $_POST['fecha_fin']);
+				$fechaInicio=date('Y-m-d',strtotime($f1));
+				$fechaFin=date('Y-m-d',strtotime($f2));
+				$fechaInicio = strtotime($fechaInicio);
+				$fechaFin = strtotime($fechaFin);
+			}
 
  /*
  $fechaInicio=strtotime("2019-11-17"); 
@@ -136,10 +133,7 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 	 //	echo $asistencia['nombrealumno']." ".$asistencia['apellidoalumno']." - ".$asistencia['hora_de_marcacion']." - ".$asistencia['diamarcado']." - ".$asistencia['fecha_marcacion']."<br>"."<br>";
 	  //}
  
-	 
-
-
-?>
+		?>
 		<!-- ASIDE BAR -->
 		<?php include 'includes/aside.php'; ?>
 		<!-- ASIDE BAR END -->
@@ -149,19 +143,14 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 			<!-- Cabicera de Contenido (Título) -->
 			<section class="content-header">
 				<h1>
-				
-					<small>Filtrando Desde <?php  
-					echo $_POST['fecha_inicio']." hasta ".$_POST['fecha_fin'].$di.$df;
-				?></small>
+					<small>Filtrando Desde <?php echo $_POST['fecha_inicio']." hasta ".$_POST['fecha_fin'].$di.$df;?></small>
 				</h1>
-
-				
 			</section>
 
 			<!-- Contenido Principal -->
 			<section class="content">
-	<!-- Caja de Texto de color gris (Default) -->
-	<div class="box">
+				<!-- Caja de Texto de color gris (Default) -->
+				<div class="box">
 					<div class="box-header with-border">
 						<!-- Caja de Busqueda -->
 						<form action="" method="post">
@@ -179,7 +168,7 @@ $sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
 							</div>
 							<div class="col-md-2">
 							<br>
-								<input type="submit" class="btn btn-primary">
+								<input type="submit" class="btn btn-primary" value="Buscar">
 							</div>
 						</form>
 						

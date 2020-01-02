@@ -153,7 +153,7 @@
 					</div>
 					<!-- Caja de Busqueda -->
 					<div class="col-md-3 pull-right">
-						<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
+						<a type="button" class="btn btn-primary pull-right" href="index.php"> ← Atrás </a>
 					</div>
 				</div>
 				<!-- Corpo de Caja -->

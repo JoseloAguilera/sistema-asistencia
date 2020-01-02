@@ -129,15 +129,7 @@
 						</div>
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
-							<a type="button" class="btn btn-warning" href="index.php"> ← Atrás </a>
-							<!--<form method="POST">
-								<div class="input-group">
-									<input type="text" class="form-control" placeholder="Buscar por..." name="busca" value="<?php echo $busca;?>">
-									<span class="input-group-btn">
-										<button class="btn btn-default" type="submit" name="search"><i class="fa fa-search"></i></button>
-									</span>
-								</div>
-							</form>-->
+							<a type="button" class="btn btn-primary pull-right" href="index.php"> ← Atrás </a>
 						</div>
 					</div>
 					<!-- Corpo de Caja -->
