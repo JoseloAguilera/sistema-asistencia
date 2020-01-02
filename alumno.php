@@ -645,7 +645,7 @@
 	<script type="text/javascript">
 
 		//Modal de alteración, pone los datos en los inputs
-	$('#AltModal').on('show.bs.modal', function (event) {
+		$('#AltModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // objeto que disparó el modal
 			var codigo = button.data('codigo')
 			var nombre = button.data('nombre')

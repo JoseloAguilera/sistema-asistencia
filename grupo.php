@@ -19,19 +19,27 @@
 			$entrada = $_POST['entrada'];
 			$salida = $_POST['salida'];
 
-			$sql = "INSERT INTO grupos (descripcion, cursos_id, activo) VALUES ('$descripcion', '$codcurso', '$estado')";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			$last_id = $connection->lastInsertId(); //id del grupo
-			//var_dump($last_id);
-
-			foreach ($dia as $diasemana) {
-				//var_dump($diasemana);
-				$sql = "INSERT INTO horarios (hora_inicio, hora_fin, dia, grupos_id, grupos_cursos_id) VALUES ('$entrada', '$salida', '$diasemana', '$last_id', '$codcurso')";
+			try {
+				$sql = "INSERT INTO grupos (descripcion, cursos_id, activo) VALUES ('$descripcion', '$codcurso', '$estado')";
 				$query = $connection->prepare($sql);
 				$query->execute();
+				$last_id = $connection->lastInsertId(); //id del grupo
+				//var_dump($last_id);
+
+				foreach ($dia as $diasemana) {
+					//var_dump($diasemana);
+					$sql = "INSERT INTO horarios (hora_inicio, hora_fin, dia, grupos_id, grupos_cursos_id) VALUES ('$entrada', '$salida', '$diasemana', '$last_id', '$codcurso')";
+					$query = $connection->prepare($sql);
+					$query->execute();
+				}
+				//$result= $query->fetchAll();
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';
+			} catch (\Exception $e) {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';
 			}
-			//$result= $query->fetchAll();
+			
 		} else if (isset($_POST['guardar'])){
 			//var_dump($_POST);
 
@@ -43,26 +51,33 @@
 			$entrada = $_POST['entrada'];
 			$salida = $_POST['salida'];
 
-			//Alteração de Horários (Deletar os horários antigos e criar novos)
-			//Delete horarios
-			$sql = "DELETE FROM horarios WHERE grupos_id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
-
-			foreach ($dia as $diasemana) {
-				//var_dump($diasemana);
-				$sql = "INSERT INTO horarios (hora_inicio, hora_fin, dia, grupos_id, grupos_cursos_id) VALUES ('$entrada', '$salida', '$diasemana', '$id', '$codcurso')";
+			try {
+				//Alteração de Horários (Deletar os horários antigos e criar novos)
+				//Delete horarios
+				$sql = "DELETE FROM horarios WHERE grupos_id = $id";
 				$query = $connection->prepare($sql);
 				$query->execute();
+
+				foreach ($dia as $diasemana) {
+					//var_dump($diasemana);
+					$sql = "INSERT INTO horarios (hora_inicio, hora_fin, dia, grupos_id, grupos_cursos_id) VALUES ('$entrada', '$salida', '$diasemana', '$id', '$codcurso')";
+					$query = $connection->prepare($sql);
+					$query->execute();
+				}
+
+				// Update do grupo
+				$sql = "UPDATE grupos SET descripcion = '$descripcion', cursos_id = '$codcurso', activo = '$estado'
+				WHERE id = $id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				//$result= $query->fetchAll();
+
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';
+			} catch (\Exception $e) {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';
 			}
-
-			// Update do grupo
-			$sql = "UPDATE grupos SET descripcion = '$descripcion', cursos_id = '$codcurso', activo = '$estado'
-			WHERE id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
-
-			//$result= $query->fetchAll();
 		} else if (isset($_POST['excluir'])){
 			// var_dump($_POST);
 			$id =  $_POST['codigo'];
@@ -71,28 +86,24 @@
 				$sql = "DELETE FROM horarios WHERE grupos_id = $id";
 				$query = $connection->prepare($sql);
 				$query->execute();
-				$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
-
+				
+				try {
+					//Delete Grupos
+					$sql = "DELETE FROM grupos WHERE id = $id";
+					$query = $connection->prepare($sql);
+					$query->execute();
+					//$result= $query->fetchAll();
+					$tipomensaje = 'success';
+					$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+				} catch (\Exception $e) {
+					$tipomensaje = 'error';
+					$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				}
 			} catch (\Exception $e) {
-				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 
 			}
-
-
-			try {
-				//Delete Grupos
-				$sql = "DELETE FROM grupos WHERE id = $id";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				//$result= $query->fetchAll();
-				$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
-
-			} catch (\Exception $e) {
-				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
-
-			}
-
-
 		}
 	}
 ?>
@@ -156,16 +167,39 @@
 						<a type="button" class="btn btn-primary pull-right" href="index.php"> ← Atrás </a>
 					</div>
 				</div>
+				<div class="modal fade modal-mensaje" id="modal-mensaje" tabindex="-1" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header modal-mensaje-<?php echo $tipomensaje;?>" > <!-- modal-mensaje-success or modal-mensaje-error -->
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<h1 class="modal-title text-center">
+										<?php if ($tipomensaje == 'success') {?>
+											<img src="img/success-icon.png"> 
+										<?php } else { ?>
+											<img src="img/error-icon.png">
+										<?php }?>
+									</h1>
+								</div>
+								<div class="modal-body text-center">
+									<p>  <?php echo $mensaje; ?></p>
+								</div>
+								<!-- <div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div> -->
+							</div>
+						</div>
+					</div>
 				<!-- Corpo de Caja -->
 				<div class="box-body">
 					<div class="col-md-12">
-						<?php
-						if (isset( $mensaje)) {
-							echo $mensaje; //alert mensaje
-						}
+						<!-- <?php
+						// if (isset( $mensaje)) {
+						// 	echo $mensaje; //alert mensaje
+						// }
 
-						?>
-
+						?> -->
 					</div>
 					<div class="box-body table-responsive">
 						<table class="table table-striped table-bordered display nowra" id="tabladatos">
@@ -541,6 +575,14 @@
 				//Acciones si el usuario no confirma
 			}
 		});
+
+		<?php if (isset($mensaje)) {?>
+			$(document).ready(function(){
+			$("#modal-mensaje").modal("show");
+			});
+		<?php
+			unset($mensaje);
+		} ?>
 	</script>
 </body>
 </html>

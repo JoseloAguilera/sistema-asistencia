@@ -27,10 +27,12 @@
 				//var_dump($last_id);
 
 				//$result= $query->fetchAll()
-				$mensaje= '<div class="alert alert-success">REGISTRO AGREGADO CORRECTAMENTE</div>';
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';//'<div class="alert alert-success">REGISTRO AGREGADO CORRECTAMENTE</div>';
 
-			} catch (\Exception $e) {
-					$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+			} catch (\Except1ion $e) {
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 			}
 
 
@@ -54,12 +56,12 @@
 				$query->execute();
 
 				//$result= $query->fetchAll();
-					$mensaje= '<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
 			} catch (\Exception $e) {
-				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 			}
-
-
 		} else if (isset($_POST['excluir'])){
 			$id =  $_POST['codigo'];
 			try {
@@ -68,14 +70,13 @@
 				$query = $connection->prepare($sql);
 				$query->execute();
 				//$result= $query->fetchAll();
-				$mensaje= '<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
 			} catch (\Exception $e) {
-				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 
 			}
-
-
-
 		}
 		else if (isset($_POST['pdf'])) {
 			if ($_POST['codigo']>0) {
@@ -160,17 +161,41 @@
 							<a type="button" class="btn btn-primary pull-right" href="index.php"> ← Atrás </a>
 						</div>
 					</div>
+					<div class="modal fade modal-mensaje" id="modal-mensaje" tabindex="-1" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header modal-mensaje-<?php echo $tipomensaje;?>" > <!-- modal-mensaje-success or modal-mensaje-error -->
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<h1 class="modal-title text-center">
+										<?php if ($tipomensaje == 'success') {?>
+											<img src="img/success-icon.png"> 
+										<?php } else { ?>
+											<img src="img/error-icon.png">
+										<?php }?>
+									</h1>
+								</div>
+								<div class="modal-body text-center">
+									<p>  <?php echo $mensaje; ?></p>
+								</div>
+								<!-- <div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div> -->
+							</div>
+						</div>
+					</div>
 					<!-- Corpo de Caja -->
 					<div class="box-body">
-						<div class="col-md-12">
+						<!-- <div class="col-md-12">
 							<?php
-							if (isset( $mensaje)) {
-								echo $mensaje; //alert mensaje
-							}
+							// if (isset( $mensaje)) {
+							// 	echo $mensaje; //alert mensaje
+							// }
 
 							?>
 
-						</div>
+						</div> -->
 						<div class="box-body table-responsive">
 							<table class="table table-striped table-bordered display nowra" id="tabladatos">
 							<thead>
@@ -540,6 +565,13 @@
 				//Acciones si el usuario no confirma
 			}
 		});
+		<?php if (isset($mensaje)) {?>
+			$(document).ready(function(){
+			$("#modal-mensaje").modal("show");
+			});
+		<?php
+			unset($mensaje);
+		} ?>
 	</script>
 </body>
 </html>

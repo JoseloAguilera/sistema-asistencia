@@ -25,10 +25,12 @@
 				$query = $connection->prepare($sql);
 				$query->execute();
 
-				$mensaje= '<div class="alert alert-success">REGISTRO INSERTADO CORRECTAMENTE</div>';
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';//'<div class="alert alert-success">REGISTRO INSERTADO CORRECTAMENTE</div>';
 
 			} catch (\Exception $e) {
-				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 			}
 			
 			//$result= $query->fetchAll();
@@ -44,28 +46,32 @@
 			$valor_matricula = $_POST['matricula'];
 
 			try {
-			$sql = "UPDATE cursos SET nombre = '$nombre', desc_corta = '$desc_corta', desc_detallada = '$desc_detallada', duracion_meses = '$duracion_meses', activo = '$estado', valor_cuota = '$valor_cuota', valor_matrícula = '$valor_matricula', fecha_update = NOW()
-			WHERE id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			//$result= $query->fetchAll();							
-			$mensaje= '<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
+				$sql = "UPDATE cursos SET nombre = '$nombre', desc_corta = '$desc_corta', desc_detallada = '$desc_detallada', duracion_meses = '$duracion_meses', activo = '$estado', valor_cuota = '$valor_cuota', valor_matrícula = '$valor_matricula', fecha_update = NOW()
+				WHERE id = $id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				//$result= $query->fetchAll();	
 
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
 			} catch (\Exception $e) {
-				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 			}
 				
 		} else if (isset($_POST['excluir'])){
 			// var_dump($_POST);
 			$id =  $_POST['codigo'];
 			try {
-			$sql = "DELETE FROM cursos WHERE id = $id";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			//$result= $query->fetchAll();
-			
+				$sql = "DELETE FROM cursos WHERE id = $id";
+				$query = $connection->prepare($sql);
+				$query->execute();
+				//$result= $query->fetchAll();
+				$tipomensaje = 'success';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';
 			} catch (\Exception $e) {
-				$mensaje = '<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$tipomensaje = 'error';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
 			}
 		}
 	}
@@ -130,6 +136,30 @@
 						<!-- Caja de Busqueda -->
 						<div class="col-md-3 pull-right">
 							<a type="button" class="btn btn-primary pull-right" href="index.php"> ← Atrás </a>
+						</div>
+					</div>
+					<div class="modal fade modal-mensaje" id="modal-mensaje" tabindex="-1" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header modal-mensaje-<?php echo $tipomensaje;?>" > <!-- modal-mensaje-success or modal-mensaje-error -->
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<h1 class="modal-title text-center">
+										<?php if ($tipomensaje == 'success') {?>
+											<img src="img/success-icon.png"> 
+										<?php } else { ?>
+											<img src="img/error-icon.png">
+										<?php }?>
+									</h1>
+								</div>
+								<div class="modal-body text-center">
+									<p>  <?php echo $mensaje; ?></p>
+								</div>
+								<!-- <div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div> -->
+							</div>
 						</div>
 					</div>
 					<!-- Corpo de Caja -->
@@ -446,6 +476,14 @@
 				//Acciones si el usuario no confirma
 			}
 		});
+
+		<?php if (isset($mensaje)) {?>
+			$(document).ready(function(){
+			$("#modal-mensaje").modal("show");
+			});
+		<?php
+			unset($mensaje);
+		} ?>
 	</script>
 </body>
 </html>
