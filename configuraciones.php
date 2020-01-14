@@ -57,7 +57,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Empresa X - Página de inicio</title>
+	<title>SSD - Configuraciones</title>
 	<?php include 'includes/head.php'; ?>
 </head>
 <body class="hold-transition skin-yellow sidebar-mini">
