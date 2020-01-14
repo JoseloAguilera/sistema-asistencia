@@ -100,18 +100,20 @@
 					<div class="box-body">
 						<div class="text-center">
 							<div class="col-lg-4 col-xs-6">
-								<img src="img/user2-160x160.jpg" class="img-responsive img-circle" alt="Responsive image" style="width: 270px;">
+								<img src="img/logo.png" class="img-circle" alt="Logo SSD" style="width: 270px;">
+								<h5>logo.png</h5>
 							</div>
 						</div>
 						
-						<div class="col-lg-8 col-xs-12">
+						<!-- <div class="col-lg-8 col-xs-12">
 							<br>
 							<div class="form-group">
 								<label for="descricao">Logo Empresa</label>
 								<input type="file" id="logo" name="logo">
 							</div>
-						</div>
+						</div> -->
 						<div class="col-lg-8 col-xs-12">
+							<br>
 							<div class="form-group">
 								<label for="nombre">Nombre Completo</label>
 								<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre Completo del Usuario" maxlength="80" value="<?php echo $user['nombre'];?>" required>

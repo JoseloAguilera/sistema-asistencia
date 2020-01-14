@@ -331,138 +331,142 @@
 	<div class="modal fade" tabindex="-1" role="dialog" id="AddModal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Nuevo Alumno</h4>
-				</div>
 				<form action="" method="POST" name="form1">
-					<input type="hidden" class="form-control" id="codigo" name="codigo">
-					<div class="modal-body">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="nombre">Nombre</label>
-								<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Alumno" maxlength="50" required>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="apellido">Apellido</label>
-								<input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del Alumno" maxlength="50" required>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="cedula">Fecha de Nacimiento</label>
-								<input type="text" class="form-control pull-right datepicker" id="nascimiento" name="nascimiento">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="cedula">Cedula</label>
-								<input type="text" class="form-control" id="cedula" name="cedula" placeholder="Numero de Cedula" maxlength="10" required>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefono">Teléfono</label>
-								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="15">
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="email">E-mail</label>
-								<input type="email" class="form-control" id="email" name="email" placeholder="E-mail de contacto" maxlength="50">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="contrasena">Contraseña</label>
-								<input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="ciudad">Ciudad</label>
-								<select class="form-control" id="ciudad" name="ciudad">
-									<option value="cde">Ciudad Del Este</option>
-									<option value="hernandarias">Hernandarias</option>
-									<option value="franco">Presidente Franco</option>
-									<option value="minga">Minga Guazu</option>
-									<option value="otra">Otra</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="direcion">Dirección</label>
-								<input type="text" class="form-control" id="direcion" name="direcion" placeholder="Direción de Cobranza" maxlength="50">
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="razonsocial">Razon Social</label>
-								<input type="text" class="form-control" id="razonsocial" name="razonsocial" placeholder="Nombre para emisión de factura" maxlength="50">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="ruc">RUC</label>
-								<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="15">
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="nombreref">Nombre Referencia</label>
-								<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="100">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefonoref">Teléfono Referencia</label>
-								<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="15">
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="nombreref">Nombre Madre</label>
-								<input type="text" class="form-control" id="nombremama" name="nombremama" placeholder="Nombre de la madre" maxlength="100">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefonoref">Teléfono Madre</label>
-								<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="15">
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="nombreref">Nombre Padre</label>
-								<input type="text" class="form-control" id="nombrepapa" name="nombrepapa" placeholder="Nombre del padre" maxlength="100">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefonoref">Teléfono Padre</label>
-								<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="15">
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="foto">Foto</label>
-								<input type="text" class="form-control" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos', 'add')">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="cedula">Estado</label>
-								<select class="form-control" id="estado" name="estado">
-									<option value="activo">Activo</option>
-									<option value="inactivo">Inactivo</option>
-									<option value="interesado">Interesado</option>
-								</select>
-							</div>
-						</div>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Nuevo Alumno</h4>
 					</div>
+
+					<div class="modal-body">
+						<div class="row">
+							<input type="hidden" class="form-control" id="codigo" name="codigo">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="nombre">Nombre</label>
+									<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Alumno" maxlength="50" required>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="apellido">Apellido</label>
+									<input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del Alumno" maxlength="50" required>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="cedula">Fecha de Nacimiento</label>
+									<input type="text" class="form-control pull-right datepicker" id="nascimiento" name="nascimiento">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="cedula">Cedula</label>
+									<input type="text" class="form-control" id="cedula" name="cedula" placeholder="Numero de Cedula" maxlength="10" required>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefono">Teléfono</label>
+									<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="15">
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="email">E-mail</label>
+									<input type="email" class="form-control" id="email" name="email" placeholder="E-mail de contacto" maxlength="50">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="contrasena">Contraseña</label>
+									<input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="ciudad">Ciudad</label>
+									<select class="form-control" id="ciudad" name="ciudad">
+										<option value="cde">Ciudad Del Este</option>
+										<option value="hernandarias">Hernandarias</option>
+										<option value="franco">Presidente Franco</option>
+										<option value="minga">Minga Guazu</option>
+										<option value="otra">Otra</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="direcion">Dirección</label>
+									<input type="text" class="form-control" id="direcion" name="direcion" placeholder="Direción de Cobranza" maxlength="50">
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="razonsocial">Razon Social</label>
+									<input type="text" class="form-control" id="razonsocial" name="razonsocial" placeholder="Nombre para emisión de factura" maxlength="50">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="ruc">RUC</label>
+									<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="15">
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="nombreref">Nombre Referencia</label>
+									<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="100">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefonoref">Teléfono Referencia</label>
+									<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="15">
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="nombreref">Nombre Madre</label>
+									<input type="text" class="form-control" id="nombremama" name="nombremama" placeholder="Nombre de la madre" maxlength="100">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefonoref">Teléfono Madre</label>
+									<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="15">
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="nombreref">Nombre Padre</label>
+									<input type="text" class="form-control" id="nombrepapa" name="nombrepapa" placeholder="Nombre del padre" maxlength="100">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefonoref">Teléfono Padre</label>
+									<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="15">
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="foto">Foto</label>
+									<input type="text" class="form-control" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos', 'add')">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="cedula">Estado</label>
+									<select class="form-control" id="estado" name="estado">
+										<option value="activo">Activo</option>
+										<option value="inactivo">Inactivo</option>
+										<option value="interesado">Interesado</option>
+									</select>
+								</div>
+							</div>
+						</div> <!-- row -->
+					</div> <!-- modal-body -->  
+					
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 						<button type="submit" class="btn btn-primary" name="accion" value="guardar">Guardar</button>
@@ -474,140 +478,145 @@
 	<!-- ./AddModal -->
 
 	<!-- AltModal -->
-	<div class="modal fade" tabindex="-1" role="dialog" id="AltModal">
+	<div class="modal fade modal-mensaje" tabindex="-1" role="dialog" id="AltModal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Actualizacion</h4>
+					<h1 class="modal-title text-center">
+						<img src="img/user2-160x160.jpg" class="img-circle" style="width: 200px;" id="fotoalumno"> 
+					</h1>
+					<!-- <h4 class="modal-title">Actualizacion</h4> -->
 				</div>
 				<form action="" method="POST" name="form">
 					<input type="hidden" class="form-control" id="codigo" name="codigo">
 					<div class="modal-body">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="nombre">Nombre</label>
-								<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Alumno" maxlength="50" required>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="nombre">Nombre</label>
+									<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Alumno" maxlength="50" required>
+								</div>
 							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="apellido">Apellido</label>
-								<input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del Alumno" maxlength="50" required>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="apellido">Apellido</label>
+									<input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del Alumno" maxlength="50" required>
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="cedula">Fecha Nacimiento</label>
-								<input type="text" class="form-control pull-right datepicker" id="nascimiento" name="nascimiento">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="cedula">Fecha Nacimiento</label>
+									<input type="text" class="form-control pull-right datepicker" id="nascimiento" name="nascimiento">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="cedula">Cedula</label>
-								<input type="text" class="form-control" id="cedula" name="cedula" placeholder="Numero de Cedula" maxlength="10" required>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="cedula">Cedula</label>
+									<input type="text" class="form-control" id="cedula" name="cedula" placeholder="Numero de Cedula" maxlength="10" required>
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefono">Teléfono</label>
-								<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="10">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefono">Teléfono</label>
+									<input type="text" class="form-control" id="telefono_alumno" name="telefono_alumno" placeholder="Numero de Teléfono" maxlength="10">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="email">E-mail</label>
-								<input type="email" class="form-control" id="email" name="email" placeholder="E-mail de contacto" maxlength="50">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="email">E-mail</label>
+									<input type="email" class="form-control" id="email" name="email" placeholder="E-mail de contacto" maxlength="50">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="contrasena">Contraseña</label>
-								<input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="contrasena">Contraseña</label>
+									<input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Contraseña de usuario" maxlength="50">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="ciudad">Ciudad</label>
-								<select class="form-control" id="ciudad" name="ciudad">
-									<option value="cde">Ciudad Del Este</option>
-									<option value="hernandarias">Hernandarias</option>
-									<option value="franco">Presidente Franco</option>
-									<option value="Minga">Minga Guazu</option>
-									<option value="otra">Otra</option>
-								</select>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="ciudad">Ciudad</label>
+									<select class="form-control" id="ciudad" name="ciudad">
+										<option value="cde">Ciudad Del Este</option>
+										<option value="hernandarias">Hernandarias</option>
+										<option value="franco">Presidente Franco</option>
+										<option value="Minga">Minga Guazu</option>
+										<option value="otra">Otra</option>
+									</select>
+								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="direcion">Dirección</label>
-								<input type="text" class="form-control" id="direcion" name="direcion" placeholder="Direción de Cobranza" maxlength="50">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="direcion">Dirección</label>
+									<input type="text" class="form-control" id="direcion" name="direcion" placeholder="Direción de Cobranza" maxlength="50">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="razonsocial">Razon Social</label>
-								<input type="text" class="form-control" id="razonsocial" name="razonsocial" placeholder="Nombre para emisión de factura" maxlength="50">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="razonsocial">Razon Social</label>
+									<input type="text" class="form-control" id="razonsocial" name="razonsocial" placeholder="Nombre para emisión de factura" maxlength="50">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="ruc">RUC</label>
-								<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="10">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="ruc">RUC</label>
+									<input type="text" class="form-control" id="ruc" name="ruc" placeholder="RUC para factura" maxlength="10">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="nombreref">Nombre Referencia</label>
-								<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="10">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="nombreref">Nombre Referencia</label>
+									<input type="text" class="form-control" id="nombreref" name="nombreref" placeholder="Nombre de la referencia personal" maxlength="10">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefonoref">Teléfono Referencia</label>
-								<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="10">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefonoref">Teléfono Referencia</label>
+									<input type="text" class="form-control" id="telefonoref" name="telefonoref" placeholder="Teléfono de la referencia" maxlength="10">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="nombreref">Nombre Madre</label>
-								<input type="text" class="form-control" id="nombremama" name="nombremama" placeholder="Nombre de la madre" maxlength="100">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="nombreref">Nombre Madre</label>
+									<input type="text" class="form-control" id="nombremama" name="nombremama" placeholder="Nombre de la madre" maxlength="100">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefonoref">Teléfono Madre</label>
-								<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="10">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefonoref">Teléfono Madre</label>
+									<input type="text" class="form-control" id="telefono_mama" name="telefono_mama" placeholder="Teléfono de la madre" maxlength="10">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="nombreref">Nombre Padre</label>
-								<input type="text" class="form-control" id="nombrepapa" name="nombrepapa" placeholder="Nombre del padre" maxlength="100">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="nombreref">Nombre Padre</label>
+									<input type="text" class="form-control" id="nombrepapa" name="nombrepapa" placeholder="Nombre del padre" maxlength="100">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="telefonoref">Teléfono Padre</label>
-								<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="10">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="telefonoref">Teléfono Padre</label>
+									<input type="text" class="form-control" id="telefono_papa" name="telefono_papa" placeholder="Teléfono del padre" maxlength="10">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group">
-								<label for="foto">Foto</label>
-								<input type="text" class="form-control" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos','alt')">
+							<div class="col-md-8">
+								<div class="form-group">
+									<label for="foto">Foto</label>
+									<input type="text" class="form-control" id="foto" name="foto" onclick="subir_imagen('foto','img_alumnos','alt')">
+								</div>
 							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="cedula">Estado</label>
-								<select class="form-control" id="estado" name="estado">
-									<option value="activo">Activo</option>
-									<option value="inactivo">Inactivo</option>
-									<option value="interesado">Interesado</option>
-								</select>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="cedula">Estado</label>
+									<select class="form-control" id="estado" name="estado">
+										<option value="activo">Activo</option>
+										<option value="inactivo">Inactivo</option>
+										<option value="interesado">Interesado</option>
+									</select>
+								</div>
 							</div>
-						</div>
+						</div> <!-- row -->
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger pull-left" name="accion" value="excluir"  id="btn-confirmar">Excluir</button>
@@ -670,7 +679,7 @@
 
 			// Actualiza los datos del modal
 			var modal = $(this)
-			modal.find('.modal-title').text('Curso ' + nombre)
+			// modal.find('.modal-title').text('Alumno ' + nombre)
 			modal.find('#codigo').val(codigo)
 			modal.find('#nombre').val(nombre)
 			modal.find('#apellido').val(apellido)
@@ -691,6 +700,11 @@
 			modal.find('#telefono_mama').val(telefono_mama)
 			modal.find('#nombrepapa').val(nombrepapa)
 			modal.find('#telefono_papa').val(telefono_papa)
+			if (foto) {
+				document.getElementById('fotoalumno').src='img/img_alumnos/'+foto
+			} else {
+				document.getElementById('fotoalumno').src='img/logo.png'
+			}
 		})
 
 		// modal para confirmar si quiere remover el registro
