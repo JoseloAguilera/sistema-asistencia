@@ -42,8 +42,8 @@
 
 <body class="hold-transition login-page">
 	<div class="login-box">
-		<div class="login-logo">
-			<a href="index.php"><b>Academia</b> de Danza</a>
+		<div class="login-logo text-center">
+			<a href="index.php"><img src="img/logo.png" class="img-circle" alt="Logo SSD" style="width: 150px;"><br><b>Super Star Dance</b></a>
 		</div> <!-- /.login-logo -->
 
 	 	<div class="login-box-body">
