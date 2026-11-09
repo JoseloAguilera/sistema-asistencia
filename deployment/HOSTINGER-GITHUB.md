@@ -2,7 +2,7 @@
 
 ## Estado / requisito previo
 
-Esta es la rama de despliegue `hostinger`: contiene código corregido y una exportación limpia, sin fotos históricas, secretos, pruebas ni backups. Conectar ESTA rama en hPanel; no desplegar la rama histórica `master`. La publicación en GitHub no implica instalación de MySQL ni despliegue funcional en Hostinger.
+La rama de despliegue es `master`: incorpora la versión corregida de `hostinger`, sin fotos históricas, secretos, pruebas ni backups en el árbol actual. Seleccionar `master` en hPanel. El historial anterior se conserva. La publicación en GitHub no implica instalación de MySQL ni despliegue funcional en Hostinger.
 
 El código web y `index.php` están en la raíz de la rama; el SQL está en `database/install.sql` y los ejemplos/documentación en `deployment/`, protegidos por el .htaccess incluido. No hace falta extraer un ZIP ni ejecutar un build en Hostinger. La configuración REAL no se versiona. Importar SQL y crear el administrador son pasos separados del despliegue Git.
 
@@ -29,7 +29,7 @@ No cambiar nameservers, MX, correo, dominio raíz ni otros subdominios. Si ya ex
 
 ## 3. Conectar GitHub con Hostinger
 
-1. Confirmar que la rama limpia y corregida ya fue subida a GitHub. No seleccionar main si todavía contiene la versión antigua.
+1. Confirmar que `master` contiene la versión corregida e introducir `master` como rama en hPanel.
 2. En el sitio correcto de hPanel, buscar Git/GIT e introducir el repositorio `https://github.com/JoseloAguilera/sistema-asistencia` y la rama aprobada.
 3. Elegir como directorio de despliegue EXACTAMENTE la raíz del subdominio anotada en el paso 1. La interpretación de la ruta puede ser relativa al sitio: comprobarlo en el panel. Si Git no permite apuntar ahí, detenerse; no desplegar sobre la web principal ni asumir que se puede cambiar el document root.
 4. Si el repositorio es privado, usar la conexión SSH/deploy key de solo lectura admitida por Hostinger y añadir únicamente la CLAVE PÚBLICA en GitHub > repositorio > Settings > Deploy keys. No introducir tokens en la URL del repo ni publicar claves privadas. Seguir la URL SSH que indique el proveedor.
@@ -43,7 +43,7 @@ Git despliega ARCHIVOS. No crea bases, no ejecuta install.sql automáticamente y
 
 1. En hPanel, crear una base MySQL VACÍA y un usuario exclusivo con acceso solo a esa base. Guardar los nombres completos con prefijo que asigne Hostinger.
 2. Abrir phpMyAdmin y seleccionar esa base.
-3. En Importar, cargar `database/install.sql` desde la rama Git `hostinger` desplegada; no se utiliza un ZIP ni la ruta `private/install.sql`.
+3. En Importar, cargar `database/install.sql` desde la rama Git `master` desplegada; no se utiliza un ZIP ni la ruta `private/install.sql`.
 4. Ejecutar una sola vez sobre base vacía. El archivo crea las tablas y vistas; NO crea el contenedor de base ni el usuario de Hostinger porque eso se gestiona en hPanel.
 5. No importar el SQL histórico `ssdpy-assist.sql`. No repetir la instalación sobre datos existentes ni agregar DROP TABLE para resolver errores. Una actualización futura necesitará su migración revisada.
 

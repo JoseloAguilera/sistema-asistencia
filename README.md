@@ -1,11 +1,11 @@
 # Sistema de asistencia — Hostinger
 
-Rama de despliegue: **hostinger**. Contiene la aplicación corregida para PHP 8.3 y las dependencias de producción. `index.php` está en la raíz, lista para conectar con Git de hPanel. La rama histórica `master` no se modifica y NO debe usarse para este despliegue.
+Rama de despliegue: **master**. Incluye la versión corregida incorporada desde `hostinger`, con PHP 8.3 y dependencias de producción. `index.php` está en la raíz, lista para conectar con Git de hPanel. El historial anterior se conserva.
 
 ## Instalación
 
 1. Crear el subdominio `asistencia.jbsolutionspy.com` en Hostinger y seleccionar su carpeta exclusiva y vacía como destino del despliegue Git.
-2. Repositorio: `https://github.com/JoseloAguilera/sistema-asistencia.git`; rama: `hostinger`.
+2. Repositorio: `https://github.com/JoseloAguilera/sistema-asistencia.git`; rama: `master`.
 3. DNS solicitado: registro **A**, nombre **asistencia**, destino **149.62.37.197**, TTL **300**, solo DNS durante la activación de SSL. La configuración DNS no implica que la app o MySQL estén instalados.
 4. Usar PHP 8.3 con PDO MySQL, GD, mbstring y XML. `vendor/` está incluido.
 5. Crear una base MySQL vacía y un usuario exclusivo desde hPanel. Seleccionar esa base en phpMyAdmin e importar [`database/install.sql`](database/install.sql) una sola vez. No ejecutar sobre bases existentes. El SQL crea tablas/vistas, no cuentas del hosting ni datos de prueba.
@@ -26,7 +26,7 @@ Guía completa: [`deployment/HOSTINGER-GITHUB.md`](deployment/HOSTINGER-GITHUB.m
 - No versionar credenciales, fotos de alumnos, logs, backups ni datos reales. El historial anterior de Git NO queda eliminado por esta rama; rotar cualquier secreto histórico en su servicio original.
 - Los uploads y la base de datos no se sincronizan con Git. Confirmar que el despliegue respete archivos no versionados antes de habilitar actualizaciones automáticas.
 - Git no ejecuta SQL automáticamente. Cambios futuros de esquema requieren una migración específica y respaldo.
-- Mantener cambios de código en esta rama o generar una exportación limpia nueva; no mezclar directamente el árbol histórico completo de `master` sobre producción.
+- Mantener los cambios de código en `master`; no reintroducir archivos históricos, dumps, fotos ni credenciales en el árbol de despliegue.
 
 ## Verificación
 
