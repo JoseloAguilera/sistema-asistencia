@@ -4,6 +4,20 @@ ini_set('display_errors', '0');
 error_reporting(E_ALL);
 if (PHP_SAPI !== 'cli') ob_start();
 set_exception_handler(function(Throwable $e): void { error_log('Application error: '.get_class($e).' at '.basename($e->getFile()).':'.$e->getLine()); if (ob_get_level()) ob_clean(); http_response_code(500); exit('Error interno. Consulte al administrador.'); });
+// Resolve from the application root, never from the caller's working directory.
+require_once dirname(__DIR__).'/vendor/autoload.php';
+try {
+ Dotenv\Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
+} catch (Throwable $e) {
+ // Parser exception messages can contain credentials: never log the exception.
+ error_log('Application configuration error');
+ http_response_code(500);
+ exit('Error interno. Consulte al administrador.');
+}
+function app_env(string $key, array $config = [], string $default = ''): string {
+ $process = getenv($key);
+ return $process !== false ? $process : (string)($_ENV[$key] ?? $_SERVER[$key] ?? $config[$key] ?? $default);
+}
 function fail(int $code, string $message): never { http_response_code($code); exit($message); }
 function redirect(string $to): never { header('Location: '.$to, true, 303); exit; }
 function e(mixed $s): string { return htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
@@ -31,9 +45,9 @@ function auth(?string $role = null): void {
 function db(): PDO {
  static $pdo;
  if ($pdo) return $pdo;
- $config=[]; $path=getenv('APP_CONFIG') ?: dirname(__DIR__,2).'/asistencia-private.php';
+ $config=[]; $path=app_env('APP_CONFIG') ?: dirname(__DIR__,2).'/asistencia-private.php';
  if (is_file($path)) $config=require $path;
- $get=fn($key,$default='') => getenv($key) !== false ? getenv($key) : ($config[$key] ?? $default);
+ $get=fn($key,$default='') => app_env($key,$config,$default);
  $name=$get('DB_NAME'); $user=$get('DB_USER');
  if (!$name || !$user) throw new RuntimeException('DB configuration missing');
  $socket=$get('DB_SOCKET');

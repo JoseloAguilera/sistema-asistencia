@@ -58,7 +58,17 @@ Ruta que busca la app por defecto: un nivel por encima de la raíz web. Ejemplos
 - Raíz `/ruta/sitio/public_html` -> config `/ruta/sitio/asistencia-private.php`.
 - Raíz `/ruta/public_html/asistencia` -> config `/ruta/public_html/asistencia-private.php`. En este segundo caso el padre pertenece a otra web y no es un lugar privado seguro: usar ubicación realmente fuera de todos los document roots y definir APP_CONFIG en el entorno PHP del hosting. Si no se puede configurar, revisar la disposición de directorios ANTES de publicar.
 
-Para este proyecto, el entorno PHP puede usar APP_CONFIG para la ruta absoluta de un archivo privado. No se debe asumir que subir un .env configura variables: esta app NO carga dotenv automáticamente.
+La app carga automáticamente `.env` junto a `index.php` mediante `vlucas/phpdotenv` (incluido en `vendor/`), en HTTP y CLI incluso desde otro directorio:
+
+```sh
+cp .env.example .env
+```
+
+Hacerlo solo si `.env` no existe; nunca sobrescribir la configuración existente. Completar `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` y **`DB_PASS`** con los datos de ese entorno: local y Hostinger tienen archivos distintos. La plantilla no tiene credenciales válidas. Para contraseñas con `#`, `$`, espacios o comillas dobles, usar comillas simples; si contiene comillas simples, usar la sintaxis de escape de phpdotenv con comillas dobles y escapar también `$`. No publicar ni copiar contraseñas a comandos o logs.
+
+Prioridad: variables del proceso > `.env` > archivo PHP privado (`APP_CONFIG` o ruta del padre). Sin `.env` sigue funcionando la configuración anterior. `APP_CONFIG` admite una ruta absoluta desde el proceso o `.env`. No se usa `putenv`. Un `.env` malformado detiene la app con un error genérico, sin registrar su contenido.
+
+`.env` y sus variantes están ignorados; `.env.example` sí se versiona. **`.gitignore` no protege HTTP**: conservar `.htaccess`, que bloquea `.env` y variantes con `FilesMatch` incluso sin mod_rewrite. Verificar en Hostinger que `/.env`, `/.env.local` y `/.env.example` respondan **403/404** sin contenido. El servidor de desarrollo `php -S` NO aplica `.htaccess`: usar solo loopback, nunca exponerlo públicamente. No reimportar SQL al desplegar actualizaciones y confirmar que Git no elimine `.env` ni uploads.
 
 Seleccionar PHP 8.3 con PDO MySQL, GD, mbstring y XML. Las dependencias van incluidas en la rama de despliegue limpia; no es necesario ejecutar Composer en cada visita.
 

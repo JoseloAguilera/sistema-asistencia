@@ -9,7 +9,7 @@ Rama de despliegue: **master**. Incluye la versión corregida incorporada desde 
 3. DNS solicitado: registro **A**, nombre **asistencia**, destino **149.62.37.197**, TTL **300**, solo DNS durante la activación de SSL. La configuración DNS no implica que la app o MySQL estén instalados.
 4. Usar PHP 8.3 con PDO MySQL, GD, mbstring y XML. `vendor/` está incluido.
 5. Crear una base MySQL vacía y un usuario exclusivo desde hPanel. Seleccionar esa base en phpMyAdmin e importar [`database/install.sql`](database/install.sql) una sola vez. No ejecutar sobre bases existentes. El SQL crea tablas/vistas, no cuentas del hosting ni datos de prueba.
-6. Copiar [`deployment/asistencia-private.example.php`](deployment/asistencia-private.example.php) a una ubicación privada fuera de TODOS los directorios públicos como `asistencia-private.php`. Completar credenciales solo en el servidor. Ver la guía para la ruta predeterminada y `APP_CONFIG` cuando el subdominio está bajo otra carpeta pública.
+6. Copiar `.env.example` a `.env` junto a `index.php` y completar `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` y **`DB_PASS`** solo en ese equipo/servidor. Usar valores distintos para local y Hostinger; nunca subir `.env` a Git. Se mantiene la alternativa de archivo privado fuera de todos los directorios públicos (ver guía).
 7. Crear el primer administrador desde terminal interactiva, en la raíz del proyecto:
 
 ```sh
@@ -22,6 +22,7 @@ Guía completa: [`deployment/HOSTINGER-GITHUB.md`](deployment/HOSTINGER-GITHUB.m
 
 ## Seguridad y actualizaciones
 
+- `.env` se carga tanto en HTTP como en CLI. Prioridad: proceso > `.env` > archivo privado anterior. `.env.example` no contiene datos reales; `.env` está ignorado. **`.gitignore` no protege HTTP**: verificar `/.env` y variantes con respuesta 403/404 en Hostinger, incluso sin mod_rewrite. `php -S` no aplica `.htaccess` y no debe exponerse públicamente.
 - Mantener `.htaccess` y `uploads/.htaccess`. Verificar en Hostinger que SQL, `.git`, `server/`, `vendor/`, `bin/` y `deployment/` no sean accesibles por HTTP.
 - No versionar credenciales, fotos de alumnos, logs, backups ni datos reales. El historial anterior de Git NO queda eliminado por esta rama; rotar cualquier secreto histórico en su servicio original.
 - Los uploads y la base de datos no se sincronizan con Git. Confirmar que el despliegue respete archivos no versionados antes de habilitar actualizaciones automáticas.

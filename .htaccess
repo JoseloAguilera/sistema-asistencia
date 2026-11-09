@@ -7,7 +7,7 @@ RewriteRule (^|/)\. - [F,L]
 RewriteRule ^(server|vendor|includes|objs|bin|database|tests|deployment|dist)(/|$) - [F,L,NC]
 RewriteRule \.(sql|log|zip|bak|old|ini|env|lock|json|md|py|sh)$ - [F,L,NC]
 </IfModule>
-<FilesMatch "(?i)(^composer\.|private|config\.local|\.sql$|\.log$|\.bak$|\.env$)">
+<FilesMatch "(?i)(^composer\.|private|config\.local|\.sql$|\.log$|\.bak$|\.env(?:\..*)?$)">
 Require all denied
 </FilesMatch>
 <IfModule mod_headers.c>
