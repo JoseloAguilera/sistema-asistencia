@@ -1,3 +1,4 @@
+<?php if (!function_exists('auth')) { http_response_code(404); exit; } ?>
 <footer class="main-footer">
 	<div class="pull-right hidden-xs">
 		<b>Version</b> 2.4.18

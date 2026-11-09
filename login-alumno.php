@@ -1,34 +1,4 @@
-<?php
-	session_start();
-	require "server/conn.php";
-
-	if(isset($_POST['usuario']) || isset($_POST['contrasena'])) {
-		if(isset($_POST['usuario']) && $_POST['usuario'] != '' && isset($_POST['contrasena']) &&  $_POST['contrasena'] != '' ) {
-			$usuario = $_POST['usuario'];
-			$contrasena = md5($_POST['contrasena']); //md5 para encriptar
-
-			$sql= "SELECT * from alumnos WHERE cedula = '$usuario' AND password = '$contrasena'";
-			$query= $connection->prepare($sql);
-			$query->execute();
-			if ($query->rowCount() > 0) {
-				
-				foreach ($query->fetchAll() as $row) {
-					$_SESSION['logueado'] = 'logueado';
-					$_SESSION['tipo_login'] = 'alumno';
-					$_SESSION['nome_usuario'] = $row['nombre'];
-					$_SESSION['nome_compl'] = $row['nombre'];
-					$_SESSION['id'] = $row['id'];
-					$_SESSION['cedula'] = $row['cedula'];
-					header('Location: presencia.php');
-				}
-			}
-			else { //Si no encontró apresenta error
-				$mensaje = '<p class="alert alert-danger">Por favor, Ingrese Todos los Datos!</p>';
-			}
-		}
-	}
-?>
-
+<?php $role='alumno'; require __DIR__.'/server/login-controller.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,10 +16,10 @@
 			<p class="login-box-msg">AREA DE ALUMNOS<br>Ingrese su Usuario y Contraseña</p>
 			<?php
 				if (isset($mensaje)) {
-					echo $mensaje; //mensaje de error
+					echo $mensaje; 
 				}
 			?>
-			<form action="" method="post">
+			<form action="" method="post"><?php echo csrf_field(); ?>
 				<div class="form-group has-feedback">
 					<input type="text" name="usuario" class="form-control" placeholder="Usuário" >
 					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>

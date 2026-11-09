@@ -1,3 +1,4 @@
+<?php if (!function_exists('auth')) { http_response_code(404); exit; } ?>
 <?php ?>
 
 <header class="main-header">
@@ -18,14 +19,14 @@
 				<li class="dropdown user user-menu">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 					<img src="img/logo.png" class="user-image" alt="User Image">
-					<span class="hidden-xs"><?php echo $_SESSION['nome_usuario'];?></span>
+					<span class="hidden-xs"><?php echo e($_SESSION['nome_usuario']);?></span>
 				</a>
 				<ul class="dropdown-menu">
 				<!-- User image -->
 					<li class="user-header">
 						<img src="img/logo.png" class="img-circle" alt="User Image">
 						<p>
-							<?php echo $_SESSION['nome_usuario'];?>
+							<?php echo e($_SESSION['nome_usuario']);?>
 							<small>Member since Nov. 2012</small>
 						</p>
 					</li>

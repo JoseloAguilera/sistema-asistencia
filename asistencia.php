@@ -1,28 +1,21 @@
-<?php 
-	session_start();
+<?php require_once __DIR__.'/server/bootstrap.php'; auth('admin'); 
+ $fechaInicio = $fechaFin = 0;
+	
 
 
-	// var_dump($_SESSION['usuario']);
-	if (!isset($_SESSION['logueado'])) {
-		header('Location: login.php');
-	}
-	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
-		header('Location: presencia.php');
-	}
+	
+	
+	
 	require 'server/conn.php';
 	$idgrupo=-1;
 	if (isset($_GET['id'])) {
 		$idgrupo=$_GET['id'];
 	}	
-	/*$sql="SELECT * FROM horarios WHERE grupos_id = $idgrupo" ;
-	$query = $connection->prepare($sql);
-	$query->execute();
-	$horarios= $query->fetchAll();
-*/// Desactivar toda notificación de error
-error_reporting(0);
+	
+
 	function saber_dia($nombredia) {
 		$dias = array('Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado');
-		$fecha = $dias[date('N', strtotime($nombredia))];
+		$fecha = $dias[date('w', strtotime($nombredia))];
 		
 		if (isset($fecha)) {
 			return $fecha;
@@ -32,62 +25,34 @@ error_reporting(0);
 	
 	function gethorarios($id){
 		require 'server/conn.php';
-		$sql="SELECT * FROM horarios WHERE grupos_id = '$id'";
+		$sql = 'SELECT * FROM horarios WHERE grupos_id = :auto1'; $sql_params = ['auto1' => $id];
 		$query = $connection->prepare($sql);
-		$query->execute();
+		$query->execute($sql_params);
 		return $query->fetchAll();
 
 	}
 
 	function getAlumno($id){
 		require 'server/conn.php';
-		$sql="SELECT * FROM alumnos WHERE id = '$id'";
+		$sql = 'SELECT * FROM alumnos WHERE id = :auto1'; $sql_params = ['auto1' => $id];
 		$query = $connection->prepare($sql);
-		$query->execute();
+		$query->execute($sql_params);
 		return $query->fetch();
 
 	}
-		// ejecutamos la función pasándole la fecha que queremos
-		//saber_dia('2015-03-13');
-	
-
-	/*$sql="SELECT *	FROM informe_presencia WHERE idgrupo = ".$idgrupo ;
-	$query = $connection->prepare($sql);
-	$query->execute();
-	$presencias= $query->fetchAll();*/
-
-
-
-		//echo "LA FECHAS ES".saber_dia(date("d-m-Y", $i)).date("d-m-Y", $i)."<br>";
-		//
-
-	/* recorrer fechas
-     $fechaInicio=strtotime("18-11-2019");
-	$fechaFin=strtotime("23-11-2019");
-	for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
-	echo "LA FECHAS ES".saber_dia(date("d-m-Y", $i)).date("d-m-Y", $i)."<br>";
-	}
-
-	*/
-/*
-	$sql="SELECT 
-	m.id as idalumno,
-	p.nombrealumno,
-	p.apellidoalumno,
-	p.hora_de_marcacion,
-	p.diamarcado
-	FROM matricula m
-	LEFT JOIN informe_presencia p ON m.grupo_id = p.idgrupo
-	WHERE m.grupo_id = ".$idgrupo ;
-	$query = $connection->prepare($sql);
-	$query->execute();
-	$result= $query->fetchAll();	
-    
-	/*foreach ($result as $row) {
-		echo $row['nombrealumno']." ".$row['apellidoalumno']." - ".$row['hora_de_marcacion']." - ".$row['diamarcado']."<br>";
+		
 		
 	
-	}*/
+
+	
+
+
+
+		
+		
+
+	
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,9 +67,9 @@ error_reporting(0);
 		<!-- MAIN HEADER END -->
 		<?php
 
-			$sql="SELECT *	FROM vista_alumnos where idgrupo= ".$idgrupo;
+			$sql = 'SELECT *	FROM vista_alumnos where idgrupo= :auto1'; $sql_params = ['auto1' => $idgrupo];
 			$query = $connection->prepare($sql);
-			$query->execute();
+			$query->execute($sql_params);
 			$alumnos= $query->fetchAll();
 
 			if (isset($_POST['fecha_inicio']) && isset($_POST['fecha_fin'])) {
@@ -116,22 +81,19 @@ error_reporting(0);
 				$fechaFin = strtotime($fechaFin);
 			}
 
- /*
- $fechaInicio=strtotime("2019-11-17"); 
- $fechaFin=strtotime("2019-12-08");
- */
+ 
 
 
  
- //$count=count($asistencias);
- //echo "total".$count;
- //VERIFICAR SI HAY ASISTENCIAS EN ESE DIA
-
- //if fecha marcasion es igual a nulo, entonces ausente
  
-	 //foreach ($asistencias as $asistencia) {
-	 //	echo $asistencia['nombrealumno']." ".$asistencia['apellidoalumno']." - ".$asistencia['hora_de_marcacion']." - ".$asistencia['diamarcado']." - ".$asistencia['fecha_marcacion']."<br>"."<br>";
-	  //}
+ 
+ 
+
+ 
+ 
+	 
+	 
+	  
  
 		?>
 		<!-- ASIDE BAR -->
@@ -143,7 +105,7 @@ error_reporting(0);
 			<!-- Cabicera de Contenido (Título) -->
 			<section class="content-header">
 				<h1>
-					<small>Filtrando Desde <?php echo $_POST['fecha_inicio']." hasta ".$_POST['fecha_fin'].$di.$df;?></small>
+					<small>Filtrando Desde <?php echo e(($_POST['fecha_inicio'] ?? '')." hasta ".($_POST['fecha_fin'] ?? ''));?></small>
 				</h1>
 			</section>
 
@@ -153,7 +115,7 @@ error_reporting(0);
 				<div class="box">
 					<div class="box-header with-border">
 						<!-- Caja de Busqueda -->
-						<form action="" method="post">
+						<form action="" method="post"><?php echo csrf_field(); ?>
 							<div class="col-md-2">
 								<div class="form-group">
 									<label for="fecha_fin">Fecha Desde</label>
@@ -218,7 +180,7 @@ error_reporting(0);
 				} 
 
 			}
-			//recorremos el filtro de fechas
+			
 			for($i=$fechaInicio; $i<=$fechaFin; $i+=86400){
 				$fechai = date("Y-m-d", $i);
 				$dia = saber_dia(date("Y-m-d", $i));		
@@ -228,29 +190,29 @@ error_reporting(0);
 				|| isset($viernes) && $viernes == $dia || isset($sabado) && $sabado == $dia 
 				|| isset($domingo) && $domingo == $dia) {
 					
-				//echo $fechai."----------------------------------------------<br>";
+				
 				foreach ($alumnos as $alumno) {
 					$idalumno = $alumno['idalumno'];
 					$fechaInicio = $alumno['fecha_inicio'];
 		
-					$sql="SELECT *	FROM informe_presencia where idalumno= '$idalumno' AND fecha_marcacion='$fechai' AND idgrupo='$idgrupo'";
+					$sql = 'SELECT *	FROM informe_presencia where idalumno= :auto1 AND fecha_marcacion=:auto2 AND idgrupo=:auto3'; $sql_params = ['auto1' => $idalumno, 'auto2' => $fechai, 'auto3' => $idgrupo];
 					$query = $connection->prepare($sql);
-					$query->execute();
+					$query->execute($sql_params);
 					$asistencia= $query->fetch();
 					if ($fechai >= $fechaInicio) {
 								
-					//si encuentra una asistencia marcada y si la fecha de inicio es mayor a la fecha buscada
+					
 					if ($asistencia) { ?>
 					<!--tr class="bg-success" data-toggle="modal" data-target="#AltModal" data-codigo="1" data-curso="ballet" data-dia="Lunes" data-fecha="30/09/2019 18:42" data-alumno="ana"-->
 				    <tr>
 
-					 	<td><?php echo $fechai?><!-- -<?php //echo $fechaInicio?> --></td>
-					    <td><?php echo $asistencia['idalumno']?></td>
-						<td><?php echo $asistencia['nombrealumno']." ".$asistencia['apellidoalumno']?></td>
-						<td><?php echo $asistencia['diamarcado']?></td>
-						<td><?php echo $asistencia['fecha_marcacion']?></td>
-						<td><?php echo $asistencia['hora_de_marcacion']?></td>
-						<td><?php echo $asistencia['asistencia']?></td>
+					 	<td><?php echo $fechai?><!-- -<?php ?> --></td>
+					    <td><?php echo e($asistencia['idalumno']); ?></td>
+						<td><?php echo e($asistencia['nombrealumno']." ".$asistencia['apellidoalumno']); ?></td>
+						<td><?php echo e($asistencia['diamarcado']); ?></td>
+						<td><?php echo e($asistencia['fecha_marcacion']); ?></td>
+						<td><?php echo e($asistencia['hora_de_marcacion']); ?></td>
+						<td><?php echo e($asistencia['asistencia']); ?></td>
 				   </tr>
 					<?php } else { ?>
 						<!--tr class ="bg-danger" data-toggle="modal" data-target="#AltModal" data-codigo="1" data-curso="ballet" data-dia="Lunes" data-fecha="30/09/2019 18:42" data-alumno="ana"-->
@@ -296,7 +258,7 @@ error_reporting(0);
 		<!-- ./FOOTER -->
 
 		<!-- Menu retractil de la derecha -->
-		<?php //include "includes/aside-control.php"; ?>
+		<?php ?>
 		<!-- ./ Menu retractil de la derecha -->
 
 		<!-- Color de Fondo de del menu derecho -->
@@ -313,7 +275,7 @@ error_reporting(0);
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Asistencia</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST"><?php echo csrf_field(); ?>
 					<div class="modal-body">
 						<div class="row">
 							<input type="hidden" class="form-control" id="codigo" name="codigo">

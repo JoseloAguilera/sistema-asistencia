@@ -1,7 +1,1 @@
-<?php	if (isset($_GET['id']) && $_GET['id'] > 0) {
-	     $sql= "SELECT * FROM alumnos WHERE id =". $_GET['id'];
-	     $query = $connection->prepare($sql);
-	     $query->execute();
-	     $total= $query->rowCount();
-}
-   ?>
+<?php http_response_code(410); exit('Ruta retirada. Use los formularios actuales.');

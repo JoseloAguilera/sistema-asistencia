@@ -1,58 +1,4 @@
-<?php 
-	session_start();
-	// var_dump($_SESSION['usuario']);
-	if (!isset($_SESSION['logueado'])) {
-		header('Location: login-alumno.php');
-	}
-
-	
-
-	require 'server/conn.php';
-
-
-	$idalumno = $_SESSION['id']	; //OBTENER DE SESION DE LOGUIN
-	
-	function getCurso($idcurso){
-		require 'server/conn.php';
-		$sql = "SELECT * FROM cursos WHERE id = $idcurso";
-		$query = $connection->prepare($sql);
-		$query->execute();
-		return $query->fetch();	
-	}
-
-	
-	
-	$sql = "SELECT * FROM matricula WHERE id_alumnos = $idalumno";
-	$query = $connection->prepare($sql);
-	$query->execute();
-	$matriculas= $query->fetchAll();
-	
-
-
-
-	/*
-	foreach ($matriculas as $row) {
-		echo "ID Matricula ".$row['id'];
-		echo "<br> --------------------------";
-
-		$sql = "SELECT * FROM horarios WHERE grupos_id = ".$row['grupo_id'];
-		$query = $connection->prepare($sql);
-		$query->execute();
-		$grupos= $query->fetchAll();
-
-		foreach ($grupos as $grupo) {
-			echo "<br>CURSO ID::".$grupo['grupos_cursos_id'].getCurso($grupo['grupos_cursos_id'])['nombre'];
-			echo "<br>DIAS::".$grupo['dia'];
-			echo "<br>HORA INICIO::".$grupo['hora_inicio'];
-			echo "<br> HORA FIN::".$grupo['hora_fin'];
-		}
-	}
-
-	*/
-
-
-	
-?>
+<?php require __DIR__.'/server/presence-controller.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,8 +7,8 @@
 </head>
 
 <?php 
-	// setlocale(LC_ALL, "es_ES", 'Spanish_Spain', 'Spanish');
-	// echo iconv('ISO-8859-2', 'UTF-8', strftime("%A, %d de %B de %Y", strtotime($row['date'])));
+	
+	
    date_default_timezone_set('America/Asuncion');
    $ano = date('Y');
    $mes = date('n');
@@ -76,37 +22,12 @@
 			 
    $data = $diassemanaN[$diasemana].", $dia de ". $mesesN[$mes] ." de $ano";
 
-   //$resultQuery = array("Miércoles","Sábado");
+   
    $resultQuery = array("Miércoles","Sábado");
 
 
 
-	//INSERT PRESENCIA
-   if($_SERVER['REQUEST_METHOD'] == "POST") {
 	
-	if (isset($_POST['presencia'])){
-		$idhorariopresencia=$_POST['txthorario'];
-		$dia=$_POST['txtdia'];
-		$idmatricula=$_POST['txtidmatricula'];
-		$idgrupo=$_POST['txtidgrupo'];
-			
-		try {
-			$sql = "INSERT INTO asistencias (matricula_id, matricula_id_alumnos, matricula_grupo_id, horarios_id, dia,  horario, fecha_add)
-			VALUES ('$idmatricula', '$idalumno', '$idgrupo',  '$idhorariopresencia', '$dia',  NOW(), NOW())";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			$mensaje = '<div class="alert alert-success">PRESENCIA REGISTRADA CORRECTAMENTE</div>';
-		} catch (Exception $e) {
-			$mensaje= '<div class="alert alert-danger">Presencia NO registrada - Consulte al administrador de sistemas. Error->"'.$e.'</div>'; 
-
-			
-		}	
-		
-	}
-}
-
-
-
 ?>
 <body class="hold-transition login-page">
 
@@ -114,14 +35,14 @@
 	<div class="login-box" style="width: 80%;">
 	<?php 
 	if (isset( $mensaje)) {
-		echo $mensaje; //alert mensaje
+		echo $mensaje; 
 	}	
 	
 	?>
 		<div class="login-logo">
 		
 	    
-			<a href="#"><b>Bienvenido,  <?php echo $_SESSION['nome_usuario'];?></b>!</a>
+			<a href="#"><b>Bienvenido,  <?php echo e($_SESSION['nome_usuario']);?></b>!</a>
 		</div> <!-- /.login-logo -->
 
 		<div class="login-box-body">
@@ -137,15 +58,15 @@
 					   $idgrupo= $matricula['grupo_id'];
 								
 			
-						$sql = "SELECT * FROM horarios WHERE grupos_id = ".$matricula['grupo_id'];
+						$sql = 'SELECT * FROM horarios WHERE grupos_id = :auto1'; $sql_params = ['auto1' => $matricula['grupo_id']];
 						$query = $connection->prepare($sql);
-						$query->execute();
+						$query->execute($sql_params);
 						$grupos= $query->fetchAll();
 				
 						foreach ($grupos as $grupo) {					
-									        //foreach ($resultQuery as $row) {
-						//var_dump(substr($data, 0, strpos($data, ',')));
-						$row = $grupo['dia'];
+									        
+						
+						$row = str_replace(['Miercoles','Sabado'],['Miércoles','Sábado'],$grupo['dia']);
 						if (substr($data, 0, strpos($data, ',')) == $row) {
 							$color = "green";
 							$text = "¿Deseas registrar presencia?";
@@ -161,7 +82,7 @@
 					
 						   <div class="col-lg-6 col-xs-12">
 								<a href="#" data-toggle="modal" <?php if ($disabled == "") { echo 'data-target="#mi-modal"'; }?>  data-text="<?php echo $text;?>" 
-								data-idhorario="<?php echo $grupo['id'];?>" data-dia="<?php echo $grupo['dia'];?> " 
+								data-idhorario="<?php echo e($grupo['id']);?>" data-dia="<?php echo e($grupo['dia']);?> " 
 								data-idmatricula="<?php echo $idmatricula;?>" data-idgrupo="<?php echo $idgrupo;?>"
 								> 
 									
@@ -169,10 +90,10 @@
 										<input type="hidden" name="cod_horario" value="<?php echo $grupo['id']?>">
 										<div class="inner">
 											<h3 <?php echo $innerColor;?>><?php echo $grupo['grupos_cursos_id']."-".getCurso($grupo['grupos_cursos_id'])['nombre'] ?></h3>
-											<p <?php echo $innerColor;?>>De  <?php echo $grupo['hora_inicio']. " Hasta ". $grupo['hora_fin'];?></p>
+											<p <?php echo $innerColor;?>>De  <?php echo e($grupo['hora_inicio']. " Hasta ". $grupo['hora_fin']);?></p>
 										</div> <!-- inner -->
 										<div class="icon" style="font-size: 5em;">
-											<span style="line-height: 160px;"><b><?php echo $grupo['dia'];	?></b></span>
+											<span style="line-height: 160px;"><b><?php echo e($grupo['dia']);	?></b></span>
 										</div> <!-- icon -->
 										<span class="small-box-footer">
 										<?php if ($disabled == "") {  ?>
@@ -207,7 +128,7 @@
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 
-			<form action="" method="POST">
+			<form action="" method="POST"><?php echo csrf_field(); ?>
 
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

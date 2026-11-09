@@ -1,14 +1,4 @@
-<?php 
-	session_start();
-	// var_dump($_SESSION['usuario']);
-	if (!isset($_SESSION['logueado'])) {
-		header('Location: login-alumno.php');
-	}
-
-	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
-		header('Location: presencia.php');
-	}
-?>
+<?php require_once __DIR__.'/server/bootstrap.php'; auth('admin'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,7 +35,7 @@
 		<!-- ./FOOTER -->
 
 		<!-- Menu retractil de la derecha -->
-		<?php //include "includes/aside-control.php"; ?>
+		<?php ?>
 		<!-- ./ Menu retractil de la derecha -->
 
 		<!-- Color de Fondo de del menu derecho -->

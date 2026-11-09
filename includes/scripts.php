@@ -1,3 +1,4 @@
+<?php if (!function_exists('auth')) { http_response_code(404); exit; } ?>
 <!-- jQuery 3 -->
 
 <!--script src="js/jquery.min.js"></script-->

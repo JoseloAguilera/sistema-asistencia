@@ -1,0 +1,16 @@
+# Datos y credenciales locales (nunca versionar)
+.env
+.env.*
+!.env.example
+asistencia-private.php
+config.local.php
+/uploads/*
+!/uploads/.htaccess
+*.log
+*.bak
+*.mwb
+*.mwb.bak
+/.tools/
+/.test-runtime-*/
+/dist/
+/tests/

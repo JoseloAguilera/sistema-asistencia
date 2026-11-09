@@ -1,38 +1,4 @@
-<?php
-	session_start();
-	require "server/conn.php";
-
-	if(isset($_POST['usuario']) || isset($_POST['contrasena'])) {
-		if(isset($_POST['usuario']) && $_POST['usuario'] != '' && isset($_POST['contrasena']) &&  $_POST['contrasena'] != '' ) {
-			$usuario = $_POST['usuario'];
-			$contrasena = md5($_POST['contrasena']); //md5 para encriptar
-
-			//Select usuario y contraseña ADM
-			$sql = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
-			$query = $connection->prepare($sql);
-			$query->execute();
-			$user= $query->fetch();
-
-			if ($_POST['usuario'] == $user['usuario'] && $contrasena == $user['password']) { //Si encontró
-				$_SESSION['logueado'] = 'logueado';
-				$_SESSION['nome_usuario'] = $user['usuario'];
-				$_SESSION['nome_compl'] = $user['nombre'];
-				$_SESSION['tipo_login'] = 'adm';
-				header('Location: index.php');
-			// } else if ($_POST['usuario'] == 'alumno') { //Si encontró
-			// 	$_SESSION['logueado'] = 'logueado';
-			// 	$_SESSION['nome_usuario'] = "Alumno";
-			// 	$_SESSION['tipo_login'] = 'alumno';
-			// 	header('Location: presencia.php');
-			} else { //Si no encontró apresenta error
-				$mensaje = '<p class="alert alert-danger">Los Datos Ingresados están Incorrectos!</p>';
-			}
-		} else { //Si no encontró apresenta error
-			$mensaje = '<p class="alert alert-danger">Por favor, Ingrese Todos los Datos!</p>';
-		}
-	}
-?>
-
+<?php $role='admin'; require __DIR__.'/server/login-controller.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,10 +16,10 @@
 			<p class="login-box-msg">Ingrese su Usuario y Contraseña</p>
 			<?php
 				if (isset($mensaje)) {
-					echo $mensaje; //mensaje de error
+					echo $mensaje; 
 				}
 			?>
-			<form action="" method="post">
+			<form action="" method="post"><?php echo csrf_field(); ?>
 				<div class="form-group has-feedback">
 					<input type="text" name="usuario" class="form-control" placeholder="Usuário" >
 					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>

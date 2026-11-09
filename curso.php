@@ -1,17 +1,14 @@
-<?php
+<?php require_once __DIR__.'/server/bootstrap.php'; auth('admin');
+ $tipomensaje = $mensaje = '';
 	require 'server/conn.php';
-	session_start();
-	// var_dump($_SESSION['usuario']);
-	if (!isset($_SESSION['logueado'])) {
-		header('Location: login.php');
-	}
-	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
-		header('Location: presencia.php');
-	}
+	
+	
+	
+	
 
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (isset($_POST['nuevo'])){
-			// var_dump($_POST);
+			
 			$nombre = $_POST['nombre'];
 			$desc_corta = $_POST['descripcion'];
 			$desc_detallada = $_POST['detallada'];
@@ -20,22 +17,22 @@
 			$valor_cuota = $_POST['cuota'];
 			$valor_matricula = $_POST['matricula'];
 			try {
-				$sql = "INSERT INTO cursos (nombre, desc_corta, desc_detallada, duracion_meses, activo, valor_cuota, valor_matrícula, fecha_add, fecha_update)
-				VALUES ('$nombre', '$desc_corta', '$desc_detallada', '$duracion_meses', '$estado', '$valor_cuota', '$valor_matricula', NOW(), NOW())";
+				$sql = 'INSERT INTO cursos (nombre, desc_corta, desc_detallada, duracion_meses, activo, valor_cuota, valor_matrícula, fecha_add, fecha_update)
+				VALUES (:auto1, :auto2, :auto3, :auto4, :auto5, :auto6, :auto7, NOW(), NOW())'; $sql_params = ['auto1' => $nombre, 'auto2' => $desc_corta, 'auto3' => $desc_detallada, 'auto4' => $duracion_meses, 'auto5' => $estado, 'auto6' => $valor_cuota, 'auto7' => $valor_matricula];
 				$query = $connection->prepare($sql);
-				$query->execute();
+				$query->execute($sql_params);
 
 				$tipomensaje = 'success';
-				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';//'<div class="alert alert-success">REGISTRO INSERTADO CORRECTAMENTE</div>';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';
 
 			} catch (\Exception $e) {
 				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"Operación rechazada</p>';
 			}
 			
-			//$result= $query->fetchAll();
+			
 		} else if (isset($_POST['guardar'])){
-			// var_dump($_POST);
+			
 			$id =  $_POST['codigo'];
 			$nombre = $_POST['nombre'];
 			$desc_corta = $_POST['descripcion'];
@@ -46,32 +43,32 @@
 			$valor_matricula = $_POST['matricula'];
 
 			try {
-				$sql = "UPDATE cursos SET nombre = '$nombre', desc_corta = '$desc_corta', desc_detallada = '$desc_detallada', duracion_meses = '$duracion_meses', activo = '$estado', valor_cuota = '$valor_cuota', valor_matrícula = '$valor_matricula', fecha_update = NOW()
-				WHERE id = $id";
+				$sql = 'UPDATE cursos SET nombre = :auto1, desc_corta = :auto2, desc_detallada = :auto3, duracion_meses = :auto4, activo = :auto5, valor_cuota = :auto6, valor_matrícula = :auto7, fecha_update = NOW()
+				WHERE id = :auto8'; $sql_params = ['auto1' => $nombre, 'auto2' => $desc_corta, 'auto3' => $desc_detallada, 'auto4' => $duracion_meses, 'auto5' => $estado, 'auto6' => $valor_cuota, 'auto7' => $valor_matricula, 'auto8' => $id];
 				$query = $connection->prepare($sql);
-				$query->execute();
-				//$result= $query->fetchAll();	
+				$query->execute($sql_params);
+				
 
 				$tipomensaje = 'success';
-				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';
 			} catch (\Exception $e) {
 				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"Operación rechazada</p>';
 			}
 				
 		} else if (isset($_POST['excluir'])){
-			// var_dump($_POST);
+			
 			$id =  $_POST['codigo'];
 			try {
-				$sql = "DELETE FROM cursos WHERE id = $id";
+				$sql = 'DELETE FROM cursos WHERE id = :auto1'; $sql_params = ['auto1' => $id];
 				$query = $connection->prepare($sql);
-				$query->execute();
-				//$result= $query->fetchAll();
+				$query->execute($sql_params);
+				
 				$tipomensaje = 'success';
 				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';
 			} catch (\Exception $e) {
 				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"Operación rechazada</p>';
 			}
 		}
 	}
@@ -93,20 +90,12 @@
 		<!-- ASIDE BAR END -->
 
 		<?php
-			/*if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
-				// var_dump($_POST['busca']);
-				$busca = $_POST['busca'];
-				$sql = "SELECT * from cursos WHERE nombre LIKE '%$busca%' OR desc_corta LIKE '%$busca%' OR duracion_meses LIKE '%$busca%' OR estado LIKE '%$busca%' OR valor_cuota LIKE '%$busca%' OR valor_matrícula LIKE '%$busca%' ORDER by nombre";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				$result= $query->fetchAll();
-			} else {
-				$busca = "";*/
+			
 				$sql = "SELECT * from cursos ORDER by nombre";
 				$query = $connection->prepare($sql);
 				$query->execute();
 				$result= $query->fetchAll();
-			//}
+			
 		?>
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -167,7 +156,7 @@
 					<div class="col-md-12">
 							<?php
 							if (isset( $mensaje)) {
-								echo $mensaje; //alert mensaje
+								echo $mensaje; 
 							}
 
 							?>
@@ -188,14 +177,14 @@
 							</thead>
 							<tbody>
 								<?php foreach ($result as $row) { ?>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-nombre="<?php echo $row['nombre'];?>" data-descripcion="<?php echo $row['desc_corta'];?>" data-detallada="<?php echo $row['desc_detallada'];?>"
-									data-duracion="<?php echo $row['duracion_meses'];?>" data-matricula="<?php echo $row['valor_matrícula'];?>" data-cuota="<?php echo $row['valor_cuota'];?>" data-estado="<?php echo $row['activo'];?>">
-									<td><?php echo $row['id'];?></td>
-									<td><?php echo $row['nombre'];?></td>
-									<td><?php echo $row['desc_corta'];?></td>
-									<td><?php echo $row['duracion_meses'];?></td>
-									<td><?php echo $row['valor_matrícula'];?></td>
-									<td><?php echo $row['valor_cuota'];?></td>
+								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo e($row['id']);?>" data-nombre="<?php echo e($row['nombre']);?>" data-descripcion="<?php echo e($row['desc_corta']);?>" data-detallada="<?php echo e($row['desc_detallada']);?>"
+									data-duracion="<?php echo e($row['duracion_meses']);?>" data-matricula="<?php echo e($row['valor_matrícula']);?>" data-cuota="<?php echo e($row['valor_cuota']);?>" data-estado="<?php echo e($row['activo']);?>">
+									<td><?php echo e($row['id']);?></td>
+									<td><?php echo e($row['nombre']);?></td>
+									<td><?php echo e($row['desc_corta']);?></td>
+									<td><?php echo e($row['duracion_meses']);?></td>
+									<td><?php echo e($row['valor_matrícula']);?></td>
+									<td><?php echo e($row['valor_cuota']);?></td>
 									<td><?php
 										$estado = "";
 										if ($row['activo'] == 1) {
@@ -229,7 +218,7 @@
 		<!-- ./FOOTER -->
 
 		<!-- Menu retractil de la derecha -->
-		<?php //include "includes/aside-control.php"; ?>
+		<?php ?>
 		<!-- ./ Menu retractil de la derecha -->
 
 		<!-- Color de Fondo de del menu derecho -->
@@ -246,7 +235,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Nuevo Curso</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST"><?php echo csrf_field(); ?>
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-9">
@@ -315,7 +304,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Alterar Curso</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST"><?php echo csrf_field(); ?>
 					<div class="modal-body">
 						<input type="hidden" class="form-control" id="codigo" name="codigo">
 						<div class="col-md-9">

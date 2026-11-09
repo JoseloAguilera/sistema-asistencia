@@ -1,3 +1,4 @@
+<?php if (!function_exists('auth')) { http_response_code(404); exit; } ?>
 <aside class="main-sidebar">
 	<!-- sidebar: style can be found in sidebar.less -->
 	<section class="sidebar">
@@ -7,7 +8,7 @@
 				<img src="img/logo.png" class="img-circle" alt="User Image">
 			</div>
 			<div class="pull-left info">
-				<p><?php echo $_SESSION['nome_usuario'];?></p>
+				<p><?php echo e($_SESSION['nome_usuario']);?></p>
 				<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
 			</div>
 		</div>
@@ -56,7 +57,7 @@
 			} else {
 				$inicio = "active";
 			}
-			// var_dump($_SERVER['REQUEST_URI']);
+			
 		?>
 		<ul class="sidebar-menu" data-widget="tree">
 			<li class="header">Menu de Navegación</li>
@@ -100,9 +101,9 @@
 
 					function getGrupos($idcurso){
 						require 'server/conn.php';
-						$sql = "SELECT * from grupos Where activo = 1 AND cursos_id =$idcurso";
+						$sql = 'SELECT * from grupos Where activo = 1 AND cursos_id =:auto1'; $sql_params = ['auto1' => $idcurso];
 						$query = $connection->prepare($sql);
-						$query->execute();
+						$query->execute($sql_params);
 						return $query->fetchAll();
 
 
@@ -124,12 +125,12 @@
                         <ul class="treeview-menu">
 						<?php
 						$iddelcurso =$curso['id'];
-						//echo $iddelcurso;
+						
 						$grupos = getGrupos($iddelcurso);
 						foreach ($grupos as $grupo) { ?>
 
 
-									<li><a href="asistencia.php?id=<?php echo $grupo['id'];?>"><i class="fa fa-circle-o"></i><?php echo $grupo['descripcion'] ?></a></li>
+									<li><a href="asistencia.php?id=<?php echo e($grupo['id']);?>"><i class="fa fa-circle-o"></i><?php echo $grupo['descripcion'] ?></a></li>
 									<!-- <li class="treeview">
 										<a href="#"><i class="fa fa-circle-o"></i> Level Two
 											<span class="pull-right-container">

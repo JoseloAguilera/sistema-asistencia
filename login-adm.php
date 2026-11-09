@@ -1,34 +1,4 @@
-<?php
-	session_start();
-	require "server/conn.php";
-
-	if(isset($_POST['usuario']) || isset($_POST['contrasena'])) {
-		if(isset($_POST['usuario']) && $_POST['usuario'] != '' && isset($_POST['contrasena']) &&  $_POST['contrasena'] != '' ) {
-			$usuario = $_POST['usuario'];
-			$contrasena = md5($_POST['contrasena']); //md5 para encriptar
-
-
-			$sql= "SELECT * from Usuarios WHERE usuario = $usuario AND contrasena = ";
-
-			//Select usuario y contraseña
-
-			if ($_POST['usuario'] == 'jose') { //Si encontró
-				$_SESSION['logueado'] = 'logueado';
-				$_SESSION['nome_usuario'] = "jose";
-				header('Location: index.php');
-			} else if ($_POST['usuario'] == 'alumno') { //Si encontró
-				$_SESSION['logueado'] = 'logueado';
-				$_SESSION['nome_usuario'] = "Alumno";
-				header('Location: presencia.php');
-			} else { //Si no encontró apresenta error
-				$mensaje = '<p class="alert alert-danger">Los Datos Ingresados están Incorrectos!</p>';
-			}
-		} else { //Si no encontró apresenta error
-			$mensaje = '<p class="alert alert-danger">Por favor, Ingrese Todos los Datos!</p>';
-		}
-	}
-?>
-
+<?php $role='admin'; require __DIR__.'/server/login-controller.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,10 +16,10 @@
 			<p class="login-box-msg">Ingrese su Usuario y Contraseña</p>
 			<?php
 				if (isset($mensaje)) {
-					echo $mensaje; //mensaje de error
+					echo $mensaje; 
 				}
 			?>
-			<form action="" method="post">
+			<form action="" method="post"><?php echo csrf_field(); ?>
 				<div class="form-group has-feedback">
 					<input type="text" name="usuario" class="form-control" placeholder="Usuário" >
 					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>

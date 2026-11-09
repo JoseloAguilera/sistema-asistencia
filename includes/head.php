@@ -1,3 +1,4 @@
+<?php if (!function_exists('auth')) { http_response_code(404); exit; } ?>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <!-- Bootstrap -->

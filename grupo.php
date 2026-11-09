@@ -1,112 +1,4 @@
-<?php
-	require 'server/conn.php';
-	session_start();
-	// var_dump($_SESSION['usuario']);
-	if (!isset($_SESSION['logueado'])) {
-		header('Location: login.php');
-	}
-	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
-		header('Location: presencia.php');
-	}
-
-	if($_SERVER['REQUEST_METHOD'] == "POST") {
-		if (isset($_POST['nuevo'])){
-			//var_dump($_POST);
-			$codcurso = $_POST['curso'];
-			$estado = $_POST['estado'];
-			$descripcion = $_POST['descripcion'];
-			$dia = $_POST['dia'];
-			$entrada = $_POST['entrada'];
-			$salida = $_POST['salida'];
-
-			try {
-				$sql = "INSERT INTO grupos (descripcion, cursos_id, activo) VALUES ('$descripcion', '$codcurso', '$estado')";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				$last_id = $connection->lastInsertId(); //id del grupo
-				//var_dump($last_id);
-
-				foreach ($dia as $diasemana) {
-					//var_dump($diasemana);
-					$sql = "INSERT INTO horarios (hora_inicio, hora_fin, dia, grupos_id, grupos_cursos_id) VALUES ('$entrada', '$salida', '$diasemana', '$last_id', '$codcurso')";
-					$query = $connection->prepare($sql);
-					$query->execute();
-				}
-				//$result= $query->fetchAll();
-				$tipomensaje = 'success';
-				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';
-			} catch (\Exception $e) {
-				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';
-			}
-			
-		} else if (isset($_POST['guardar'])){
-			//var_dump($_POST);
-
-			$id =  $_POST['codigo'];
-			$codcurso = $_POST['curso'];
-			$estado = $_POST['estado'];
-			$descripcion = $_POST['descripcion'];
-			$dia = $_POST['dia'];
-			$entrada = $_POST['entrada'];
-			$salida = $_POST['salida'];
-
-			try {
-				//Alteração de Horários (Deletar os horários antigos e criar novos)
-				//Delete horarios
-				$sql = "DELETE FROM horarios WHERE grupos_id = $id";
-				$query = $connection->prepare($sql);
-				$query->execute();
-
-				foreach ($dia as $diasemana) {
-					//var_dump($diasemana);
-					$sql = "INSERT INTO horarios (hora_inicio, hora_fin, dia, grupos_id, grupos_cursos_id) VALUES ('$entrada', '$salida', '$diasemana', '$id', '$codcurso')";
-					$query = $connection->prepare($sql);
-					$query->execute();
-				}
-
-				// Update do grupo
-				$sql = "UPDATE grupos SET descripcion = '$descripcion', cursos_id = '$codcurso', activo = '$estado'
-				WHERE id = $id";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				//$result= $query->fetchAll();
-
-				$tipomensaje = 'success';
-				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';
-			} catch (\Exception $e) {
-				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';
-			}
-		} else if (isset($_POST['excluir'])){
-			// var_dump($_POST);
-			$id =  $_POST['codigo'];
-			try {
-				//Delete horarios
-				$sql = "DELETE FROM horarios WHERE grupos_id = $id";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				
-				try {
-					//Delete Grupos
-					$sql = "DELETE FROM grupos WHERE id = $id";
-					$query = $connection->prepare($sql);
-					$query->execute();
-					//$result= $query->fetchAll();
-					$tipomensaje = 'success';
-					$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
-				} catch (\Exception $e) {
-					$tipomensaje = 'error';
-					$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
-				}
-			} catch (\Exception $e) {
-				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
-
-			}
-		}
-	}
-?>
+<?php $tipomensaje = $mensaje = ''; require __DIR__.'/server/group-controller.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -124,20 +16,12 @@
 		<!-- ASIDE BAR END -->
 
 		<?php
-			/*if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
-				// var_dump($_POST['busca']);
-				$busca = $_POST['busca'];
-				$sql = "SELECT grupos.*, nombre FROM grupos INNER JOIN cursos ON grupos.cursos_id=cursos.id WHERE descripcion LIKE '%$busca%' OR nombre LIKE '%$busca%' ORDER by descripcion";
-				$query = $connection->prepare($sql);
-				$query->execute();
-				$result= $query->fetchAll();
-			} else {
-				$busca = "";*/
+			
 				$sql = "SELECT grupos.*, nombre FROM grupos INNER JOIN cursos ON grupos.cursos_id=cursos.id ORDER by descripcion";
 				$query = $connection->prepare($sql);
 				$query->execute();
 				$result= $query->fetchAll();
-			//}
+			
 		?>
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -195,9 +79,9 @@
 				<div class="box-body">
 					<div class="col-md-12">
 						<!-- <?php
-						// if (isset( $mensaje)) {
-						// 	echo $mensaje; //alert mensaje
-						// }
+						
+						
+						
 
 						?> -->
 					</div>
@@ -219,11 +103,11 @@
 							foreach ($result as $row) {
 								$curso_id = $row['cursos_id'];
 								$grupo_id = $row['id'];
-								$sql = "SELECT * FROM horarios WHERE grupos_id = $grupo_id AND grupos_cursos_id = $curso_id";
+								$sql = 'SELECT * FROM horarios WHERE grupos_id = :auto1 AND grupos_cursos_id = :auto2'; $sql_params = ['auto1' => $grupo_id, 'auto2' => $curso_id];
 								$query = $connection->prepare($sql);
-								$query->execute();
+								$query->execute($sql_params);
 								$result2= $query->fetchAll();
-								//Los horarios para poner en el selectpicker
+								
 								$dias = "";
 								foreach ($result2 as $horario) {
 									if ($dias != "") {
@@ -232,24 +116,24 @@
 									$dias = $dias.$horario['dia'];
 									$id = $row['id'];
 								}
-								//var_dump($dias);
+								
 							?>
-							<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-curso="<?php echo $row['cursos_id'];?>" data-descripcion="<?php echo $row['descripcion'];?>" data-dias="<?php echo $dias;?>"
+							<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo e($row['id']);?>" data-curso="<?php echo e($row['cursos_id']);?>" data-descripcion="<?php echo e($row['descripcion']);?>" data-dias="<?php echo $dias;?>"
 								data-entrada="<?php echo substr($horario['hora_inicio'],0,5)?>" data-salida="<?php echo substr($horario['hora_fin'],0,5)?>" data-estado="<?php echo $row['activo']?>">
-								<td><?php echo $row['id'];?></td>
-								<td><?php echo $row['nombre'];?></td>
-								<td><?php echo $row['descripcion'];?></td>
+								<td><?php echo e($row['id']);?></td>
+								<td><?php echo e($row['nombre']);?></td>
+								<td><?php echo e($row['descripcion']);?></td>
 								<td>
 									<?php foreach ($result2 as $horario) { ?>
-										<?php echo $horario['dia']."<br>";?>
+										<?php echo e($horario['dia']."<br>"); ?>
 									<?php } ?>
 								</td>
 								<td>De <?php echo substr($horario['hora_inicio'],0,5)."<br>";?>Hasta <?php echo substr($horario['hora_fin'],0,5)."<br>";?></td>
 								<?php
-								//Quantidade de Alunos Matriculados no Grupo
-								$sql = "SELECT COUNT(*) FROM `matricula` INNER JOIN grupos ON matricula.`grupo_id` = grupos.id WHERE matricula.`grupo_id` = $id";
+								
+								$sql = 'SELECT COUNT(*) FROM `matricula` INNER JOIN grupos ON matricula.`grupo_id` = grupos.id WHERE matricula.`grupo_id` = :auto1'; $sql_params = ['auto1' => $id];
 								$query = $connection->prepare($sql);
-								$query->execute();
+								$query->execute($sql_params);
 								$result3= $query->fetch();
 								?>
 								<td><?php echo $result3['COUNT(*)']?> alumnos</td>
@@ -288,7 +172,7 @@
 		<!-- ./FOOTER -->
 
 		<!-- Menu retractil de la derecha -->
-		<?php //include "includes/aside-control.php"; ?>
+		<?php ?>
 		<!-- ./ Menu retractil de la derecha -->
 
 		<!-- Color de Fondo de del menu derecho -->
@@ -305,7 +189,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Nuevo Grupo</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST"><?php echo csrf_field(); ?>
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-9">
@@ -322,7 +206,7 @@
 											if ($row['activo']== 1)
 											{
 									?>
-										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre'];?></option>
+										<option value="<?php echo e($row['id']);?>"><?php echo e($row['nombre']);?></option>
 									<?php }
 												}?>
 									</select>
@@ -404,7 +288,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Alterar Curso</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST"><?php echo csrf_field(); ?>
 					<div class="modal-body">
 						<input type="hidden" class="form-control" id="codigo" name="codigo">
 						<div class="row">
@@ -420,7 +304,7 @@
 
 										foreach ($result as $row) {
 									?>
-										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre'];?></option>
+										<option value="<?php echo e($row['id']);?>"><?php echo e($row['nombre']);?></option>
 									<?php }?>
 									</select>
 								</div>

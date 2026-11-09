@@ -1,43 +1,40 @@
-<?php
+<?php require_once __DIR__.'/server/bootstrap.php'; auth('admin');
+ $tipomensaje = $mensaje = '';
 	require 'server/conn.php';
-	session_start();
-	// var_dump($_SESSION['usuario']);
-	if (!isset($_SESSION['logueado'])) {
-		header('Location: login.php');
-	}
-	if (isset($_SESSION['logueado']) && $_SESSION['tipo_login'] == 'alumno' ) {
-		header('Location: presencia.php');
-	}
+	
+	
+	
+	
 
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
 		if (isset($_POST['nuevo'])){
-			//var_dump($_POST);
+			
 			$fechainicio = $_POST['fechainicio'];
 			$codgrupo = $_POST['grupo'];
 			$alumno = $_POST['alumno'];
 			$estado = $_POST['estado'];
 			$matricula = str_replace(".", "", $_POST['valmatricula']);
 			$cuota = str_replace(".", "", $_POST['valcuota']);
-			// $estado = $_POST['estado'];
-			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); //convierte de dd/mm/yyyy para yyyy-mm-dd
+			
+			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); 
 			try {
-				$sql = "INSERT INTO matricula (id_alumnos, fecha_inicio, valor_cuota, valor_matricula, grupo_id, fecha_add, activo) VALUES ('$alumno', '$mysqldata', '$cuota','$matricula', '$codgrupo', NOW(), '$estado')";
+				$sql = 'INSERT INTO matricula (id_alumnos, fecha_inicio, valor_cuota, valor_matricula, grupo_id, fecha_add, activo) VALUES (:auto1, :auto2, :auto3,:auto4, :auto5, NOW(), :auto6)'; $sql_params = ['auto1' => $alumno, 'auto2' => $mysqldata, 'auto3' => $cuota, 'auto4' => $matricula, 'auto5' => $codgrupo, 'auto6' => $estado];
 				$query = $connection->prepare($sql);
-				$query->execute();
-				//var_dump($last_id);
+				$query->execute($sql_params);
+				
 
-				//$result= $query->fetchAll()
+				
 				$tipomensaje = 'success';
-				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';//'<div class="alert alert-success">REGISTRO AGREGADO CORRECTAMENTE</div>';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron insertados correctamente.</p>';
 
-			} catch (\Except1ion $e) {
+			} catch (\Exception $e) {
 				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"Operación rechazada</p>';
 			}
 
 
 		} else if (isset($_POST['guardar'])){
-			//var_dump($_POST);
+			
 			$id =  $_POST['codigo'];
 			$fechainicio = $_POST['fechainicio'];
 			$codgrupo = $_POST['grupo'];
@@ -45,36 +42,36 @@
 			$estado = $_POST['estado'];
 			$matricula = str_replace(".", "", $_POST['valmatricula']);
 			$cuota = str_replace(".", "", $_POST['valcuota']);
-			// $estado = $_POST['estado'];
-			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); //convierte de dd/mm/yyyy para yyyy-mm-dd
+			
+			$mysqldata = substr($fechainicio, 6,4)."-".substr($fechainicio, 3,2)."-".substr($fechainicio, 0,2); 
 
-			// Update do grupo
+			
 			try {
-				$sql = "UPDATE matricula SET id_alumnos = '$alumno', fecha_inicio = '$mysqldata', valor_cuota = '$cuota', valor_matricula = '$matricula', grupo_id = '$codgrupo', fecha_update = NOW(), activo = '$estado'
-				WHERE id = $id";
+				$sql = 'UPDATE matricula SET id_alumnos = :auto1, fecha_inicio = :auto2, valor_cuota = :auto3, valor_matricula = :auto4, grupo_id = :auto5, fecha_update = NOW(), activo = :auto6
+				WHERE id = :auto7'; $sql_params = ['auto1' => $alumno, 'auto2' => $mysqldata, 'auto3' => $cuota, 'auto4' => $matricula, 'auto5' => $codgrupo, 'auto6' => $estado, 'auto7' => $id];
 				$query = $connection->prepare($sql);
-				$query->execute();
+				$query->execute($sql_params);
 
-				//$result= $query->fetchAll();
+				
 				$tipomensaje = 'success';
-				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ACTUALIZADO CORRECTAMENTE</div>';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron actualizados correctamente.</p>';
 			} catch (\Exception $e) {
 				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"Operación rechazada</p>';
 			}
 		} else if (isset($_POST['excluir'])){
 			$id =  $_POST['codigo'];
 			try {
-				// Delete Grupos
-				$sql = "DELETE FROM matricula WHERE id = $id";
+				
+				$sql = 'DELETE FROM matricula WHERE id = :auto1'; $sql_params = ['auto1' => $id];
 				$query = $connection->prepare($sql);
-				$query->execute();
-				//$result= $query->fetchAll();
+				$query->execute($sql_params);
+				
 				$tipomensaje = 'success';
-				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';//'<div class="alert alert-success">REGISTRO ELIMINADO CORRECTAMENTE</div>';
+				$mensaje= '<h3>Perfecto!</h3><p>Los datos fueron eliminados correctamente.</p>';
 			} catch (\Exception $e) {
 				$tipomensaje = 'error';
-				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"'.$e.'</p>';//'<div class="alert alert-danger">HA OCURRIDO UN ERROR - Consulte al administrador de sistemas. Error->"'.$e.'<br></div>';
+				$mensaje = '<h3>Error!</h3><p>Consulte al administrador de sistemas.<br>Error->"Operación rechazada</p>';
 
 			}
 		}
@@ -87,7 +84,7 @@
 				window.open('pdf.php?id='+pdf,'_blank');
 				</script>
 				<?php
-				//header('Location: pdf.php?id='.$_POST['codigo']);
+				
 			}
 		}
 	}
@@ -111,18 +108,18 @@
 		<?php include 'includes/aside.php'; ?>
 		<!-- ASIDE BAR END -->
 		<?php if(isset($pdf)){
-			//var_dump($pdf);
-			//echo $pdf;
+			
+			
 		} ?>
 
 		<?php
 			if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['search'])){
-				// var_dump($_POST['busca']);
-				// $busca = $_POST['busca'];
-				// $sql = "SELECT * from cursos WHERE nombre LIKE '%$busca%' OR desc_corta LIKE '%$busca%' OR duracion_meses LIKE '%$busca%' OR estado LIKE '%$busca%' OR valor_cuota LIKE '%$busca%' OR valor_matrícula LIKE '%$busca%' ORDER by nombre";
-				// $query = $connection->prepare($sql);
-				// $query->execute();
-				// $result= $query->fetchAll();
+				
+				
+				
+				
+				
+				
 			} else {
 				$busca = "";
 				$sql = "SELECT matricula.*, alumnos.nombre, alumnos.apellido, cursos.nombre AS curso, grupos.descripcion AS grupo FROM `matricula` INNER JOIN alumnos ON `id_alumnos` = alumnos.id INNER JOIN grupos ON grupo_id = grupos.id INNER JOIN cursos ON grupos.cursos_id = cursos.id ORDER BY alumnos.nombre";
@@ -189,9 +186,9 @@
 					<div class="box-body">
 						<!-- <div class="col-md-12">
 							<?php
-							// if (isset( $mensaje)) {
-							// 	echo $mensaje; //alert mensaje
-							// }
+							
+							
+							
 
 							?>
 
@@ -217,12 +214,12 @@
 									$valmatricula = number_format($row['valor_matricula'], 0, ",", ".");
 									$valcuota = number_format($row['valor_cuota'], 0, ",", ".");
 								?>
-								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo $row['id'];?>" data-alumno="<?php echo $row['id_alumnos'];?>"  data-grupo="<?php echo $row['grupo_id'];?>" data-fechainicio="<?php echo $fechainicio;?>"
-									data-valmatricula="<?php echo $valmatricula;?>" data-valcuota="<?php echo $valcuota;?>" data-estado="<?php echo $row['activo'];?>">
-									<td><?php echo $row['id'];?></td>
-									<td><?php echo $row['curso'];?></td>
-									<td><?php echo $row['grupo'];?></td>
-									<td><?php echo $row['nombre']." ".$row['apellido'];?></td>
+								<tr data-toggle="modal" data-target="#AltModal" data-codigo="<?php echo e($row['id']);?>" data-alumno="<?php echo e($row['id_alumnos']);?>"  data-grupo="<?php echo e($row['grupo_id']);?>" data-fechainicio="<?php echo $fechainicio;?>"
+									data-valmatricula="<?php echo $valmatricula;?>" data-valcuota="<?php echo $valcuota;?>" data-estado="<?php echo e($row['activo']);?>">
+									<td><?php echo e($row['id']);?></td>
+									<td><?php echo e($row['curso']);?></td>
+									<td><?php echo e($row['grupo']);?></td>
+									<td><?php echo e($row['nombre']." ".$row['apellido']);?></td>
 									<td><?php echo $fechainicio;?></td>
 									<td><?php echo $valmatricula;?></td>
 									<td><?php echo $valcuota;?></td>
@@ -255,7 +252,7 @@
 		<!-- ./FOOTER -->
 
 		<!-- Menu retractil de la derecha -->
-		<?php //include "includes/aside-control.php"; ?>
+		<?php ?>
 		<!-- ./ Menu retractil de la derecha -->
 
 		<!-- Color de Fondo de del menu derecho -->
@@ -272,7 +269,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Nueva Matricula</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST"><?php echo csrf_field(); ?>
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-4">
@@ -293,7 +290,7 @@
 
 										foreach ($result as $row) {
 									?>
-										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre']." ".$row['apellido'];?></option>
+										<option value="<?php echo e($row['id']);?>"><?php echo e($row['nombre']." ".$row['apellido']);?></option>
 									<?php }?>
 									</select>
 								</div>
@@ -310,19 +307,19 @@
 
 										foreach ($result as $row) {
 									?>
-										<optgroup label="<?php echo 'Curso de '.$row['nombre'];?>">
+										<optgroup label="<?php echo e('Curso de '.$row['nombre']);?>">
 											<?php
 												$codcurso = $row['id'];
-												$sql = "SELECT * from grupos WHERE cursos_id = $codcurso ORDER by descripcion";
+												$sql = 'SELECT * from grupos WHERE cursos_id = :auto1 ORDER by descripcion'; $sql_params = ['auto1' => $codcurso];
 												$query = $connection->prepare($sql);
-												$query->execute();
+												$query->execute($sql_params);
 												$result2= $query->fetchAll();
 
 												foreach ($result2 as $grupo) {
-													if ($grupo[activo]==1) {
+													if ($grupo['activo']==1) {
 
 											?>
-											<option value="<?php echo $grupo['id'];?>"><?php echo $grupo['descripcion'];?></option>
+											<option value="<?php echo e($grupo['id']);?>"><?php echo e($grupo['descripcion']);?></option>
 											<?php }
 										}?>
 										</optgroup>
@@ -372,7 +369,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">Matricula ID</h4>
 				</div>
-				<form action="" method="POST">
+				<form action="" method="POST"><?php echo csrf_field(); ?>
 					<div class="modal-body">
 						<input type="hidden" class="form-control" id="codigo" name="codigo">
 						<div class="row">
@@ -394,7 +391,7 @@
 
 										foreach ($result as $row) {
 									?>
-										<option value="<?php echo $row['id'];?>"><?php echo $row['nombre']." ".$row['apellido'];?></option>
+										<option value="<?php echo e($row['id']);?>"><?php echo e($row['nombre']." ".$row['apellido']);?></option>
 									<?php }?>
 									</select>
 								</div>
@@ -411,17 +408,17 @@
 
 										foreach ($result as $row) {
 									?>
-										<optgroup label="<?php echo 'Curso de '.$row['nombre'];?>">
+										<optgroup label="<?php echo e('Curso de '.$row['nombre']);?>">
 											<?php
 												$codcurso = $row['id'];
-												$sql = "SELECT * from grupos WHERE cursos_id = $codcurso ORDER by descripcion";
+												$sql = 'SELECT * from grupos WHERE cursos_id = :auto1 ORDER by descripcion'; $sql_params = ['auto1' => $codcurso];
 												$query = $connection->prepare($sql);
-												$query->execute();
+												$query->execute($sql_params);
 												$result2= $query->fetchAll();
 
 												foreach ($result2 as $grupo) {
 											?>
-											<option value="<?php echo $grupo['id'];?>" ><?php echo $grupo['descripcion'];?></option>
+											<option value="<?php echo e($grupo['id']);?>" ><?php echo e($grupo['descripcion']);?></option>
 											<?php }?>
 										</optgroup>
 									<?php }?>

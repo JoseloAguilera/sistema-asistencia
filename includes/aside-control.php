@@ -1,3 +1,4 @@
+<?php if (!function_exists('auth')) { http_response_code(404); exit; } ?>
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark" style="display: none;">
     <!-- Create the tabs -->
@@ -118,7 +119,7 @@
       <!-- /.tab-pane -->
       <!-- Settings tab content -->
       <div class="tab-pane" id="control-sidebar-settings-tab">
-        <form method="post">
+        <form method="post"><?php echo csrf_field(); ?>
           <h3 class="control-sidebar-heading">General Settings</h3>
 
           <div class="form-group">
